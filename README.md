@@ -33,7 +33,7 @@ Aliases: `pretty-sessions`, `ps`
 
 ```bash
 # stream from claude in real-time
-claude -p "explain this code" --output-format stream-json | ps claude
+claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json --include-partial-messages | ps claude
 
 # replay a saved session
 cat ~/.claude/projects/.../session.jsonl | ps claude

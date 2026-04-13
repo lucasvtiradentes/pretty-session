@@ -11,7 +11,9 @@
 		"build": "tsup",
 		"dev": "tsup --watch",
 		"check": "tsc --noEmit",
-		"test": "vitest run"
+		"test": "vitest run",
+		"test:replay": "cat tests/fixtures/sample_session.jsonl | node dist/cli.js claude",
+		"test:e2e": "cd ../../.sandbox && claude -p \"$(cat ../.github/test-prompt.md)\" --print --verbose --dangerously-skip-permissions --output-format stream-json --include-partial-messages | node ../apps/cli/dist/cli.js claude"
 	},
 	"devDependencies": {
 		"@types/node": "^25.6.0",

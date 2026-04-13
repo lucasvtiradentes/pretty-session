@@ -1,0 +1,7 @@
+{"type":"system","subtype":"init","session_id":"test-session-123","cwd":"/Users/test/project","model":"claude-sonnet-4-20250514"}
+{"type":"user","message":{"content":"List all Python files"}}
+{"type":"assistant","message":{"content":[{"type":"text","text":"I'll list all Python files for you."}]}}
+{"type":"assistant","message":{"content":[{"type":"tool_use","name":"Glob","input":{"pattern":"*.py"}}]}}
+{"type":"user","message":{"content":[{"type":"tool_result","content":"main.py\nutils.py\ntest.py"}]}}
+{"type":"assistant","message":{"content":[{"type":"text","text":"Found 3 Python files: main.py, utils.py, and test.py."}]}}
+{"type":"result","is_error":false,"duration_ms":2500,"total_cost_usd":0.025,"num_turns":2,"usage":{"input_tokens":500,"output_tokens":100}}

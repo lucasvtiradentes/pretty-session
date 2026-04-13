@@ -1,4 +1,4 @@
-import type { Renderer } from "./base.js"
+import type { Renderer } from "./base"
 
 const BOLD = "\x1b[1m"
 const INVERSE = "\x1b[7m"

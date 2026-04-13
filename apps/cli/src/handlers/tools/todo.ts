@@ -1,5 +1,5 @@
-import { INDENT } from "../../constants.js"
-import type { ParseResult, ParserState } from "../base.js"
+import { INDENT } from "../../constants"
+import type { ParseResult, ParserState } from "../base"
 
 export function handleTodo(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer

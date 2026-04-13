@@ -1,4 +1,4 @@
-import type { ParseResult, ParserState } from "../base.js"
+import type { ParseResult, ParserState } from "../base"
 
 export function handleEdit(name: string, inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer

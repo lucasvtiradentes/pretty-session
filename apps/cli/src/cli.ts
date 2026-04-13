@@ -1,6 +1,6 @@
-import { run as runShow } from "./commands/show.js"
-import { run as runStream } from "./commands/stream.js"
-import { CLI_NAME } from "./constants.js"
+import { run as runShow } from "./commands/show"
+import { run as runStream } from "./commands/stream"
+import { CLI_NAME } from "./constants"
 
 const VERSION = "0.1.0"
 

@@ -1,5 +1,5 @@
-import { HIDE_TOOLS } from "../constants.js"
-import type { ParseResult, ParserState } from "./base.js"
+import { HIDE_TOOLS } from "../constants"
+import type { ParseResult, ParserState } from "./base"
 
 export function handleStreamEvent(data: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer

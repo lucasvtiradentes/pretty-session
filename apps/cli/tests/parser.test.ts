@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
-import { ParserState } from "../src/handlers/base.js"
-import { parseJsonLine } from "../src/parser.js"
+import { ParserState } from "../src/handlers/base"
+import { parseJsonLine } from "../src/parser"
 
 describe("parser", () => {
 	it("parses system init", () => {

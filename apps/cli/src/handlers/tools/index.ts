@@ -1,13 +1,13 @@
-import type { ParseResult, ParserState } from "../base.js"
-import { handleBash } from "./bash.js"
-import { handleEdit } from "./edit.js"
-import { handleGlob } from "./glob.js"
-import { handleGrep } from "./grep.js"
-import { handleNotebook } from "./notebook.js"
-import { handleRead } from "./read.js"
-import { handleTask } from "./task.js"
-import { handleTodo } from "./todo.js"
-import { handleWrite } from "./write.js"
+import type { ParseResult, ParserState } from "../base"
+import { handleBash } from "./bash"
+import { handleEdit } from "./edit"
+import { handleGlob } from "./glob"
+import { handleGrep } from "./grep"
+import { handleNotebook } from "./notebook"
+import { handleRead } from "./read"
+import { handleTask } from "./task"
+import { handleTodo } from "./todo"
+import { handleWrite } from "./write"
 
 export function dispatchTool(name: string, inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	if (name === "TodoWrite") handleTodo(inp, state, result)

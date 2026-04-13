@@ -6,7 +6,7 @@ import {
 	handleStreamEvent,
 	handleSystem,
 	handleUserMessage,
-} from "./handlers/index.js"
+} from "./handlers/index"
 
 export function parseJsonLine(line: string, state: ParserState): ParseResult {
 	const result = new ParseResult()

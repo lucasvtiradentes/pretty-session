@@ -1,5 +1,5 @@
-import type { ParseResult, ParserState } from "./base.js"
-import { dispatchTool } from "./tools/index.js"
+import type { ParseResult, ParserState } from "./base"
+import { dispatchTool } from "./tools/index"
 
 export function handleAssistantMessage(data: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const message = (data.message as Record<string, unknown>) ?? {}

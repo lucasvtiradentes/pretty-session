@@ -1,8 +1,8 @@
 import { spawn } from "node:child_process"
 import { createInterface } from "node:readline"
-import { CLI_NAME } from "../constants.js"
-import { ParserState } from "../handlers/base.js"
-import { parseJsonLine } from "../parser.js"
+import { CLI_NAME } from "../constants"
+import { ParserState } from "../handlers/base"
+import { parseJsonLine } from "../parser"
 
 function printHelp() {
 	console.log(`${CLI_NAME} stream - Run claude with pretty output

@@ -1,0 +1,19 @@
+{
+	"name": "pretty-sessions",
+	"private": true,
+	"scripts": {
+		"check": "turbo check",
+		"format": "biome format --write .",
+		"lint": "biome check .",
+		"knip": "knip",
+		"prepare": "husky"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"husky": "^9.1.7",
+		"knip": "^6.4.1",
+		"lint-staged": "^15.4.3",
+		"turbo": "^2.4.4"
+	},
+	"packageManager": "pnpm@9.15.4"
+}

@@ -1,6 +1,6 @@
 # pretty-sessions
 
-Pretty formatter for AI coding agent sessions - stream in real-time or replay saved .jsonl files. Works with Claude Code, Codex, Gemini, and more.
+Pretty formatter for AI coding agent sessions. Pipe any provider's output and get a readable, colorized view. Works with Claude Code, Codex, Gemini, and more.
 
 <table align="center">
   <tr>
@@ -15,8 +15,7 @@ Pretty formatter for AI coding agent sessions - stream in real-time or replay sa
 
 ## Features
 
-- stream mode    - run claude with pretty output in real-time
-- replay mode    - replay saved .jsonl session files
+- pipe-based     - works with any provider via stdin
 - tool display   - formatted output for Glob, Grep, Bash, Read, Edit, etc.
 - markdown       - renders bold and code with ANSI styles
 - subagent depth - visual indentation for nested Task calls
@@ -33,19 +32,20 @@ Aliases: `pretty-sessions`, `ps`
 ## Usage
 
 ```bash
-# stream - run claude with pretty output (all args forwarded to claude)
-pretty-sessions stream -p "explain this code"
-pretty-sessions stream -p "fix the bug" --model sonnet --max-turns 3
-pretty-sessions stream --resume
+# stream from claude in real-time
+claude -p "explain this code" --output-format stream-json | ps claude
 
-# show - replay a saved session in terminal
-pretty-sessions show ~/.claude/projects/.../session.jsonl
+# replay a saved session
+cat ~/.claude/projects/.../session.jsonl | ps claude
 ```
 
-Stream mode adds these flags automatically:
-```
---print --verbose --dangerously-skip-permissions --output-format stream-json --include-partial-messages
-```
+## Providers
+
+| Provider | Status |
+|----------|--------|
+| claude   | supported |
+| codex    | planned |
+| gemini   | planned |
 
 ## Environment
 

@@ -1,18 +1,20 @@
-import { run as runShow } from "./commands/show"
-import { run as runStream } from "./commands/stream"
+import { createInterface } from "node:readline"
 import { CLI_NAME } from "./constants"
+import { ParserState } from "./handlers/base"
+import { parseJsonLine } from "./parser"
 
 const VERSION = "0.1.0"
+
+const PROVIDERS = new Set(["claude"])
 
 function printHelp() {
 	console.log(`${CLI_NAME} - Pretty formatter for AI coding agent sessions
 
 Usage:
-  ${CLI_NAME} <command> [options]
+  <provider-output> | ${CLI_NAME} <provider>
 
-Commands:
-  stream [claude-args...]          Run claude with pretty output (forwards all args)
-  show <file.jsonl>                Replay a saved session (.jsonl)
+Providers:
+  claude          Claude Code stream-json format
 
 Options:
   -h, --help         Show this help
@@ -23,16 +25,11 @@ Environment:
   PS_READ_PREVIEW_LINES      Lines to preview from Read (default: 5, 0=hide)
 
 Examples:
-  ${CLI_NAME} stream -p "explain this code"
-  ${CLI_NAME} show ~/.claude/projects/.../session.jsonl`)
+  claude -p "explain this code" --output-format stream-json | ${CLI_NAME} claude
+  cat session.jsonl | ${CLI_NAME} claude`)
 }
 
-const COMMANDS: Record<string, (args: string[]) => void | Promise<void>> = {
-	stream: runStream,
-	show: runShow,
-}
-
-async function main() {
+function main() {
 	const args = process.argv.slice(2)
 
 	if (args.length === 0 || args.includes("-h") || args.includes("--help")) {
@@ -45,17 +42,25 @@ async function main() {
 		process.exit(0)
 	}
 
-	const command = args[0]
-	const subArgs = args.slice(1)
+	const provider = args[0]
 
-	const handler = COMMANDS[command]
-	if (!handler) {
-		console.log(`Unknown command: ${command}`)
-		console.log(`Run '${CLI_NAME} --help' for usage`)
+	if (!PROVIDERS.has(provider)) {
+		console.error(`Unknown provider: ${provider}`)
+		console.error(`Run '${CLI_NAME} --help' for usage`)
 		process.exit(1)
 	}
 
-	await handler(subArgs)
+	const state = new ParserState("stream")
+	const rl = createInterface({ input: process.stdin })
+
+	rl.on("line", (line) => {
+		const trimmed = line.trim()
+		if (trimmed) {
+			const result = parseJsonLine(trimmed, state)
+			const output = result.getOutput()
+			if (output) process.stdout.write(output)
+		}
+	})
 }
 
 main()

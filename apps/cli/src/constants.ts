@@ -11,6 +11,7 @@ export const HIDE_TOOLS = new Set([
 	"Edit",
 	"MultiEdit",
 	"NotebookEdit",
+	"Agent",
 ])
 
 export const TOOL_RESULT_MAX_CHARS = Number(process.env.PS_TOOL_RESULT_MAX_CHARS ?? "300")

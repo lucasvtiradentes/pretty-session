@@ -8,7 +8,6 @@ export function handleStreamEvent(data: Record<string, unknown>, state: ParserSt
 
 	if (eventType === "content_block_start") {
 		if (state.subagentDepth > 0) {
-			result.add(`${state.sp}${r.sectionClose()}\n`)
 			state.decrementDepth()
 		}
 

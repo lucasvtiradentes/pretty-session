@@ -8,6 +8,5 @@ export function handleTask(inp: Record<string, unknown>, state: ParserState, res
 	result.add(`\n${state.sp}${r.blue(label)}\n`)
 	if (state.mode === "stream") {
 		state.incrementDepth()
-		result.add(`${state.sp}${r.sectionOpen()}\n`)
 	}
 }

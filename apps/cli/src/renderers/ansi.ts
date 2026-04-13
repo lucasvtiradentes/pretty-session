@@ -68,14 +68,6 @@ export class AnsiRenderer implements Renderer {
 		return BOLD + INVERSE
 	}
 
-	sectionOpen() {
-		return this.dim(`┌${"─".repeat(31)}`)
-	}
-
-	sectionClose() {
-		return this.dim(`└${"─".repeat(31)}`)
-	}
-
 	pipe() {
 		return `${DIM}│${RESET} `
 	}

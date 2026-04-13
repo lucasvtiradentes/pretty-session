@@ -4,7 +4,6 @@ export function handleResult(data: Record<string, unknown>, state: ParserState, 
 	const r = state.renderer
 
 	while (state.subagentDepth > 0) {
-		result.add(`${state.sp}${r.sectionClose()}\n`)
 		state.decrementDepth()
 	}
 

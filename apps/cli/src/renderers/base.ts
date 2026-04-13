@@ -12,7 +12,5 @@ export interface Renderer {
 	styleBold(): string
 	styleCode(): string
 	styleBoldCode(): string
-	sectionOpen(): string
-	sectionClose(): string
 	pipe(): string
 }

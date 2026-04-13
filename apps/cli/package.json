@@ -9,15 +9,17 @@
 	},
 	"scripts": {
 		"build": "tsup",
-		"dev": "tsup --watch",
+		"dev": "dotenv tsx src/cli.ts",
 		"check": "tsc --noEmit",
 		"test": "vitest run",
-		"test:replay": "cat tests/fixtures/sample_session.jsonl | node dist/cli.js claude",
-		"test:e2e": "cd ../../.sandbox && claude -p \"$(cat ../.github/test-prompt.md)\" --print --verbose --dangerously-skip-permissions --output-format stream-json --include-partial-messages | node ../apps/cli/dist/cli.js claude"
+		"test:replay": "cat tests/fixtures/sample_session.jsonl | pnpm dev claude",
+		"test:e2e": "mkdir -p ../../.sandbox && cd ../../.sandbox && claude -p \"$(cat ../.github/test-prompt.md)\" --print --verbose --dangerously-skip-permissions --output-format stream-json --include-partial-messages | pnpm --filter @pretty-sessions/cli dev claude"
 	},
 	"devDependencies": {
 		"@types/node": "^25.6.0",
+		"dotenv-cli": "^11.0.0",
 		"tsup": "^8.3.6",
+		"tsx": "^4.21.0",
 		"typescript": "^5.7.3",
 		"vitest": "^4.1.4"
 	}

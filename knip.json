@@ -2,7 +2,8 @@
 	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"workspaces": {
 		"apps/cli": {
-			"project": ["src/**/*.ts"]
+			"project": ["src/**/*.ts"],
+			"ignoreBinaries": ["claude"]
 		}
 	}
 }

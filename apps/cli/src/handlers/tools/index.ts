@@ -1,4 +1,5 @@
 import type { ParseResult, ParserState } from "../base"
+import { handleAgent } from "./agent"
 import { handleBash } from "./bash"
 import { handleEdit } from "./edit"
 import { handleGlob } from "./glob"
@@ -19,4 +20,5 @@ export function dispatchTool(name: string, inp: Record<string, unknown>, state: 
 	else if (name === "NotebookEdit") handleNotebook(inp, state, result)
 	else if (name === "Bash") handleBash(inp, state, result)
 	else if (name === "Task") handleTask(inp, state, result)
+	else if (name === "Agent") handleAgent(inp, state, result)
 }

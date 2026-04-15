@@ -7,11 +7,13 @@ import { handleGrep } from "./grep"
 import { handleMultiEdit } from "./multi-edit"
 import { handleNotebook } from "./notebook-edit"
 import { handleRead } from "./read"
+import { handleSkill } from "./skill"
 import { handleTaskCreate } from "./task-create"
 import { handleTaskGet } from "./task-get"
 import { handleTaskList } from "./task-list"
 import { handleTaskUpdate } from "./task-update"
 import { handleTodo } from "./todo-write"
+import { handleToolSearch } from "./tool-search"
 import { handleWebFetch } from "./web-fetch"
 import { handleWebSearch } from "./web-search"
 import { handleWrite } from "./write"
@@ -32,5 +34,7 @@ export function dispatchTool(name: string, inp: Record<string, unknown>, state: 
 	else if (name === "TaskUpdate") handleTaskUpdate(inp, state, result)
 	else if (name === "WebFetch") handleWebFetch(inp, state, result)
 	else if (name === "WebSearch") handleWebSearch(inp, state, result)
+	else if (name === "ToolSearch") handleToolSearch(inp, state, result)
+	else if (name === "Skill") handleSkill(inp, state, result)
 	else if (name === "Agent") handleAgent(inp, state, result)
 }

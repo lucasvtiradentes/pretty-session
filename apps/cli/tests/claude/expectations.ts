@@ -52,6 +52,8 @@ export const GREP_BODY = `
 `
 
 export const TODO_WRITE_BODY = `
+[tool-search] "select:TodoWrite"
+
 [todo-write]
    [x] step one
    [~] step two
@@ -63,6 +65,8 @@ export const TODO_WRITE_BODY = `
 
 export const NOTEBOOK_EDIT_BODY = `
 [bash] echo '{"cells":[],"metadata":{},"nbformat":4,"nbformat_minor":5}' > tmp-notebook-test.ipynb
+
+[tool-search] "select:NotebookEdit"
 
 
 [notebook-edit] <ABS_PATH>
@@ -111,6 +115,17 @@ export const TASK_UPDATE_BODY = `
 
 export const WEB_SEARCH_BODY = `
 [web-search] "vitest testing framework"
+
+`
+
+export const TOOL_SEARCH_BODY = `
+[tool-search] "select:WebFetch"
+
+`
+
+export const SKILL_BODY = `
+[skill] simple-skill
+   → Launching skill: simple-skill
 
 `
 

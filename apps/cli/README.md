@@ -22,13 +22,8 @@ CLI tool that parses Claude Code session JSONL files into readable, formatted ou
 | TaskUpdate      | yes         | no            | yes     |
 | TaskGet         | yes         | no            | yes     |
 | TaskList        | yes         | no            | yes     |
-
-# Next
-
-| Tool name       | Interactive | Prompt (`-p`) | Handled |
-|-----------------|-------------|---------------|---------|
-| ToolSearch      | yes         | yes           | no      |
-| Skill           | yes         | yes           | no      |
+| ToolSearch      | yes         | yes           | yes     |
+| Skill           | yes         | yes           | yes     |
 
 # Maybe later 
 

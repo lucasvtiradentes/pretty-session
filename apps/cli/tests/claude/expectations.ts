@@ -94,6 +94,18 @@ export const TASK_UPDATE_BODY = `
 
 `
 
+export const TASK_OUTPUT_BODY = `
+[task-output] #1 (non-blocking)
+   ✗ No task found with ID: 1
+
+`
+
+export const TASK_STOP_BODY = `
+[task-stop] #2
+   ✗ No task found with ID: 2
+
+`
+
 export const TOOL_SEARCH_BODY = `
 [tool-search] "select:WebFetch"
 

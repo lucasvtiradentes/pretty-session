@@ -11,6 +11,8 @@ export const HIDE_TOOLS = new Set([
 	"TaskList",
 	"TaskCreate",
 	"TaskUpdate",
+	"TaskOutput",
+	"TaskStop",
 	"Edit",
 	"MultiEdit",
 	"NotebookEdit",

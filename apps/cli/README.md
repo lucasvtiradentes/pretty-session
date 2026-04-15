@@ -24,13 +24,13 @@ CLI tool that parses Claude Code session JSONL files into readable, formatted ou
 | TaskList        | yes         | no            | yes     |
 | ToolSearch      | yes         | yes           | yes     |
 | Skill           | yes         | yes           | yes     |
+| TaskOutput      | yes         | yes           | yes     |
+| TaskStop        | yes         | yes           | yes     |
 
 # Maybe later 
 
 | Tool name       | Interactive | Prompt (`-p`) | Handled |
 |-----------------|-------------|---------------|---------|
-| TaskOutput      | yes         | yes           | no      |
-| TaskStop        | yes         | yes           | no      |
 |-----------------|-------------|---------------|---------|
 | EnterPlanMode   | yes         | yes           | no      |
 | ExitPlanMode    | yes         | yes           | no      |

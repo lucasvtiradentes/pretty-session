@@ -11,6 +11,8 @@ import { handleSkill } from "./skill"
 import { handleTaskCreate } from "./task-create"
 import { handleTaskGet } from "./task-get"
 import { handleTaskList } from "./task-list"
+import { handleTaskOutput } from "./task-output"
+import { handleTaskStop } from "./task-stop"
 import { handleTaskUpdate } from "./task-update"
 import { handleTodo } from "./todo-write"
 import { handleToolSearch } from "./tool-search"
@@ -32,6 +34,8 @@ export function dispatchTool(name: string, inp: Record<string, unknown>, state: 
 	else if (name === "TaskList") handleTaskList(inp, state, result)
 	else if (name === "TaskCreate") handleTaskCreate(inp, state, result)
 	else if (name === "TaskUpdate") handleTaskUpdate(inp, state, result)
+	else if (name === "TaskOutput") handleTaskOutput(inp, state, result)
+	else if (name === "TaskStop") handleTaskStop(inp, state, result)
 	else if (name === "WebFetch") handleWebFetch(inp, state, result)
 	else if (name === "WebSearch") handleWebSearch(inp, state, result)
 	else if (name === "ToolSearch") handleToolSearch(inp, state, result)

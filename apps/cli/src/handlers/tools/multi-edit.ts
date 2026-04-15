@@ -1,0 +1,7 @@
+import type { ParseResult, ParserState } from "../base"
+
+export function handleMultiEdit(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
+	const r = state.renderer
+	const path = (inp.file_path as string) ?? ""
+	result.add(`\n${state.sp}${r.orange(`[multi-edit] ${path}`)}\n`)
+}

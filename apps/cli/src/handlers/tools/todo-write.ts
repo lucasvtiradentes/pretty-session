@@ -3,7 +3,7 @@ import type { ParseResult, ParserState } from "../base"
 
 export function handleTodo(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer
-	result.add(`\n${state.sp}${r.yellow("[Todo]")}\n`)
+	result.add(`\n${state.sp}${r.yellow("[todo-write]")}\n`)
 	const todos = (inp.todos as Array<Record<string, unknown>>) ?? []
 	for (const todo of todos) {
 		const status = (todo.status as string) ?? "pending"

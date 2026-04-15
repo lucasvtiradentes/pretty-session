@@ -9,50 +9,50 @@ export const SESSION_FOOTER = `[done] <DURATION>s, $<COST>, <N> turns, <N> in / 
 `
 
 export const GLOB_BODY = `
-[Glob] **<PATH>.ts
+[glob] **<PATH>.ts
    → No files found
 
 `
 
 export const BASH_BODY = `
-[Bash] echo "hello from bash test" && date
+[bash] echo "hello from bash test" && date
    → hello from bash test
    → <DATE>
 
 `
 
 export const READ_BODY = `
-[Bash] echo -n "read tool works" > tmp-read-test.txt
+[bash] echo -n "read tool works" > tmp-read-test.txt
 
 
-[Read] <ABS_PATH>
+[read] <ABS_PATH>
    → <N>\tread tool works
 
 `
 
 export const WRITE_BODY = `
-[Write] <ABS_PATH>
+[write] <ABS_PATH>
    → File created successfully at: <ABS_PATH>
 
 `
 
 export const EDIT_BODY = `
-[Write] <ABS_PATH>
+[write] <ABS_PATH>
    → File created successfully at: <ABS_PATH>
 
 
-[Edit] <ABS_PATH>
+[edit] <ABS_PATH>
 
 `
 
 export const GREP_BODY = `
-[Grep] "version"
+[grep] "version"
    → No matches found
 
 `
 
-export const TODO_BODY = `
-[Todo]
+export const TODO_WRITE_BODY = `
+[todo-write]
    [x] step one
    [~] step two
    [ ] step three
@@ -61,32 +61,35 @@ export const TODO_BODY = `
 
 `
 
-export const NOTEBOOK_BODY = `
-[Bash] echo '{"cells":[],"metadata":{},"nbformat":4,"nbformat_minor":5}' > tmp-notebook-test.ipynb
+export const NOTEBOOK_EDIT_BODY = `
+[bash] echo '{"cells":[],"metadata":{},"nbformat":4,"nbformat_minor":5}' > tmp-notebook-test.ipynb
 
 
-[NotebookEdit] <ABS_PATH>
+[notebook-edit] <ABS_PATH>
    ✗ File has not been read yet. Read it first before writing to it.
 
 
-[Read] <ABS_PATH>
+[read] <ABS_PATH>
    → (Read completed with no output)
 
 
-[NotebookEdit] <ABS_PATH>
+[notebook-edit] <ABS_PATH>
    → Inserted cell <HEX> with print("test")
 
 `
 
-export const TASK_BODY = `
-[TaskCreate] "Fix login bug"
+export const TASK_CREATE_BODY = `
+[task-create] "Fix login bug"
 
-[TaskUpdate] #1 → completed
+`
+
+export const TASK_UPDATE_BODY = `
+[task-update] #1 → completed
 
 `
 
 export const AGENT_BODY = `
-[Agent] "test subagent" (general-purpose)
+[agent] "test subagent" (general-purpose)
    echo hello from subagent
 
 `

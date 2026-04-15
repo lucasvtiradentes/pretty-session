@@ -7,9 +7,9 @@ export function handleGrep(inp: Record<string, unknown>, state: ParserState, res
 	let label: string
 	if (path) {
 		path = path.split("/").pop() ?? path
-		label = `[Grep] "${pattern}" in ${path}`
+		label = `[grep] "${pattern}" in ${path}`
 	} else {
-		label = `[Grep] "${pattern}"`
+		label = `[grep] "${pattern}"`
 	}
 	result.add(`\n${state.sp}${r.purple(label)}\n`)
 }

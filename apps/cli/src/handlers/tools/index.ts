@@ -4,10 +4,12 @@ import { handleBash } from "./bash"
 import { handleEdit } from "./edit"
 import { handleGlob } from "./glob"
 import { handleGrep } from "./grep"
-import { handleNotebook } from "./notebook"
+import { handleMultiEdit } from "./multi-edit"
+import { handleNotebook } from "./notebook-edit"
 import { handleRead } from "./read"
-import { handleTaskCreate, handleTaskUpdate } from "./task"
-import { handleTodo } from "./todo"
+import { handleTaskCreate } from "./task-create"
+import { handleTaskUpdate } from "./task-update"
+import { handleTodo } from "./todo-write"
 import { handleWrite } from "./write"
 
 export function dispatchTool(name: string, inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
@@ -16,7 +18,8 @@ export function dispatchTool(name: string, inp: Record<string, unknown>, state: 
 	else if (name === "Read") handleRead(inp, state, result)
 	else if (name === "Glob") handleGlob(inp, state, result)
 	else if (name === "Grep") handleGrep(inp, state, result)
-	else if (name === "Edit" || name === "MultiEdit") handleEdit(name, inp, state, result)
+	else if (name === "Edit") handleEdit(inp, state, result)
+	else if (name === "MultiEdit") handleMultiEdit(inp, state, result)
 	else if (name === "NotebookEdit") handleNotebook(inp, state, result)
 	else if (name === "Bash") handleBash(inp, state, result)
 	else if (name === "TaskCreate") handleTaskCreate(inp, state, result)

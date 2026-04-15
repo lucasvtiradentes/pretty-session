@@ -22,7 +22,7 @@ export const BASH_BODY = `
 `
 
 export const READ_BODY = `
-[bash] echo -n "read tool works" > tmp-read-test.txt
+[bash] echo -n "read tool works" > <ABS_PATH>
 
 
 [read] <ABS_PATH>

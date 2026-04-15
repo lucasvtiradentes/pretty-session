@@ -2,9 +2,8 @@
 	"name": "pretty-sessions",
 	"private": true,
 	"scripts": {
-		"check": "turbo check",
-		"format": "biome format --write .",
-		"lint": "biome check .",
+		"check": "biome check . && turbo check",
+		"check:fix": "biome check --fix . && turbo check",
 		"knip": "knip",
 		"prepare": "husky"
 	},

@@ -14,9 +14,8 @@ jobs:
           node-version: "24"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
+      - run: pnpm check
       - run: pnpm knip
-      - run: pnpm turbo check
 
   test:
     strategy:
@@ -34,9 +33,8 @@ jobs:
       - run: pnpm turbo build
       - run: pnpm turbo test
 
-  live:
+  test-e2e:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

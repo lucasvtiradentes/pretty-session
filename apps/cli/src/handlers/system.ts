@@ -6,7 +6,7 @@ export function handleSystem(data: Record<string, unknown>, state: ParserState, 
 
 	if (data.subtype === "init") {
 		const sessionId = (data.session_id as string) ?? ""
-		const cwd = ((data.cwd as string) ?? "").replace(/\//g, "-").replace(/_/g, "-")
+		const cwd = ((data.cwd as string) ?? "").replace(/[\/_.]/g, "-")
 		const model = (data.model as string) ?? ""
 		const modelName = model.includes("-") ? model.split("-")[1] : model
 

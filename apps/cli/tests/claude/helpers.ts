@@ -7,11 +7,17 @@ const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), "../..")
 const SANDBOX_BASE = resolve(CLI_ROOT, "../../.sandbox")
 const HOME = process.env.HOME ?? ""
 
+const TEST_ENV = { ...process.env, PS_TOOL_RESULT_MAX_CHARS: "300", PS_READ_PREVIEW_LINES: "5" }
+
+// biome-ignore lint/suspicious/noControlCharactersInRegex: stripping ANSI escape codes
+export const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, "")
+
 export function replayFixture(fixturePath: string): string {
 	const output = execSync(`cat ${fixturePath} | pnpm --filter @pretty-sessions/cli dev claude`, {
 		encoding: "utf-8",
 		timeout: 30_000,
 		cwd: CLI_ROOT,
+		env: TEST_ENV,
 	})
 	return stripPnpmBanner(output)
 }

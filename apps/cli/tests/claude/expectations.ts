@@ -123,3 +123,10 @@ export const AGENT_BODY = `
    echo hello from subagent
 
 `
+
+export const TABLE_ROWS = [
+	"| Name  | Age | City |",
+	"|-------|-----|------|",
+	"| Alice | 30  | NYC  |",
+	"| Bob   | 7   | LA   |",
+]

@@ -8,9 +8,20 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 
 	if (typeof content === "string") {
 		if (state.mode === "replay" && state.sessionShown) {
-			const text = content.slice(0, 200)
+			const cleaned = content
+				.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, "")
+				.replace(/<task-notification>[\s\S]*?<\/task-notification>/g, "")
+				.replace(/<local-command-caveat>[\s\S]*?<\/local-command-caveat>/g, "")
+				.replace(/<local-command-stdout>[\s\S]*?<\/local-command-stdout>/g, "")
+				.replace(/<command-name>[\s\S]*?<\/command-name>/g, "")
+				.replace(/<command-message>[\s\S]*?<\/command-message>/g, "")
+				.replace(/<command-args>[\s\S]*?<\/command-args>/g, "")
+				.replace(/<user-prompt-submit-hook>[\s\S]*?<\/user-prompt-submit-hook>/g, "")
+				.trim()
+			if (!cleaned) return
+			const text = cleaned.slice(0, 200)
 			result.add(`\n${r.green("[user]")} ${text}`)
-			if (content.length > 200) result.add(r.dim("..."))
+			if (cleaned.length > 200) result.add(r.dim("..."))
 			result.add("\n")
 		}
 		return
@@ -25,7 +36,10 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 		const rawContent = first.content
 
 		if (typeof rawContent === "string") {
-			const toolContent = rawContent.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, "").trim()
+			const toolContent = rawContent
+				.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, "")
+				.replace(/\[rerun: \w+\]/g, "")
+				.trim()
 			if (!toolContent) return
 			if (
 				(toolContent.startsWith("Todos have been") || toolContent.startsWith("The file")) &&

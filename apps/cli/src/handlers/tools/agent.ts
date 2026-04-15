@@ -1,4 +1,4 @@
-import { INDENT } from "../../constants"
+import { INDENT, Tool } from "../../constants"
 import type { ParseResult, ParserState } from "../base"
 
 export function handleAgent(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
@@ -6,7 +6,7 @@ export function handleAgent(inp: Record<string, unknown>, state: ParserState, re
 	const description = ((inp.description as string) ?? "").slice(0, 50)
 	const prompt = (inp.prompt as string) ?? ""
 	const subagentType = (inp.subagent_type as string) ?? ""
-	const label = subagentType ? `[agent] "${description}" (${subagentType})` : `[agent] "${description}"`
+	const label = subagentType ? `[${Tool.Agent}] "${description}" (${subagentType})` : `[${Tool.Agent}] "${description}"`
 	result.add(`\n${state.sp}${r.blue(label)}\n`)
 	if (prompt) {
 		for (const line of prompt.split("\n")) {

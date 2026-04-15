@@ -1,3 +1,5 @@
+import { Tool } from "../../src/constants"
+
 export const SESSION_HEADER = `[session]
    id:    <UUID>
    path:  ~/.claude/projects/<CWD>/<UUID>.jsonl
@@ -9,52 +11,52 @@ export const SESSION_FOOTER = `[done] <DURATION>s, $<COST>, <N> turns, <N> in / 
 `
 
 export const GLOB_BODY = `
-[glob] **<PATH>.ts
+[${Tool.Glob}] **<PATH>.ts
    → No files found
 
 `
 
 export const BASH_BODY = `
-[bash] echo "hello from bash test" && date
+[${Tool.Bash}] echo "hello from bash test" && date
    → hello from bash test
    → <DATE>
 
 `
 
 export const READ_BODY = `
-[bash] echo -n "read tool works" > <ABS_PATH>
+[${Tool.Bash}] echo -n "read tool works" > <ABS_PATH>
 
 
-[read] <ABS_PATH>
+[${Tool.Read}] <ABS_PATH>
    → <N>\tread tool works
 
 `
 
 export const WRITE_BODY = `
-[write] <ABS_PATH>
+[${Tool.Write}] <ABS_PATH>
    → File created successfully at: <ABS_PATH>
 
 `
 
 export const EDIT_BODY = `
-[write] <ABS_PATH>
+[${Tool.Write}] <ABS_PATH>
    → File created successfully at: <ABS_PATH>
 
 
-[edit] <ABS_PATH>
+[${Tool.Edit}] <ABS_PATH>
 
 `
 
 export const GREP_BODY = `
-[grep] "version"
+[${Tool.Grep}] "version"
    → No matches found
 
 `
 
 export const TODO_WRITE_BODY = `
-[tool-search] "select:TodoWrite"
+[${Tool.ToolSearch}] "select:TodoWrite"
 
-[todo-write]
+[${Tool.TodoWrite}]
    [x] step one
    [~] step two
    [ ] step three
@@ -64,9 +66,9 @@ export const TODO_WRITE_BODY = `
 `
 
 export const TASK_CREATE_BODY = `
-[task-create] "Fix login bug"
+[${Tool.TaskCreate}] "Fix login bug"
 
-[task-create] "Add dark mode"
+[${Tool.TaskCreate}] "Add dark mode"
    → Task #1 created successfully: Add dark mode
 
    → Task #2 created successfully: Fix login bug
@@ -74,14 +76,14 @@ export const TASK_CREATE_BODY = `
 `
 
 export const TASK_LIST_BODY = `
-[task-list]
+[${Tool.TaskList}]
    → #1 [pending] Add dark mode
    → #2 [pending] Fix login bug
 
 `
 
 export const TASK_GET_BODY = `
-[task-get] #1
+[${Tool.TaskGet}] #1
    → Task #1: Add dark mode
    → Status: pending
    → Description: Implement dark mode toggle
@@ -89,36 +91,36 @@ export const TASK_GET_BODY = `
 `
 
 export const TASK_UPDATE_BODY = `
-[task-update] #1 → completed
+[${Tool.TaskUpdate}] #1 → completed
    → Updated task #1 status
 
 `
 
 export const TASK_OUTPUT_BODY = `
-[task-output] #1 (non-blocking)
+[${Tool.TaskOutput}] #1 (non-blocking)
    ✗ No task found with ID: 1
 
 `
 
 export const TASK_STOP_BODY = `
-[task-stop] #2
+[${Tool.TaskStop}] #2
    ✗ No task found with ID: 2
 
 `
 
 export const TOOL_SEARCH_BODY = `
-[tool-search] "select:WebFetch"
+[${Tool.ToolSearch}] "select:WebFetch"
 
 `
 
 export const SKILL_BODY = `
-[skill] simple-skill
+[${Tool.Skill}] simple-skill
    → Launching skill: simple-skill
 
 `
 
 export const AGENT_BODY = `
-[agent] "test subagent" (general-purpose)
+[${Tool.Agent}] "test subagent" (general-purpose)
    echo hello from subagent
 
 `

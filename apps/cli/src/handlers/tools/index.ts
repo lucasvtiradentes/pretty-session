@@ -1,3 +1,4 @@
+import { Tool } from "../../constants"
 import type { ParseResult, ParserState } from "../base"
 import { handleAgent } from "./agent"
 import { handleBash } from "./bash"
@@ -21,24 +22,24 @@ import { handleWebSearch } from "./web-search"
 import { handleWrite } from "./write"
 
 export function dispatchTool(name: string, inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
-	if (name === "TodoWrite") handleTodo(inp, state, result)
-	else if (name === "Write") handleWrite(inp, state, result)
-	else if (name === "Read") handleRead(inp, state, result)
-	else if (name === "Glob") handleGlob(inp, state, result)
-	else if (name === "Grep") handleGrep(inp, state, result)
-	else if (name === "Edit") handleEdit(inp, state, result)
-	else if (name === "MultiEdit") handleMultiEdit(inp, state, result)
-	else if (name === "NotebookEdit") handleNotebook(inp, state, result)
-	else if (name === "Bash") handleBash(inp, state, result)
-	else if (name === "TaskGet") handleTaskGet(inp, state, result)
-	else if (name === "TaskList") handleTaskList(inp, state, result)
-	else if (name === "TaskCreate") handleTaskCreate(inp, state, result)
-	else if (name === "TaskUpdate") handleTaskUpdate(inp, state, result)
-	else if (name === "TaskOutput") handleTaskOutput(inp, state, result)
-	else if (name === "TaskStop") handleTaskStop(inp, state, result)
-	else if (name === "WebFetch") handleWebFetch(inp, state, result)
-	else if (name === "WebSearch") handleWebSearch(inp, state, result)
-	else if (name === "ToolSearch") handleToolSearch(inp, state, result)
-	else if (name === "Skill") handleSkill(inp, state, result)
-	else if (name === "Agent") handleAgent(inp, state, result)
+	if (name === Tool.TodoWrite) handleTodo(inp, state, result)
+	else if (name === Tool.Write) handleWrite(inp, state, result)
+	else if (name === Tool.Read) handleRead(inp, state, result)
+	else if (name === Tool.Glob) handleGlob(inp, state, result)
+	else if (name === Tool.Grep) handleGrep(inp, state, result)
+	else if (name === Tool.Edit) handleEdit(inp, state, result)
+	else if (name === Tool.MultiEdit) handleMultiEdit(inp, state, result)
+	else if (name === Tool.NotebookEdit) handleNotebook(inp, state, result)
+	else if (name === Tool.Bash) handleBash(inp, state, result)
+	else if (name === Tool.TaskGet) handleTaskGet(inp, state, result)
+	else if (name === Tool.TaskList) handleTaskList(inp, state, result)
+	else if (name === Tool.TaskCreate) handleTaskCreate(inp, state, result)
+	else if (name === Tool.TaskUpdate) handleTaskUpdate(inp, state, result)
+	else if (name === Tool.TaskOutput) handleTaskOutput(inp, state, result)
+	else if (name === Tool.TaskStop) handleTaskStop(inp, state, result)
+	else if (name === Tool.WebFetch) handleWebFetch(inp, state, result)
+	else if (name === Tool.WebSearch) handleWebSearch(inp, state, result)
+	else if (name === Tool.ToolSearch) handleToolSearch(inp, state, result)
+	else if (name === Tool.Skill) handleSkill(inp, state, result)
+	else if (name === Tool.Agent) handleAgent(inp, state, result)
 }

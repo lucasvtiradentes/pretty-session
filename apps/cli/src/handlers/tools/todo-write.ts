@@ -1,9 +1,9 @@
-import { INDENT } from "../../constants"
+import { INDENT, Tool } from "../../constants"
 import type { ParseResult, ParserState } from "../base"
 
 export function handleTodo(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer
-	result.add(`\n${state.sp}${r.yellow("[todo-write]")}\n`)
+	result.add(`\n${state.sp}${r.yellow(`[${Tool.TodoWrite}]`)}\n`)
 	const todos = (inp.todos as Array<Record<string, unknown>>) ?? []
 	for (const todo of todos) {
 		const status = (todo.status as string) ?? "pending"

@@ -1,3 +1,4 @@
+import { Tool } from "../../constants"
 import type { ParseResult, ParserState } from "../base"
 
 export function handleGrep(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
@@ -7,9 +8,9 @@ export function handleGrep(inp: Record<string, unknown>, state: ParserState, res
 	let label: string
 	if (path) {
 		path = path.split("/").pop() ?? path
-		label = `[grep] "${pattern}" in ${path}`
+		label = `[${Tool.Grep}] "${pattern}" in ${path}`
 	} else {
-		label = `[grep] "${pattern}"`
+		label = `[${Tool.Grep}] "${pattern}"`
 	}
 	result.add(`\n${state.sp}${r.purple(label)}\n`)
 }

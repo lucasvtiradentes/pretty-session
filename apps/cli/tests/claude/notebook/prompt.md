@@ -1,0 +1,1 @@
+Use Bash to create a notebook file: echo '{"cells":[],"metadata":{},"nbformat":4,"nbformat_minor":5}' > tmp-notebook-test.ipynb. Then use NotebookEdit to insert a code cell with source print("test"). Do nothing else.

@@ -1,0 +1,1 @@
+Use TodoWrite to create a todo list with these items: "step one" (completed), "step two" (in_progress), "step three" (pending). Do nothing else.

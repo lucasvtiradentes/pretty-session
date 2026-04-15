@@ -1,0 +1,1 @@
+Use Write to create a file called tmp-write-test.txt with the content "write tool test". Do nothing else.

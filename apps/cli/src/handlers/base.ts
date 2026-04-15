@@ -11,6 +11,13 @@ export class ParserState {
 	inCode = false
 	pendingChar = ""
 	renderer: Renderer
+	pendingSessionId = ""
+	pendingCwd = ""
+	lastUsage: Record<string, number> = {}
+	lastModel = ""
+	lastDurationMs = 0
+	turnCount = 0
+	lastCostUsd = 0
 
 	constructor(mode = "stream") {
 		this.mode = mode

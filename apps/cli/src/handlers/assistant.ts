@@ -7,11 +7,9 @@ export function handleAssistantMessage(data: Record<string, unknown>, state: Par
 
 	if (!Array.isArray(content)) return
 
-	if (state.mode === "replay") {
-		for (const block of content) {
-			if (block.type === "text") {
-				result.add(state.renderer.renderMarkdown((block.text as string) ?? ""))
-			}
+	for (const block of content) {
+		if (block.type === "text") {
+			result.add(state.renderer.renderMarkdown((block.text as string) ?? ""))
 		}
 	}
 

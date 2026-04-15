@@ -1,0 +1,1 @@
+Say exactly "result test done" and nothing else.

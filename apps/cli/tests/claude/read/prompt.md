@@ -1,0 +1,1 @@
+Use Bash to run: echo -n "read tool works" > tmp-read-test.txt. Then use Read to read that file. Do nothing else.

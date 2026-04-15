@@ -1,0 +1,1 @@
+First use Write to create a file called tmp-edit-test.txt with content "before edit". Then use Edit to change "before edit" to "after edit" in that file. Do nothing else.

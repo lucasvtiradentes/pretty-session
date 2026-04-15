@@ -1,0 +1,1 @@
+Use the Agent tool to launch a subagent with subagent_type "general-purpose" and prompt "echo hello from subagent" and description "test subagent". Do nothing else.

@@ -11,9 +11,8 @@
 		"build": "tsup",
 		"dev": "dotenv tsx src/cli.ts",
 		"check": "tsc --noEmit",
-		"test": "vitest run",
-		"test:replay": "cat tests/fixtures/sample_session.jsonl | pnpm dev claude",
-		"test:e2e": "mkdir -p ../../.sandbox && cd ../../.sandbox && claude -p \"$(cat ../apps/cli/tests/prompts/test-prompt.md)\" --print --verbose --dangerously-skip-permissions --output-format stream-json --include-partial-messages | pnpm --filter @pretty-sessions/cli dev claude"
+		"test": "vitest run --exclude '**/**.e2e.test.ts'",
+		"test:e2e": "vitest run tests/claude/**/*.e2e.test.ts"
 	},
 	"devDependencies": {
 		"@types/node": "^25.6.0",

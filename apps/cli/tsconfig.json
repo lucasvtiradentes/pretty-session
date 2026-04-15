@@ -8,9 +8,9 @@
 		"types": ["node"],
 		"skipLibCheck": true,
 		"outDir": "dist",
-		"rootDir": "src",
+		"rootDir": ".",
 		"declaration": true,
 		"sourceMap": true
 	},
-	"include": ["src"]
+	"include": ["src", "tests"]
 }

@@ -1,0 +1,1 @@
+Use Bash to run: echo "hello from bash test" && date. Do nothing else.

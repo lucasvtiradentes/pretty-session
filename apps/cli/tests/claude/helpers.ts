@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process"
 import { copyFileSync, existsSync, readFileSync } from "node:fs"
 import { dirname, resolve } from "node:path"
+import { SESSION_FOOTER, SESSION_HEADER } from "./expectations"
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), "../..")
 const SANDBOX_DIR = resolve(CLI_ROOT, "../../.sandbox")
@@ -15,21 +16,22 @@ export function replayFixture(fixturePath: string): string {
 	return stripPnpmBanner(output)
 }
 
-export function runE2E(promptPath: string, fixturePath: string): string {
+export function runE2E(promptPath: string, dir: string): string {
 	const prompt = readFileSync(promptPath, "utf-8").trim()
 	const escapedPrompt = prompt.replace(/"/g, '\\"')
+	const streamFile = resolve(dir, "stream.jsonl")
 
 	execSync(`rm -rf ${SANDBOX_DIR} && mkdir -p ${SANDBOX_DIR}`)
 
 	const output = execSync(
-		`cd ${SANDBOX_DIR} && claude -p "${escapedPrompt}" --verbose --output-format stream-json --dangerously-skip-permissions | pnpm --filter @pretty-sessions/cli dev claude`,
+		`cd ${SANDBOX_DIR} && claude -p "${escapedPrompt}" --verbose --output-format stream-json --dangerously-skip-permissions | tee ${streamFile} | pnpm --filter @pretty-sessions/cli dev claude`,
 		{ encoding: "utf-8", timeout: 120_000, cwd: CLI_ROOT },
 	)
 
 	const cleaned = stripPnpmBanner(output)
 
-	const sessionJsonl = extractSessionPath(cleaned)
-	if (sessionJsonl) copyFileSync(sessionJsonl, fixturePath)
+	const sessionSrc = extractSessionPath(cleaned)
+	if (sessionSrc) copyFileSync(sessionSrc, resolve(dir, "session.jsonl"))
 
 	return cleaned
 }
@@ -75,16 +77,6 @@ export function sanitize(output: string): string {
 	)
 }
 
-const SESSION_HEADER = `[session]
-   id:    <UUID>
-   path:  ~/.claude/projects/<CWD>/<UUID>.jsonl
-   model: <MODEL>
-
-`
-
-const SESSION_FOOTER = `[done] <DURATION>s, $<COST>, <N> turns, <N> in / <N> out
-`
-
 export function expected(body: string): string {
 	return SESSION_HEADER + body + SESSION_FOOTER
 }
@@ -93,8 +85,12 @@ export function fixtureExists(path: string): boolean {
 	return existsSync(path)
 }
 
-export function fixturePath(dir: string): string {
-	return resolve(dir, "fixture.jsonl")
+export function sessionPath(dir: string): string {
+	return resolve(dir, "session.jsonl")
+}
+
+export function streamPath(dir: string): string {
+	return resolve(dir, "stream.jsonl")
 }
 
 export function promptPath(dir: string): string {

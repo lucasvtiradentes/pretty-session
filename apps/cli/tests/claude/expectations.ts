@@ -1,6 +1,12 @@
-export const SESSION_BODY = ""
+export const SESSION_HEADER = `[session]
+   id:    <UUID>
+   path:  ~/.claude/projects/<CWD>/<UUID>.jsonl
+   model: <MODEL>
 
-export const RESULT_BODY = ""
+`
+
+export const SESSION_FOOTER = `[done] <DURATION>s, $<COST>, <N> turns, <N> in / <N> out
+`
 
 export const GLOB_BODY = `
 [Glob] **<PATH>.ts

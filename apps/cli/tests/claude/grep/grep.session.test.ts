@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest"
 import { GREP_BODY } from "../expectations"
-import { expected, fixtureExists, fixturePath, replayFixture, sanitize } from "../helpers"
+import { expected, fixtureExists, replayFixture, sanitize, sessionPath } from "../helpers"
 
 const dir = new URL(".", import.meta.url).pathname
-const fixture = fixturePath(dir)
+const fixture = sessionPath(dir)
 
-describe("grep", () => {
+describe("grep - session mode", () => {
 	it.skipIf(!fixtureExists(fixture))("parses Grep tool", () => {
 		expect(sanitize(replayFixture(fixture))).toBe(expected(GREP_BODY))
 	})

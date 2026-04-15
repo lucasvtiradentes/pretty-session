@@ -88,6 +88,11 @@ export const TASK_UPDATE_BODY = `
 
 `
 
+export const WEB_SEARCH_BODY = `
+[web-search] "vitest testing framework"
+
+`
+
 export const AGENT_BODY = `
 [agent] "test subagent" (general-purpose)
    echo hello from subagent

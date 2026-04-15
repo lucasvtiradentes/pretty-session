@@ -10,6 +10,7 @@ import { handleRead } from "./read"
 import { handleTaskCreate } from "./task-create"
 import { handleTaskUpdate } from "./task-update"
 import { handleTodo } from "./todo-write"
+import { handleWebSearch } from "./web-search"
 import { handleWrite } from "./write"
 
 export function dispatchTool(name: string, inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
@@ -24,5 +25,6 @@ export function dispatchTool(name: string, inp: Record<string, unknown>, state: 
 	else if (name === "Bash") handleBash(inp, state, result)
 	else if (name === "TaskCreate") handleTaskCreate(inp, state, result)
 	else if (name === "TaskUpdate") handleTaskUpdate(inp, state, result)
+	else if (name === "WebSearch") handleWebSearch(inp, state, result)
 	else if (name === "Agent") handleAgent(inp, state, result)
 }

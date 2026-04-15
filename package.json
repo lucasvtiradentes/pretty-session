@@ -2,6 +2,7 @@
 	"name": "pretty-sessions",
 	"private": true,
 	"scripts": {
+		"build": "turbo build",
 		"check": "biome check . && turbo check",
 		"check:fix": "biome check --fix . && turbo check",
 		"knip": "knip",

@@ -2,9 +2,20 @@ name: CI
 
 on:
   workflow_call:
+    secrets:
+      TURBO_TOKEN:
+        required: true
+      TURBO_TEAM:
+        required: true
+      CLAUDE_CODE_OAUTH_TOKEN:
+        required: false
+
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 jobs:
-  check:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,10 +25,12 @@ jobs:
           node-version: "24"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
+      - run: pnpm build
       - run: pnpm check
       - run: pnpm knip
 
   test:
+    needs: build
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -34,6 +47,7 @@ jobs:
       - run: pnpm turbo test
 
   test-e2e:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

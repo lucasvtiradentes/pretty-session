@@ -1,1 +1,1 @@
-Use TaskCreate to create a task with subject "Fix login bug" and description "Fix it". Then use TaskGet to get task #1. Then use TaskUpdate to mark task #1 as completed. Do nothing else.
+Use TaskCreate to create a task with subject "Fix login bug" and description "Fix it". Use TaskCreate again to create a second task with subject "Add dark mode" and description "Implement dark mode toggle". Then use TaskList to list all tasks. Then use TaskGet to get task #1. Then use TaskUpdate to mark task #1 as completed. Do nothing else.

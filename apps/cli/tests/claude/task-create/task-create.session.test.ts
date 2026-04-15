@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest"
 import { TASK_CREATE_BODY } from "../expectations"
-import { fixtureExists, replayFixture, sanitize, sessionPath } from "../helpers"
+import { expected, fixtureExists, replayFixture, sanitize, sessionPath } from "../helpers"
 
 const dir = new URL(".", import.meta.url).pathname
 const fixture = sessionPath(dir)
 
 describe("task-create - session mode", () => {
 	it.skipIf(!fixtureExists(fixture))("parses TaskCreate tool", () => {
-		const output = sanitize(replayFixture(fixture))
-		expect(output).toContain(TASK_CREATE_BODY.trim())
+		expect(sanitize(replayFixture(fixture))).toBe(expected(TASK_CREATE_BODY))
 	})
 })

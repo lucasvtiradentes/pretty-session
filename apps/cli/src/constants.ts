@@ -8,6 +8,7 @@ export const HIDE_TOOLS = new Set([
 	"Grep",
 	"Bash",
 	"TaskGet",
+	"TaskList",
 	"TaskCreate",
 	"TaskUpdate",
 	"Edit",

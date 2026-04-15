@@ -80,15 +80,26 @@ export const NOTEBOOK_EDIT_BODY = `
 
 export const TASK_CREATE_BODY = `
 [task-create] "Fix login bug"
-   → Task #1 created successfully: Fix login bug
+
+[task-create] "Add dark mode"
+   → Task #1 created successfully: Add dark mode
+
+   → Task #2 created successfully: Fix login bug
+
+`
+
+export const TASK_LIST_BODY = `
+[task-list]
+   → #1 [pending] Add dark mode
+   → #2 [pending] Fix login bug
 
 `
 
 export const TASK_GET_BODY = `
 [task-get] #1
-   → Task #1: Fix login bug
+   → Task #1: Add dark mode
    → Status: pending
-   → Description: Fix it
+   → Description: Implement dark mode toggle
 
 `
 

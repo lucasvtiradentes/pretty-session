@@ -24,7 +24,7 @@ export enum Tool {
 	Agent = "Agent",
 }
 
-export const HIDE_TOOLS = new Set(Object.values(Tool))
+export const HIDE_TOOLS: Set<string> = new Set(Object.values(Tool))
 
 export const TOOL_RESULT_MAX_CHARS = Number(process.env.PS_TOOL_RESULT_MAX_CHARS ?? 300)
 export const READ_PREVIEW_LINES = Number(process.env.PS_READ_PREVIEW_LINES ?? 5)

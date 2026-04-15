@@ -16,16 +16,16 @@ CLI tool that parses Claude Code session JSONL files into readable, formatted ou
 | Agent           | yes         | yes           | yes     |
 | NotebookEdit    | yes         | yes           | yes     |
 | TodoWrite       | yes         | yes           | yes     |
-| TaskCreate      | yes         | no            | yes     |
-| TaskUpdate      | yes         | no            | yes     |
 | WebSearch       | yes         | yes           | yes     |
 | WebFetch        | yes         | yes           | yes     |
+| TaskCreate      | yes         | no            | yes     |
+| TaskUpdate      | yes         | no            | yes     |
+| TaskGet         | yes         | no            | yes     |
 
 # Next
 
 | Tool name       | Interactive | Prompt (`-p`) | Handled |
 |-----------------|-------------|---------------|---------|
-| TaskGet         | yes         | no            | no      |
 | TaskList        | yes         | no            | no      |
 | ToolSearch      | yes         | yes           | no      |
 | Skill           | yes         | yes           | no      |

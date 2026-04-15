@@ -8,6 +8,7 @@ import { handleMultiEdit } from "./multi-edit"
 import { handleNotebook } from "./notebook-edit"
 import { handleRead } from "./read"
 import { handleTaskCreate } from "./task-create"
+import { handleTaskGet } from "./task-get"
 import { handleTaskUpdate } from "./task-update"
 import { handleTodo } from "./todo-write"
 import { handleWebFetch } from "./web-fetch"
@@ -24,6 +25,7 @@ export function dispatchTool(name: string, inp: Record<string, unknown>, state: 
 	else if (name === "MultiEdit") handleMultiEdit(inp, state, result)
 	else if (name === "NotebookEdit") handleNotebook(inp, state, result)
 	else if (name === "Bash") handleBash(inp, state, result)
+	else if (name === "TaskGet") handleTaskGet(inp, state, result)
 	else if (name === "TaskCreate") handleTaskCreate(inp, state, result)
 	else if (name === "TaskUpdate") handleTaskUpdate(inp, state, result)
 	else if (name === "WebFetch") handleWebFetch(inp, state, result)

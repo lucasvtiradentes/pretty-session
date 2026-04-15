@@ -80,11 +80,21 @@ export const NOTEBOOK_EDIT_BODY = `
 
 export const TASK_CREATE_BODY = `
 [task-create] "Fix login bug"
+   → Task #1 created successfully: Fix login bug
+
+`
+
+export const TASK_GET_BODY = `
+[task-get] #1
+   → Task #1: Fix login bug
+   → Status: pending
+   → Description: Fix it
 
 `
 
 export const TASK_UPDATE_BODY = `
 [task-update] #1 → completed
+   → Updated task #1 status
 
 `
 

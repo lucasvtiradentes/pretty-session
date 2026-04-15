@@ -31,15 +31,19 @@ CLI tool that parses Claude Code session JSONL files into readable, formatted ou
 |-----------------|-------------|---------------|---------|
 | TaskOutput      | yes         | yes           | no      |
 | TaskStop        | yes         | yes           | no      |
-| ScheduleWakeup  | yes         | yes           | no      |
-| Monitor         | yes         | yes           | no      |
-| LSP             | yes         | yes           | no      |
+|-----------------|-------------|---------------|---------|
 | EnterPlanMode   | yes         | yes           | no      |
 | ExitPlanMode    | yes         | yes           | no      |
+|-----------------|-------------|---------------|---------|
 | EnterWorktree   | yes         | yes           | no      |
 | ExitWorktree    | yes         | yes           | no      |
+|-----------------|-------------|---------------|---------|
 | CronCreate      | yes         | yes           | no      |
 | CronDelete      | yes         | yes           | no      |
 | CronList        | yes         | yes           | no      |
+|-----------------|-------------|---------------|---------|
+| ScheduleWakeup  | yes         | yes           | no      |
+| Monitor         | yes         | yes           | no      |
+| LSP             | yes         | yes           | no      |
 | RemoteTrigger   | yes         | yes           | no      |
 | AskUserQuestion | yes         | yes           | no      |

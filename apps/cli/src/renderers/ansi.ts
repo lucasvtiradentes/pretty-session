@@ -89,9 +89,15 @@ export class AnsiRenderer implements Renderer {
 	renderMarkdown(text: string) {
 		let result = text
 		result = formatTables(result)
+		const codeBlocks: string[] = []
+		result = result.replace(/```[\s\S]*?```/g, (m) => {
+			codeBlocks.push(m.replace(/```\w*\n?/g, "").replace(/```$/g, ""))
+			return `CBLK${codeBlocks.length - 1}CBLK`
+		})
 		result = result.replace(/\*\*(.+?)\*\*/g, `${BOLD}$1${RESET}`)
 		result = result.replace(/__(.+?)__/g, `${BOLD}$1${RESET}`)
 		result = result.replace(/`([^`]+)`/g, `${INVERSE}$1${RESET}`)
+		result = result.replace(/CBLK(\d+)CBLK/g, (_, i) => `${DIM}${codeBlocks[Number(i)]}${RESET}`)
 		return result
 	}
 

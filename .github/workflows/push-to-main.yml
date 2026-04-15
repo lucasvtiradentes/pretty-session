@@ -7,4 +7,7 @@ on:
 jobs:
   ci:
     uses: ./.github/workflows/callable-ci.yml
+    with:
+      run_tests: true
+      run_e2e_tests: false
     secrets: inherit

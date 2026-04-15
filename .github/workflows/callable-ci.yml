@@ -2,6 +2,13 @@ name: CI
 
 on:
   workflow_call:
+    inputs:
+      run_tests:
+        type: boolean
+        required: true
+      run_e2e_tests:
+        type: boolean
+        required: true
     secrets:
       TURBO_TOKEN:
         required: true
@@ -26,6 +33,7 @@ jobs:
       - run: pnpm knip
 
   test:
+    if: ${{ inputs.run_tests }}
     needs: build
     strategy:
       matrix:
@@ -37,6 +45,7 @@ jobs:
       - run: pnpm turbo test
 
   test-e2e:
+    if: ${{ inputs.run_e2e_tests }}
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -44,7 +53,7 @@ jobs:
       - uses: ./.github/actions/setup-and-install
 
       - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
+        run: curl -fsSL https://claude.ai/install.sh | bash
 
       - name: Run e2e tests
         timeout-minutes: 10

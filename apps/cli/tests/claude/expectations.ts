@@ -18,13 +18,11 @@ export const BASH_BODY = `
 [Bash] echo "hello from bash test" && date
    → hello from bash test
    → <DATE>
-   →
 
 `
 
 export const READ_BODY = `
 [Bash] echo -n "read tool works" > tmp-read-test.txt
-   →
 
 
 [Read] <ABS_PATH>
@@ -44,6 +42,7 @@ export const EDIT_BODY = `
 
 
 [Edit] <ABS_PATH>
+
 `
 
 export const GREP_BODY = `
@@ -64,7 +63,6 @@ export const TODO_BODY = `
 
 export const NOTEBOOK_BODY = `
 [Bash] echo '{"cells":[],"metadata":{},"nbformat":4,"nbformat_minor":5}' > tmp-notebook-test.ipynb
-   →
 
 
 [NotebookEdit] <ABS_PATH>
@@ -83,4 +81,5 @@ export const NOTEBOOK_BODY = `
 export const AGENT_BODY = `
 [Agent] "test subagent" (general-purpose)
    echo hello from subagent
+
 `

@@ -74,8 +74,9 @@ export function sanitize(output: string): string {
 			.replace(/\d+\t/g, "<N>\t")
 			.replace(/→ \(Bash completed with no output\)/g, "→")
 			.replace(/→ \n/g, "→\n")
+			.replace(/^ +→\n/gm, "")
 			.replace(/^(?!\[|\s{3}|\n$)[^\n]+\n?/gm, "")
-			.replace(/\n{3,}(?=\[done\])/g, "\n\n")
+			.replace(/\n+\[done\]/g, "\n\n[done]")
 	)
 }
 

@@ -22,9 +22,11 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 	const contentType = (first.type as string) ?? ""
 
 	if (contentType === "tool_result") {
-		const toolContent = first.content
+		const rawContent = first.content
 
-		if (typeof toolContent === "string") {
+		if (typeof rawContent === "string") {
+			const toolContent = rawContent.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, "").trim()
+			if (!toolContent) return
 			if (
 				(toolContent.startsWith("Todos have been") || toolContent.startsWith("The file")) &&
 				toolContent.includes("has been")

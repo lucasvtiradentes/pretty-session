@@ -1,1 +1,1 @@
-Use the Skill tool with skill "simple-test". Do nothing else.
+Use the Skill tool with skill "simple-skill". Do nothing else.

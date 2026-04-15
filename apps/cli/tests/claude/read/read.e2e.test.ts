@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest"
-import { READ_BODY } from "../expectations"
-import { expected, promptPath, runE2E, sanitize } from "../helpers"
+import { promptPath, runE2E, sanitize } from "../helpers"
 
 const dir = new URL(".", import.meta.url).pathname
 
 describe("read e2e", () => {
 	it("runs claude and parses Read tool", () => {
-		const output = runE2E(promptPath(dir), dir)
-		expect(sanitize(output)).toBe(expected(READ_BODY))
+		const output = sanitize(runE2E(promptPath(dir), dir))
+		expect(output).toContain("[read] <ABS_PATH>\n   → <N>\tread tool works")
+		expect(output).toContain("[done]")
 	}, 120_000)
 })

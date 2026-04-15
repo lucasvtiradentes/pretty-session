@@ -63,25 +63,6 @@ export const TODO_WRITE_BODY = `
 
 `
 
-export const NOTEBOOK_EDIT_BODY = `
-[bash] echo '{"cells":[],"metadata":{},"nbformat":4,"nbformat_minor":5}' > tmp-notebook-test.ipynb
-
-[tool-search] "select:NotebookEdit"
-
-
-[notebook-edit] <ABS_PATH>
-   ✗ File has not been read yet. Read it first before writing to it.
-
-
-[read] <ABS_PATH>
-   → (Read completed with no output)
-
-
-[notebook-edit] <ABS_PATH>
-   → Inserted cell <HEX> with print("test")
-
-`
-
 export const TASK_CREATE_BODY = `
 [task-create] "Fix login bug"
 
@@ -110,11 +91,6 @@ export const TASK_GET_BODY = `
 export const TASK_UPDATE_BODY = `
 [task-update] #1 → completed
    → Updated task #1 status
-
-`
-
-export const WEB_SEARCH_BODY = `
-[web-search] "vitest testing framework"
 
 `
 

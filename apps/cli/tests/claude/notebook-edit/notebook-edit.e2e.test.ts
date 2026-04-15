@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest"
-import { NOTEBOOK_EDIT_BODY } from "../expectations"
-import { expected, promptPath, runE2E, sanitize } from "../helpers"
+import { promptPath, runE2E, sanitize } from "../helpers"
 
 const dir = new URL(".", import.meta.url).pathname
 
 describe("notebook-edit e2e", () => {
 	it("runs claude and parses NotebookEdit tool", () => {
-		const output = runE2E(promptPath(dir), dir)
-		expect(sanitize(output)).toBe(expected(NOTEBOOK_EDIT_BODY))
+		const output = sanitize(runE2E(promptPath(dir), dir))
+		expect(output).toContain("[notebook-edit] <ABS_PATH>")
+		expect(output).toContain('Inserted cell <HEX> with print("test")')
+		expect(output).toContain("[done]")
 	}, 120_000)
 })

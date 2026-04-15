@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path"
 import { SESSION_FOOTER, SESSION_HEADER } from "./expectations"
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), "../..")
-const SANDBOX_DIR = resolve(CLI_ROOT, "../../.sandbox")
+const SANDBOX_BASE = resolve(CLI_ROOT, "../../.sandbox")
 const HOME = process.env.HOME ?? ""
 
 export function replayFixture(fixturePath: string): string {
@@ -20,11 +20,13 @@ export function runE2E(promptPath: string, dir: string): string {
 	const prompt = readFileSync(promptPath, "utf-8").trim()
 	const escapedPrompt = prompt.replace(/"/g, '\\"')
 	const streamFile = resolve(dir, "stream.jsonl")
-
-	execSync(`rm -rf ${SANDBOX_DIR} && mkdir -p ${SANDBOX_DIR}`)
+	const model = "claude-sonnet-4-6"
+	const testName = dir.split("/").filter(Boolean).pop() ?? "default"
+	const sandboxDir = resolve(SANDBOX_BASE, testName)
+	execSync(`rm -rf ${sandboxDir} && mkdir -p ${sandboxDir}`)
 
 	const output = execSync(
-		`cd ${SANDBOX_DIR} && claude -p "${escapedPrompt}" --verbose --output-format stream-json --dangerously-skip-permissions | tee ${streamFile} | pnpm --filter @pretty-sessions/cli dev claude`,
+		`cd ${sandboxDir} && claude -p "${escapedPrompt}" --model ${model} --verbose --output-format stream-json --dangerously-skip-permissions | tee ${streamFile} | pnpm --filter @pretty-sessions/cli dev claude`,
 		{ encoding: "utf-8", timeout: 120_000, cwd: CLI_ROOT },
 	)
 
@@ -32,6 +34,8 @@ export function runE2E(promptPath: string, dir: string): string {
 
 	const sessionSrc = extractSessionPath(cleaned)
 	if (sessionSrc) copyFileSync(sessionSrc, resolve(dir, "session.jsonl"))
+
+	execSync(`rm -rf ${sandboxDir}`)
 
 	return cleaned
 }

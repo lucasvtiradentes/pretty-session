@@ -4,6 +4,7 @@ import type { Renderer } from "../renderers/base"
 export class ParserState {
 	mode: string
 	currentTool = ""
+	sessionShown = false
 	subagentDepth = 0
 	sp = ""
 	inBold = false

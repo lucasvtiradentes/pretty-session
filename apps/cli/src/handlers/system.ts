@@ -5,6 +5,8 @@ export function handleSystem(data: Record<string, unknown>, state: ParserState, 
 	const r = state.renderer
 
 	if (data.subtype === "init") {
+		if (state.sessionShown) return
+		state.sessionShown = true
 		const sessionId = (data.session_id as string) ?? ""
 		const cwd = ((data.cwd as string) ?? "").replace(/[\/_.]/g, "-")
 		const model = (data.model as string) ?? ""

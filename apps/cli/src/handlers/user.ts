@@ -7,7 +7,7 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 	const content = message.content
 
 	if (typeof content === "string") {
-		if (state.mode === "replay") {
+		if (state.mode === "replay" && state.sessionShown) {
 			const text = content.slice(0, 200)
 			result.add(`\n${r.green("[user]")} ${text}`)
 			if (content.length > 200) result.add(r.dim("..."))

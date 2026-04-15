@@ -66,15 +66,16 @@ export function sanitize(output: string): string {
 			.replace(/\[rerun: b\d+\]/g, "")
 			.replace(/(Mon|Tue|Wed|Thu|Fri|Sat|Sun) \w+ \d+ [\d:]+ [+-]?\w+ \d+/g, "<DATE>")
 			.replace(/\b[0-9a-f]{8}\b/g, "<HEX>")
-			.replace(/\/Users\/[^\s]+/g, "<ABS_PATH>")
+			.replace(/\/(?:Users|home|root|tmp)\b[^\s]*/g, "<ABS_PATH>")
 			.replace(/\/[^\s]+\.txt/g, "<PATH>.txt")
 			.replace(/\/[^\s]+\.ipynb/g, "<PATH>.ipynb")
 			.replace(/\/[^\s]+\.json\b/g, "<PATH>.json")
 			.replace(/\/[^\s]+\.ts\b/g, "<PATH>.ts")
 			.replace(/\d+\t/g, "<N>\t")
+			.replace(/→ \(Bash completed with no output\)/g, "→")
 			.replace(/→ \n/g, "→\n")
 			.replace(/^(?!\[|\s{3}|\n$)[^\n]+\n?/gm, "")
-			.replace(/\n{4,}/g, "\n\n\n")
+			.replace(/\n{3,}(?=\[done\])/g, "\n\n")
 	)
 }
 

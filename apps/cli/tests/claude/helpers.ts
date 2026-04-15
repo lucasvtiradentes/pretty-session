@@ -74,6 +74,7 @@ export function sanitize(output: string): string {
 			.replace(/\d+\t/g, "<N>\t")
 			.replace(/→ \n/g, "→\n")
 			.replace(/^(?!\[|\s{3}|\n$)[^\n]+\n?/gm, "")
+			.replace(/\n{4,}/g, "\n\n\n")
 	)
 }
 

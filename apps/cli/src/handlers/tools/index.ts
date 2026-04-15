@@ -6,7 +6,7 @@ import { handleGlob } from "./glob"
 import { handleGrep } from "./grep"
 import { handleNotebook } from "./notebook"
 import { handleRead } from "./read"
-import { handleTask } from "./task"
+import { handleTaskCreate, handleTaskUpdate } from "./task"
 import { handleTodo } from "./todo"
 import { handleWrite } from "./write"
 
@@ -19,6 +19,7 @@ export function dispatchTool(name: string, inp: Record<string, unknown>, state: 
 	else if (name === "Edit" || name === "MultiEdit") handleEdit(name, inp, state, result)
 	else if (name === "NotebookEdit") handleNotebook(inp, state, result)
 	else if (name === "Bash") handleBash(inp, state, result)
-	else if (name === "Task") handleTask(inp, state, result)
+	else if (name === "TaskCreate") handleTaskCreate(inp, state, result)
+	else if (name === "TaskUpdate") handleTaskUpdate(inp, state, result)
 	else if (name === "Agent") handleAgent(inp, state, result)
 }

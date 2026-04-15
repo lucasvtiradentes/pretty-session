@@ -1,12 +1,16 @@
 import type { ParseResult, ParserState } from "../base"
 
-export function handleTask(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
+export function handleTaskCreate(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer
-	const prompt = ((inp.prompt as string) ?? (inp.description as string) ?? "").slice(0, 50)
-	const model = (inp.model as string) ?? "sonnet"
-	const label = `[Task] "${prompt}" (${model})`
+	const subject = ((inp.subject as string) ?? "").slice(0, 60)
+	const label = `[TaskCreate] "${subject}"`
 	result.add(`\n${state.sp}${r.blue(label)}\n`)
-	if (state.mode === "stream") {
-		state.incrementDepth()
-	}
+}
+
+export function handleTaskUpdate(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
+	const r = state.renderer
+	const taskId = (inp.taskId as string) ?? ""
+	const status = (inp.status as string) ?? ""
+	const label = `[TaskUpdate] #${taskId} → ${status}`
+	result.add(`\n${state.sp}${r.blue(label)}\n`)
 }

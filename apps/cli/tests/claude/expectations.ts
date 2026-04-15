@@ -78,6 +78,13 @@ export const NOTEBOOK_BODY = `
 
 `
 
+export const TASK_BODY = `
+[TaskCreate] "Fix login bug"
+
+[TaskUpdate] #1 → completed
+
+`
+
 export const AGENT_BODY = `
 [Agent] "test subagent" (general-purpose)
    echo hello from subagent

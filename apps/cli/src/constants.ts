@@ -12,6 +12,7 @@ export const HIDE_TOOLS = new Set([
 	"Edit",
 	"MultiEdit",
 	"NotebookEdit",
+	"WebFetch",
 	"WebSearch",
 	"Agent",
 ])

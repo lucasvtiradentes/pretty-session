@@ -1,0 +1,1 @@
+Use the WebFetch tool to fetch "https://example.com". Do nothing else.

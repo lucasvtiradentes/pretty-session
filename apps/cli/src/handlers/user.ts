@@ -20,7 +20,7 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 				.trim()
 			if (!cleaned) return
 			const text = cleaned.slice(0, 200)
-			if (state.turnCount > 1) result.add(`\n\n${r.dim("----")}\n`)
+			if (state.turnCount > 1) result.add(`\n${r.dim("----")}\n`)
 			result.add(`\n${r.green("[user]")} ${text}`)
 			if (cleaned.length > 200) result.add(r.dim("..."))
 			result.add(`\n\n${r.dim("----")}\n`)
@@ -50,7 +50,7 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 			}
 			if (toolContent.includes("<tool_use_error>")) {
 				const errorMsg = toolContent.replace(/<[^>]*>/g, "")
-				result.add(`${state.sp}${r.red(`${INDENT}✗ ${errorMsg}`)}\n\n`)
+				result.add(`${state.sp}${r.red(`${INDENT}✗ ${errorMsg}`)}\n`)
 				return
 			}
 
@@ -63,11 +63,10 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 				if (toolContent.split("\n").length > READ_PREVIEW_LINES) {
 					result.add(`${state.sp}${INDENT}...\n`)
 				}
-				result.add("\n")
 			} else {
 				if (TOOL_RESULT_MAX_CHARS === 0) return
 				const text = TOOL_RESULT_MAX_CHARS < 0 ? toolContent : toolContent.slice(0, TOOL_RESULT_MAX_CHARS)
-				result.add(`${state.sp}${r.dim(`${INDENT}→ ${text}`)}\n\n`)
+				result.add(`${state.sp}${r.dim(`${INDENT}→ ${text}`)}\n`)
 			}
 		}
 	}

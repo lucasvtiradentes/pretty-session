@@ -41,7 +41,6 @@ export const EDIT_BODY = `
 [${Tool.Write}] <ABS_PATH>
    → File created successfully at: <ABS_PATH>
 
-
 [${Tool.Edit}] <ABS_PATH>
 
 `
@@ -69,7 +68,6 @@ export const TASK_CREATE_BODY = `
 
 [${Tool.TaskCreate}] "Add dark mode"
    → Task #1 created successfully: Add dark mode
-
    → Task #2 created successfully: Fix login bug
 
 `

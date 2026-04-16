@@ -9,7 +9,10 @@ export function handleAssistantMessage(data: Record<string, unknown>, state: Par
 
 	for (const block of content) {
 		if (block.type === "text") {
-			result.add(state.renderer.renderMarkdown((block.text as string) ?? ""))
+			const raw = ((block.text as string) ?? "").replace(/^\n+|\n+$/g, "")
+			if (!raw) continue
+			const rendered = state.renderer.renderMarkdown(raw).replace(/\n+$/, "")
+			if (rendered) result.add(`\n${rendered}\n`)
 		}
 	}
 

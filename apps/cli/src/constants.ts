@@ -1,3 +1,10 @@
+export enum Provider {
+	Claude = "claude",
+	Codex = "codex",
+}
+
+export const PROVIDER_VALUES = Object.values(Provider) as string[]
+
 export const CLI_NAME = "pretty-sessions"
 export const INDENT = "   "
 

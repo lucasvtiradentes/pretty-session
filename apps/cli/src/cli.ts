@@ -1,13 +1,11 @@
 import { createInterface } from "node:readline"
-import { CLI_NAME } from "./constants"
+import { CLI_NAME, PROVIDER_VALUES, Provider } from "./constants"
 import { ParserState } from "./providers/claude/handlers/base"
 import { parseJsonLine } from "./providers/claude/parser"
 import { CodexState, finalizeCodex, parseCodexLine } from "./providers/codex/parser"
 import type { ParseResult } from "./result"
 
 const VERSION = "0.1.0"
-
-const PROVIDERS = new Set(["claude", "codex"])
 
 function printHelp() {
 	console.log(`${CLI_NAME} - Pretty formatter for AI coding agent sessions
@@ -16,8 +14,8 @@ Usage:
   <provider-output> | ${CLI_NAME} <provider>
 
 Providers:
-  claude          Claude Code stream-json format
-  codex           OpenAI Codex CLI session format
+  ${Provider.Claude}          Claude Code (stream + session auto-detected)
+  ${Provider.Codex}           OpenAI Codex CLI (stream + session auto-detected)
 
 Options:
   -h, --help         Show this help
@@ -28,8 +26,23 @@ Environment:
   PS_READ_PREVIEW_LINES      Lines to preview from Read (default: 5, 0=hide)
 
 Examples:
-  claude -p "explain this code" --output-format stream-json | ${CLI_NAME} claude
-  cat session.jsonl | ${CLI_NAME} claude`)
+  claude -p "explain this code" --output-format stream-json | ${CLI_NAME} ${Provider.Claude}
+  cat ~/.claude/projects/.../session.jsonl | ${CLI_NAME} ${Provider.Claude}
+  codex exec "do something" --json | ${CLI_NAME} ${Provider.Codex}
+  cat ~/.codex/sessions/.../session.jsonl | ${CLI_NAME} ${Provider.Codex}`)
+}
+
+function createParser(provider: Provider): { parseLine: (line: string) => ParseResult; onClose?: () => ParseResult } {
+	switch (provider) {
+		case Provider.Claude: {
+			const state = new ParserState()
+			return { parseLine: (line) => parseJsonLine(line, state) }
+		}
+		case Provider.Codex: {
+			const state = new CodexState()
+			return { parseLine: (line) => parseCodexLine(line, state), onClose: () => finalizeCodex(state) }
+		}
+	}
 }
 
 function main() {
@@ -45,25 +58,15 @@ function main() {
 		process.exit(0)
 	}
 
-	const provider = args[0]
+	const providerArg = args[0]
 
-	if (!PROVIDERS.has(provider)) {
-		console.error(`Unknown provider: ${provider}`)
+	if (!PROVIDER_VALUES.includes(providerArg)) {
+		console.error(`Unknown provider: ${providerArg}`)
 		console.error(`Run '${CLI_NAME} --help' for usage`)
 		process.exit(1)
 	}
 
-	let parseLine: (line: string) => ParseResult
-	let onClose: (() => ParseResult) | undefined
-
-	if (provider === "claude") {
-		const state = new ParserState("stream")
-		parseLine = (line) => parseJsonLine(line, state)
-	} else {
-		const state = new CodexState()
-		parseLine = (line) => parseCodexLine(line, state)
-		onClose = () => finalizeCodex(state)
-	}
+	const { parseLine, onClose } = createParser(providerArg as Provider)
 
 	const rl = createInterface({ input: process.stdin })
 

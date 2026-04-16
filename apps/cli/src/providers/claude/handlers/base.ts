@@ -20,8 +20,8 @@ export class ParserState {
 	turnCount = 0
 	lastCostUsd = 0
 
-	constructor(mode = "stream") {
-		this.mode = mode
+	constructor() {
+		this.mode = "stream"
 		this.renderer = new AnsiRenderer()
 	}
 

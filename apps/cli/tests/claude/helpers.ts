@@ -32,7 +32,7 @@ export function runE2E(promptPath: string, dir: string): string {
 	execSync(`rm -rf ${sandboxDir} && mkdir -p ${sandboxDir}`)
 
 	const output = execSync(
-		`cd ${sandboxDir} && claude --bare -p "${escapedPrompt}" --model ${model} --verbose --output-format stream-json --dangerously-skip-permissions | tee ${streamFile} | pnpm --filter @pretty-sessions/cli dev claude`,
+		`cd ${sandboxDir} && claude -p "${escapedPrompt}" --model ${model} --verbose --output-format stream-json --dangerously-skip-permissions | tee ${streamFile} | pnpm --filter @pretty-sessions/cli dev claude`,
 		{ encoding: "utf-8", timeout: 120_000, cwd: CLI_ROOT, env: TEST_ENV },
 	)
 

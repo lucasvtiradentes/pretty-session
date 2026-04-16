@@ -1,4 +1,4 @@
-{"type":"thread.started","thread_id":"019d941f-3ae1-7dd0-a479-1b8dee94cc63"}
+{"type":"thread.started","thread_id":"019d9435-93f7-71e1-8e34-e0fe2899f69c"}
 {"type":"turn.started"}
 {"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"session test done"}}
-{"type":"turn.completed","usage":{"input_tokens":14351,"cached_input_tokens":4480,"output_tokens":17}}
+{"type":"turn.completed","usage":{"input_tokens":14162,"cached_input_tokens":9728,"output_tokens":17}}

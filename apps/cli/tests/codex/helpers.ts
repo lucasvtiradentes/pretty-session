@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process"
-import { copyFileSync, existsSync, readFileSync, renameSync } from "node:fs"
+import { copyFileSync, existsSync, readFileSync } from "node:fs"
 import { dirname, resolve } from "node:path"
+import { scrubFixture } from "../scrub"
 import { SESSION_FOOTER, SESSION_HEADER, STREAM_SESSION_FOOTER, STREAM_SESSION_HEADER } from "./expectations"
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), "../..")
@@ -23,9 +24,6 @@ export function replayFixture(fixturePath: string): string {
 	return output
 }
 
-const GLOBAL_AGENTS = resolve(HOME, ".codex", "AGENTS.md")
-const GLOBAL_AGENTS_BAK = `${GLOBAL_AGENTS}.bak-e2e`
-
 export function runE2E(promptPath: string, dir: string): string {
 	const prompt = readFileSync(promptPath, "utf-8").trim()
 	const escapedPrompt = prompt.replace(/"/g, '\\"')
@@ -34,24 +32,22 @@ export function runE2E(promptPath: string, dir: string): string {
 	const sandboxDir = resolve(SANDBOX_BASE, `codex-${testName}`)
 	execSync(`rm -rf ${sandboxDir} && mkdir -p ${sandboxDir} && git -C ${sandboxDir} init -q`)
 
-	const hadAgents = existsSync(GLOBAL_AGENTS)
-	if (hadAgents) renameSync(GLOBAL_AGENTS, GLOBAL_AGENTS_BAK)
+	const output = execSync(
+		`cd ${sandboxDir} && codex exec "${escapedPrompt}" --json --dangerously-bypass-approvals-and-sandbox 2>/dev/null | tee ${streamFile} | npx tsx ${CLI_PATH} codex`,
+		{ encoding: "utf-8", timeout: 120_000, cwd: CLI_ROOT, env: TEST_ENV },
+	)
 
-	try {
-		const output = execSync(
-			`cd ${sandboxDir} && codex exec "${escapedPrompt}" --json --dangerously-bypass-approvals-and-sandbox 2>/dev/null | tee ${streamFile} | npx tsx ${CLI_PATH} codex`,
-			{ encoding: "utf-8", timeout: 120_000, cwd: CLI_ROOT, env: TEST_ENV },
-		)
-
-		const sessionSrc = extractSessionPath(output)
-		if (sessionSrc) copyFileSync(sessionSrc, resolve(dir, "session.jsonl"))
-
-		execSync(`rm -rf ${sandboxDir}`)
-
-		return output
-	} finally {
-		if (hadAgents) renameSync(GLOBAL_AGENTS_BAK, GLOBAL_AGENTS)
+	const sessionSrc = extractSessionPath(output)
+	if (sessionSrc) {
+		const dest = resolve(dir, "session.jsonl")
+		copyFileSync(sessionSrc, dest)
+		scrubFixture(dest)
 	}
+
+	scrubFixture(streamFile)
+	execSync(`rm -rf ${sandboxDir}`)
+
+	return output
 }
 
 function extractSessionPath(output: string): string | null {

@@ -1,4 +1,4 @@
-import { INDENT, READ_PREVIEW_LINES, TOOL_RESULT_MAX_CHARS } from "../../../constants"
+import { formatToolOutput } from "../../../format"
 import type { ParseResult } from "../../../result"
 import type { CodexState } from "../state"
 import { showSession } from "./session"
@@ -29,23 +29,8 @@ export function handleStreamItem(data: Record<string, unknown>, state: CodexStat
 			const cmd = extractCmd((item.command as string) ?? "")
 			result.add(`\n${r.purple(`[Bash] ${cmd}`)}\n`)
 		} else {
-			if (TOOL_RESULT_MAX_CHARS === 0) return
 			const output = ((item.aggregated_output as string) ?? "").trimEnd()
-			if (!output) return
-
-			if (output.includes("\n")) {
-				if (READ_PREVIEW_LINES === 0) return
-				const lines = output.split("\n").slice(0, READ_PREVIEW_LINES)
-				for (const line of lines) {
-					result.add(`${r.dim(`${INDENT}→ ${line}`)}\n`)
-				}
-				if (output.split("\n").length > READ_PREVIEW_LINES) {
-					result.add(`${INDENT}...\n`)
-				}
-			} else {
-				const text = TOOL_RESULT_MAX_CHARS < 0 ? output : output.slice(0, TOOL_RESULT_MAX_CHARS)
-				result.add(`${r.dim(`${INDENT}→ ${text}`)}\n`)
-			}
+			formatToolOutput(output, r, result)
 		}
 	} else if (itemType === "patch_application" && isCompleted) {
 		const filePaths = (item.file_paths as string[]) ?? []

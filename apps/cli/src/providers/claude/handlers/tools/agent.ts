@@ -1,10 +1,10 @@
-import { INDENT } from "../../../../constants"
+import { AGENT_DESCRIPTION_MAX_CHARS, INDENT } from "../../../../constants"
 import { Tool } from "../../constants"
 import type { ParseResult, ParserState } from "../base"
 
 export function handleAgent(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer
-	const description = ((inp.description as string) ?? "").slice(0, 50)
+	const description = ((inp.description as string) ?? "").slice(0, AGENT_DESCRIPTION_MAX_CHARS)
 	const prompt = (inp.prompt as string) ?? ""
 	const subagentType = (inp.subagent_type as string) ?? ""
 	const label = subagentType ? `[${Tool.Agent}] "${description}" (${subagentType})` : `[${Tool.Agent}] "${description}"`

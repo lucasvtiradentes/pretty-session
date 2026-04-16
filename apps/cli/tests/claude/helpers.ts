@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process"
 import { copyFileSync, existsSync, readFileSync } from "node:fs"
 import { dirname, resolve } from "node:path"
+import { scrubFixture } from "../scrub"
 import { SESSION_FOOTER, SESSION_HEADER } from "./expectations"
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), "../..")
@@ -39,8 +40,13 @@ export function runE2E(promptPath: string, dir: string): string {
 	const cleaned = stripPnpmBanner(output)
 
 	const sessionSrc = extractSessionPath(cleaned)
-	if (sessionSrc) copyFileSync(sessionSrc, resolve(dir, "session.jsonl"))
+	if (sessionSrc) {
+		const dest = resolve(dir, "session.jsonl")
+		copyFileSync(sessionSrc, dest)
+		scrubFixture(dest)
+	}
 
+	scrubFixture(streamFile)
 	execSync(`rm -rf ${sandboxDir}`)
 
 	return cleaned

@@ -1,4 +1,5 @@
-import { INDENT, READ_PREVIEW_LINES, TOOL_RESULT_MAX_CHARS } from "../../../constants"
+import { INDENT, USER_MESSAGE_MAX_CHARS } from "../../../constants"
+import { formatToolOutput } from "../../../format"
 import type { ParseResult, ParserState } from "./base"
 
 export function handleUserMessage(data: Record<string, unknown>, state: ParserState, result: ParseResult) {
@@ -19,10 +20,10 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 				.replace(/<user-prompt-submit-hook>[\s\S]*?<\/user-prompt-submit-hook>/g, "")
 				.trim()
 			if (!cleaned) return
-			const text = cleaned.slice(0, 200)
+			const text = cleaned.slice(0, USER_MESSAGE_MAX_CHARS)
 			if (state.turnCount > 1) result.add(`\n${r.dim("----")}\n`)
 			result.add(`\n${r.green("[user]")} ${text}`)
-			if (cleaned.length > 200) result.add(r.dim("..."))
+			if (cleaned.length > USER_MESSAGE_MAX_CHARS) result.add(r.dim("..."))
 			result.add(`\n\n${r.dim("----")}\n`)
 		}
 		return
@@ -54,20 +55,7 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 				return
 			}
 
-			if (toolContent.includes("\n")) {
-				if (READ_PREVIEW_LINES === 0) return
-				const lines = toolContent.split("\n").slice(0, READ_PREVIEW_LINES)
-				for (const line of lines) {
-					result.add(`${state.sp}${r.dim(`${INDENT}→ ${line}`)}\n`)
-				}
-				if (toolContent.split("\n").length > READ_PREVIEW_LINES) {
-					result.add(`${state.sp}${INDENT}...\n`)
-				}
-			} else {
-				if (TOOL_RESULT_MAX_CHARS === 0) return
-				const text = TOOL_RESULT_MAX_CHARS < 0 ? toolContent : toolContent.slice(0, TOOL_RESULT_MAX_CHARS)
-				result.add(`${state.sp}${r.dim(`${INDENT}→ ${text}`)}\n`)
-			}
+			formatToolOutput(toolContent, r, result, state.sp)
 		}
 	}
 }

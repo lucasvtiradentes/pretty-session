@@ -1,5 +1,5 @@
 import { execSync } from "node:child_process"
-import { copyFileSync, existsSync, readFileSync } from "node:fs"
+import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs"
 import { dirname, resolve } from "node:path"
 import { scrubFixture } from "../scrub"
 import { SESSION_FOOTER, SESSION_HEADER, STREAM_SESSION_FOOTER, STREAM_SESSION_HEADER } from "./expectations"
@@ -45,9 +45,26 @@ export function runE2E(promptPath: string, dir: string): string {
 	}
 
 	scrubFixture(streamFile)
+	enrichStreamFixture(streamFile, resolve(dir, "session.jsonl"))
 	execSync(`rm -rf ${sandboxDir}`)
 
 	return output
+}
+
+function enrichStreamFixture(streamFile: string, sessionFile: string) {
+	if (!existsSync(sessionFile)) return
+	const sessionLines = readFileSync(sessionFile, "utf-8").split("\n")
+	const metaLines: string[] = []
+	for (const line of sessionLines) {
+		if (!line.trim()) continue
+		try {
+			const d = JSON.parse(line)
+			if (d.type === "session_meta" || d.type === "turn_context") metaLines.push(line)
+		} catch {}
+	}
+	if (metaLines.length === 0) return
+	const stream = readFileSync(streamFile, "utf-8")
+	writeFileSync(streamFile, `${metaLines.join("\n")}\n${stream}`)
 }
 
 function extractSessionPath(output: string): string | null {

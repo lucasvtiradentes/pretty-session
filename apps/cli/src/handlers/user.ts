@@ -20,9 +20,10 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 				.trim()
 			if (!cleaned) return
 			const text = cleaned.slice(0, 200)
+			if (state.turnCount > 1) result.add(`\n\n${r.dim("----")}\n`)
 			result.add(`\n${r.green("[user]")} ${text}`)
 			if (cleaned.length > 200) result.add(r.dim("..."))
-			result.add("\n")
+			result.add(`\n\n${r.dim("----")}\n`)
 		}
 		return
 	}

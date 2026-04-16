@@ -1,6 +1,7 @@
 {
 	"name": "pretty-sessions",
 	"private": true,
+	"packageManager": "pnpm@9.15.4",
 	"scripts": {
 		"build": "turbo build",
 		"check": "biome check . && turbo check",
@@ -14,6 +15,5 @@
 		"knip": "^6.4.1",
 		"lint-staged": "^15.4.3",
 		"turbo": "^2.4.4"
-	},
-	"packageManager": "pnpm@9.15.4"
+	}
 }

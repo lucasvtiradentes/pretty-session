@@ -68,7 +68,7 @@ export function sanitize(output: string): string {
 			.replace(/\x1b\[[0-9;]*m/g, "")
 			.replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g, "<UUID>")
 			.replace(/~\/\.claude\/projects\/[^\s]+\.jsonl/g, "~/.claude/projects/<CWD>/<UUID>.jsonl")
-			.replace(/model: \w+/g, "model: <MODEL>")
+			.replace(/model: [\w-]+/g, "model: <MODEL>")
 			.replace(/\d+\.\d+s/g, "<DURATION>s")
 			.replace(/\$[\d.]+/g, "$<COST>")
 			.replace(/\d+ turns/g, "<N> turns")

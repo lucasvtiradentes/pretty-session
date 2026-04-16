@@ -1,5 +1,6 @@
 import { AnsiRenderer } from "../../../renderers/ansi"
 import type { Renderer } from "../../../renderers/base"
+export { ParseResult } from "../../../result"
 
 export class ParserState {
 	mode: string
@@ -80,17 +81,5 @@ export class ParserState {
 		}
 
 		return out.join("")
-	}
-}
-
-export class ParseResult {
-	messages: string[] = []
-
-	add(text: string) {
-		this.messages.push(text)
-	}
-
-	getOutput(): string {
-		return this.messages.join("")
 	}
 }

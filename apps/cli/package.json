@@ -12,7 +12,9 @@
 		"dev": "dotenv tsx src/cli.ts",
 		"check": "tsc --noEmit",
 		"test": "vitest run --exclude '**/**.e2e.test.ts'",
-		"test:e2e": "vitest run tests/claude/**/*.e2e.test.ts"
+		"test:e2e": "pnpm test:e2e:claude && pnpm test:e2e:codex",
+		"test:e2e:claude": "vitest run tests/claude/**/*.e2e.test.ts",
+		"test:e2e:codex": "vitest run tests/codex/**/*.e2e.test.ts"
 	},
 	"devDependencies": {
 		"@types/node": "^25.6.0",

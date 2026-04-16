@@ -1,0 +1,1 @@
+Create a file called tmp-edit-test.txt with the content "after edit" using apply_patch. Do nothing else.

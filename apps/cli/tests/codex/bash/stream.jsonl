@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"019d941a-db93-7f90-a46f-119b2fb1ce2d"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Running the exact shell command you requested and returning its output only."}}
+{"type":"item.started","item":{"id":"item_1","type":"command_execution","command":"/bin/zsh -lc 'echo \"hello from codex test\" && date'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"/bin/zsh -lc 'echo \"hello from codex test\" && date'","aggregated_output":"hello from codex test\nWed Apr 15 23:24:50 -03 2026\n","exit_code":0,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"hello from codex test\nWed Apr 15 23:24:50 -03 2026"}}
+{"type":"turn.completed","usage":{"input_tokens":28880,"cached_input_tokens":17792,"output_tokens":113}}

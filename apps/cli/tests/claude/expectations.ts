@@ -24,7 +24,7 @@ export const BASH_BODY = `
 `
 
 export const READ_BODY = `
-[${Tool.Bash}] echo -n "read tool works" > <ABS_PATH>
+[${Tool.Bash}] echo -n "read tool works" > tmp-read-test.txt
 
 [${Tool.Read}] <ABS_PATH>
    → <N>\tread tool works

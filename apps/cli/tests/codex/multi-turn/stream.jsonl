@@ -1,10 +1,10 @@
-{"type":"thread.started","thread_id":"019d941b-4710-7470-8b81-6188901c4e43"}
+{"type":"thread.started","thread_id":"019d941f-3ae2-76f3-b612-d3a185da2f3d"}
 {"type":"turn.started"}
-{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Executing the exact shell command you specified, then creating `tmp-multi.txt` with `apply_patch`."}}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’m executing the exact command first, then I’ll create `tmp-multi.txt` with `apply_patch` and stop there."}}
 {"type":"item.started","item":{"id":"item_1","type":"command_execution","command":"/bin/zsh -lc 'echo \"multi-turn test ok\"'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
 {"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"/bin/zsh -lc 'echo \"multi-turn test ok\"'","aggregated_output":"multi-turn test ok\n","exit_code":0,"status":"completed"}}
-{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"Creating `tmp-multi.txt` now via `apply_patch`."}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"I’ve run the required command. Now I’m creating `tmp-multi.txt` with the exact requested contents and then stopping."}}
 {"type":"item.started","item":{"id":"item_3","type":"file_change","changes":[{"path":"/Users/lucas/_custom/repos/github_lucasvtiradentes/pretty-sessions/.sandbox/codex-multi-turn/tmp-multi.txt","kind":"add"}],"status":"in_progress"}}
 {"type":"item.completed","item":{"id":"item_3","type":"file_change","changes":[{"path":"/Users/lucas/_custom/repos/github_lucasvtiradentes/pretty-sessions/.sandbox/codex-multi-turn/tmp-multi.txt","kind":"add"}],"status":"completed"}}
-{"type":"item.completed","item":{"id":"item_4","type":"agent_message","text":"Done."}}
-{"type":"turn.completed","usage":{"input_tokens":43569,"cached_input_tokens":39424,"output_tokens":165}}
+{"type":"item.completed","item":{"id":"item_4","type":"agent_message","text":"Completed."}}
+{"type":"turn.completed","usage":{"input_tokens":43524,"cached_input_tokens":39424,"output_tokens":146}}

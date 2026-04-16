@@ -44,7 +44,7 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 			if (!toolContent) return
 			if (
 				(toolContent.startsWith("Todos have been") || toolContent.startsWith("The file")) &&
-				toolContent.includes("has been")
+				(toolContent.includes("has been") || toolContent.includes("have been"))
 			) {
 				return
 			}

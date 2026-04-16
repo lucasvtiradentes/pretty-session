@@ -1,4 +1,4 @@
-import { INDENT, READ_PREVIEW_LINES, TOOL_RESULT_MAX_CHARS } from "../constants"
+import { INDENT, READ_PREVIEW_LINES, TOOL_RESULT_MAX_CHARS } from "../../../constants"
 import type { ParseResult, ParserState } from "./base"
 
 export function handleUserMessage(data: Record<string, unknown>, state: ParserState, result: ParseResult) {

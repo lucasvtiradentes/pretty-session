@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { Tool } from "../../../src/constants"
+import { Tool } from "../../../src/providers/claude/constants"
 import { fixtureExists, replayFixture, sanitize, sessionPath } from "../helpers"
 
 const dir = new URL(".", import.meta.url).pathname

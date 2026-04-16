@@ -1,4 +1,4 @@
-import { INDENT } from "../constants"
+import { INDENT } from "../../../constants"
 import type { ParseResult, ParserState } from "./base"
 
 export function handleSystem(data: Record<string, unknown>, state: ParserState, result: ParseResult) {

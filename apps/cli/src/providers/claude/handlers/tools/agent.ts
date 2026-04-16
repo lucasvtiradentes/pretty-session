@@ -1,4 +1,5 @@
-import { INDENT, Tool } from "../../constants"
+import { INDENT } from "../../../../constants"
+import { Tool } from "../../constants"
 import type { ParseResult, ParserState } from "../base"
 
 export function handleAgent(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {

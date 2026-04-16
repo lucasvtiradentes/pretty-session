@@ -1,7 +1,7 @@
 import { createInterface } from "node:readline"
 import { CLI_NAME } from "./constants"
-import { ParserState } from "./handlers/base"
-import { parseJsonLine } from "./parser"
+import { ParserState } from "./providers/claude/handlers/base"
+import { parseJsonLine } from "./providers/claude/parser"
 
 const VERSION = "0.1.0"
 

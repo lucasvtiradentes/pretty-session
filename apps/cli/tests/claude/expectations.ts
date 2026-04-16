@@ -1,4 +1,4 @@
-import { Tool } from "../../src/constants"
+import { Tool } from "../../src/providers/claude/constants"
 
 export const SESSION_HEADER = `[session]
    id:    <UUID>

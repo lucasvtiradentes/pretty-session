@@ -46,55 +46,11 @@ jobs:
       - uses: ./.github/actions/setup-and-install
       - run: pnpm turbo test
 
-  test-e2e-claude:
+  test-e2e:
     if: ${{ inputs.run_e2e_tests }}
     needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/setup-and-install
-
-      - name: Install Claude Code
-        run: curl -fsSL https://claude.ai/install.sh | bash
-
-      - name: Run Claude e2e tests
-        timeout-minutes: 10
-        env:
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-        run: pnpm --filter @pretty-sessions/cli test:e2e:claude
-
-      - name: Upload Claude session logs
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: claude-session-logs
-          path: ~/.claude/projects/
-          retention-days: 7
-
-  test-e2e-codex:
-    if: ${{ inputs.run_e2e_tests }}
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/setup-and-install
-
-      - name: Install Codex CLI
-        run: npm install -g @openai/codex
-
-      - name: Setup Codex auth
-        env:
-          CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
-        run: mkdir -p ~/.codex && echo "$CODEX_AUTH_JSON" > ~/.codex/auth.json
-
-      - name: Run Codex e2e tests
-        timeout-minutes: 10
-        run: pnpm --filter @pretty-sessions/cli test:e2e:codex
-
-      - name: Upload Codex session logs
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: codex-session-logs
-          path: ~/.codex/sessions/
-          retention-days: 7
+    uses: ./.github/workflows/callable-run-e2e-tests.yml
+    with:
+      run_claude: true
+      run_codex: true
+    secrets: inherit

@@ -48,6 +48,7 @@ export function handleStreamItem(data: Record<string, unknown>, state: CodexStat
 
 export function handleThreadStarted(data: Record<string, unknown>, state: CodexState) {
 	state.sessionId = (data.thread_id as string) ?? ""
+	if (!state.model) state.model = "codex"
 }
 
 export function handleTurnCompleted(data: Record<string, unknown>, state: CodexState) {

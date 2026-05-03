@@ -1,0 +1,5 @@
+{"sessionId":"0932623f-d027-44f4-8375-a16b65f36340","projectHash":"1f3ef8e640dcf25da5bb4dc120ea4ef337b61b4e7a1b1b23a124180f5f5b31d3","startTime":"2026-05-03T21:36:58.808Z","lastUpdated":"2026-05-03T21:36:58.808Z","kind":"main"}
+{"id":"63faa3df-7d78-4850-82a0-8cb10692ac67","timestamp":"2026-05-03T21:36:58.817Z","type":"user","content":[{"text":"Reply with only fixture-gemini-ok"}]}
+{"$set":{"lastUpdated":"2026-05-03T21:36:58.817Z"}}
+{"id":"c7ff3478-dd04-4d8f-8fe2-e053152ec1fa","timestamp":"2026-05-03T21:37:00.045Z","type":"gemini","content":"fixture-gemini-ok","thoughts":[],"tokens":{"input":15037,"output":8,"cached":11623,"thoughts":0,"tool":0,"total":15045},"model":"gemini-3-flash-preview"}
+{"$set":{"lastUpdated":"2026-05-03T21:37:00.045Z"}}

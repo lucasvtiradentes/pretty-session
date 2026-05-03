@@ -1,6 +1,36 @@
 # @pretty-sessions/cli
 
-CLI tool that parses Claude Code session JSONL files into readable, formatted output.
+CLI tool that parses AI coding agent streams and saved session files into readable, formatted output.
+
+## Usage
+
+```bash
+# Claude Code stream
+claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | pretty-sessions claude
+
+# Claude Code saved session
+cat ~/.claude/projects/.../session.jsonl | pretty-sessions claude
+
+# Codex stream
+codex exec "explain this code" --json | pretty-sessions codex
+
+# Codex saved session
+cat ~/.codex/sessions/.../session.jsonl | pretty-sessions codex
+
+# Gemini stream
+gemini -p "explain this code" --output-format stream-json | pretty-sessions gemini
+
+# Gemini saved session
+cat ~/.gemini/tmp/.../chats/session.jsonl | pretty-sessions gemini
+```
+
+## Providers
+
+| Provider | Stream | Saved session |
+|----------|--------|---------------|
+| claude   | yes    | yes           |
+| codex    | yes    | yes           |
+| gemini   | yes    | yes           |
 
 ## Claude Code tools reference
 

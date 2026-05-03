@@ -1,5 +1,5 @@
 export { handleAssistant } from "./assistant"
-export { handleSessionMeta, handleTurnContext } from "./session"
+export { handleSessionMeta, handleTurnContext, showSession } from "./session"
 export { handleStreamItem, handleThreadStarted, handleTurnCompleted } from "./stream"
 export { dispatchTool } from "./tools/index"
 export { handleToolResult } from "./tools/result"

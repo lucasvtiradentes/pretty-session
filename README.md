@@ -1,6 +1,6 @@
 # pretty-sessions
 
-Pretty formatter for AI coding agent sessions. Pipe any provider's output and get a readable, colorized view. Works with Claude Code, Codex, Gemini, and more.
+Pretty formatter for AI coding agent sessions. Pipe provider output or saved session files and get a readable, colorized view.
 
 <table align="center">
   <tr>
@@ -32,20 +32,32 @@ Aliases: `pretty-sessions`, `ps`
 ## Usage
 
 ```bash
-# stream from claude in real-time
-claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json --include-partial-messages | ps claude
+# Claude Code stream
+claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | ps claude
 
-# replay a saved session
+# Claude Code saved session
 cat ~/.claude/projects/.../session.jsonl | ps claude
+
+# Codex stream
+codex exec "explain this code" --json | ps codex
+
+# Codex saved session
+cat ~/.codex/sessions/.../session.jsonl | ps codex
+
+# Gemini stream
+gemini -p "explain this code" --output-format stream-json | ps gemini
+
+# Gemini saved session
+cat ~/.gemini/tmp/.../chats/session.jsonl | ps gemini
 ```
 
 ## Providers
 
-| Provider | Status |
-|----------|--------|
-| claude   | supported |
-| codex    | planned |
-| gemini   | planned |
+| Provider | Stream | Saved session |
+|----------|--------|---------------|
+| claude   | yes    | yes           |
+| codex    | yes    | yes           |
+| gemini   | yes    | yes           |
 
 ## Environment
 

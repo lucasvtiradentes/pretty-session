@@ -3,6 +3,7 @@ import { CLI_NAME, PROVIDER_VALUES, Provider } from "./constants"
 import { ParserState } from "./providers/claude/handlers/base"
 import { parseJsonLine } from "./providers/claude/parser"
 import { CodexState, finalizeCodex, parseCodexLine } from "./providers/codex/parser"
+import { GeminiState, finalizeGemini, parseGeminiLine } from "./providers/gemini/parser"
 import type { ParseResult } from "./result"
 
 const VERSION = "0.1.0"
@@ -16,6 +17,7 @@ Usage:
 Providers:
   ${Provider.Claude}          Claude Code (stream + session auto-detected)
   ${Provider.Codex}           OpenAI Codex CLI (stream + session auto-detected)
+  ${Provider.Gemini}          Gemini CLI (stream + session auto-detected)
 
 Options:
   -h, --help         Show this help
@@ -29,7 +31,9 @@ Examples:
   claude -p "explain this code" --output-format stream-json | ${CLI_NAME} ${Provider.Claude}
   cat ~/.claude/projects/.../session.jsonl | ${CLI_NAME} ${Provider.Claude}
   codex exec "do something" --json | ${CLI_NAME} ${Provider.Codex}
-  cat ~/.codex/sessions/.../session.jsonl | ${CLI_NAME} ${Provider.Codex}`)
+  cat ~/.codex/sessions/.../session.jsonl | ${CLI_NAME} ${Provider.Codex}
+  gemini -p "do something" --output-format stream-json | ${CLI_NAME} ${Provider.Gemini}
+  cat ~/.gemini/tmp/.../session.jsonl | ${CLI_NAME} ${Provider.Gemini}`)
 }
 
 function createParser(provider: Provider): { parseLine: (line: string) => ParseResult; onClose?: () => ParseResult } {
@@ -41,6 +45,10 @@ function createParser(provider: Provider): { parseLine: (line: string) => ParseR
 		case Provider.Codex: {
 			const state = new CodexState()
 			return { parseLine: (line) => parseCodexLine(line, state), onClose: () => finalizeCodex(state) }
+		}
+		case Provider.Gemini: {
+			const state = new GeminiState()
+			return { parseLine: (line) => parseGeminiLine(line, state), onClose: () => finalizeGemini(state) }
 		}
 	}
 }

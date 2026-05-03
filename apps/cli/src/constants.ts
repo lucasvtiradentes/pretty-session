@@ -1,6 +1,7 @@
 export enum Provider {
 	Claude = "claude",
 	Codex = "codex",
+	Gemini = "gemini",
 }
 
 export const PROVIDER_VALUES = Object.values(Provider) as string[]

@@ -1,0 +1,4 @@
+{"type":"init","timestamp":"2026-05-03T21:35:30.000Z","session_id":"b7d5fe82-86ea-47b6-8668-058a1651b914","model":"gemini-3-flash-preview"}
+{"type":"message","timestamp":"2026-05-03T21:35:31.000Z","role":"user","content":"Reply with only fixture-gemini-stream-ok"}
+{"type":"message","timestamp":"2026-05-03T21:35:32.000Z","role":"assistant","content":"fixture-gemini-stream-ok","delta":true}
+{"type":"result","timestamp":"2026-05-03T21:35:33.000Z","status":"success","stats":{"total_tokens":15202,"input_tokens":15196,"output_tokens":6}}

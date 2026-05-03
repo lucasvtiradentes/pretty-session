@@ -9,6 +9,7 @@ import {
 	handleTurnCompleted,
 	handleTurnContext,
 	handleUserMessage,
+	showSession,
 } from "./handlers/index"
 import type { CodexState } from "./state"
 
@@ -16,6 +17,9 @@ export { CodexState } from "./state"
 export { finalizeCodex } from "./handlers/result"
 
 const STREAM_TYPES = new Set(["thread.started", "turn.started", "turn.completed", "item.started", "item.completed"])
+const APP_SERVER_DELTA_METHOD = "item/agentMessage/delta"
+const APP_SERVER_TOKEN_USAGE_METHOD = "thread/tokenUsage/updated"
+const APP_SERVER_TURN_COMPLETED_METHOD = "turn/completed"
 
 function parseStreamLine(type: string, data: Record<string, unknown>, state: CodexState, result: ParseResult) {
 	if (type === "thread.started") handleThreadStarted(data, state)
@@ -63,6 +67,42 @@ export function parseCodexLine(line: string, state: CodexState): ParseResult {
 	}
 
 	const type = (data.type as string) ?? ""
+	const method = (data.method as string) ?? ""
+	const rpcResult = (data.result as Record<string, unknown>) ?? {}
+	const thread = (rpcResult.thread as Record<string, unknown>) ?? {}
+
+	if (thread.id) {
+		state.sessionId = (thread.id as string) ?? ""
+		if (!state.model) state.model = "codex"
+		return result
+	}
+
+	if (method === APP_SERVER_DELTA_METHOD) {
+		const params = (data.params as Record<string, unknown>) ?? {}
+		state.streamingAssistantText += (params.delta as string) ?? ""
+		return result
+	}
+
+	if (method === APP_SERVER_TOKEN_USAGE_METHOD) {
+		const params = (data.params as Record<string, unknown>) ?? {}
+		const tokenUsage = (params.tokenUsage as Record<string, unknown>) ?? {}
+		const total = (tokenUsage.total as Record<string, number>) ?? {}
+		state.lastInputTokens = (total.inputTokens ?? 0) + (total.cachedInputTokens ?? 0)
+		state.lastOutputTokens = (total.outputTokens ?? 0) + (total.reasoningOutputTokens ?? 0)
+		return result
+	}
+
+	if (method === APP_SERVER_TURN_COMPLETED_METHOD) {
+		if (!state.sessionShown) showSession(state, result)
+		const raw = state.streamingAssistantText.replace(/^\n+|\n+$/g, "")
+		state.streamingAssistantText = ""
+		if (raw) {
+			const rendered = state.renderer.renderMarkdown(raw).replace(/\n+$/, "")
+			if (rendered) result.add(`\n${rendered}\n`)
+		}
+		state.turnCount++
+		return result
+	}
 
 	if (STREAM_TYPES.has(type)) parseStreamLine(type, data, state, result)
 	else parseSessionLine(type, data, state, result)

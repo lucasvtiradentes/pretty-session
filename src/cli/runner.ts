@@ -1,12 +1,8 @@
 import { createRequire } from "node:module"
-import { createInterface } from "node:readline"
 import type { Program as CaporalProgram } from "@caporal/core"
-import { COMPLETION_COMMAND_NAME, registerCompletionCommand } from "../completion"
-import { CLI_NAME, PROVIDER_VALUES, Provider, VERSION } from "../constants"
-import { ParserState, parseJsonLine } from "../providers/claude"
-import { CodexState, finalizeCodex, parseCodexLine } from "../providers/codex"
-import { GeminiState, finalizeGemini, parseGeminiLine } from "../providers/gemini"
-import type { ParseResult } from "../result"
+import { COMPLETION_COMMAND_NAME } from "../commands/completion/register"
+import { registerCommands } from "../commands/register"
+import { CLI_NAME, VERSION } from "../constants"
 
 let programInstance: CaporalProgram | undefined
 let programInstanceBin: string | undefined
@@ -49,27 +45,10 @@ function createProgram(binName: string): CaporalProgram {
 			},
 		})
 
-	for (const provider of PROVIDER_VALUES) {
-		program
-			.command(provider, getProviderDescription(provider as Provider))
-			.strict(false)
-			.action(() => runProvider(provider as Provider))
-	}
-
-	registerCompletionCommand(program)
+	registerCommands(program)
 	program.help(formatHelpExamples(binName))
 
 	return program
-}
-
-const providerDescriptions = {
-	[Provider.Claude]: "Format Claude Code stream or saved session JSONL",
-	[Provider.Codex]: "Format Codex stream or saved session JSONL",
-	[Provider.Gemini]: "Format Gemini stream or saved session JSONL",
-} as const satisfies Record<Provider, string>
-
-function getProviderDescription(provider: Provider) {
-	return providerDescriptions[provider]
 }
 
 function formatHelpExamples(binName: string) {
@@ -83,44 +62,6 @@ function formatHelpExamples(binName: string) {
 		`  cat ~/.gemini/tmp/.../session.jsonl | ${binName} gemini`,
 		`  ${binName} ${COMPLETION_COMMAND_NAME} zsh`,
 	].join("\n")
-}
-
-function runProvider(provider: Provider) {
-	const { parseLine, onClose } = createParser(provider)
-	const rl = createInterface({ input: process.stdin })
-
-	rl.on("line", (line) => {
-		const trimmed = line.trim()
-		if (trimmed) {
-			const output = parseLine(trimmed).getOutput()
-			if (output) process.stdout.write(output)
-		}
-	})
-
-	if (onClose) {
-		const finalize = onClose
-		rl.on("close", () => {
-			const output = finalize().getOutput()
-			if (output) process.stdout.write(output)
-		})
-	}
-}
-
-function createParser(provider: Provider): { parseLine: (line: string) => ParseResult; onClose?: () => ParseResult } {
-	switch (provider) {
-		case Provider.Claude: {
-			const state = new ParserState()
-			return { parseLine: (line) => parseJsonLine(line, state) }
-		}
-		case Provider.Codex: {
-			const state = new CodexState()
-			return { parseLine: (line) => parseCodexLine(line, state), onClose: () => finalizeCodex(state) }
-		}
-		case Provider.Gemini: {
-			const state = new GeminiState()
-			return { parseLine: (line) => parseGeminiLine(line, state), onClose: () => finalizeGemini(state) }
-		}
-	}
 }
 
 function getProgramConstructor() {

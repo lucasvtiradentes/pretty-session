@@ -3,7 +3,7 @@ import { dirname, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), "..")
-const CLI_PATH = resolve(CLI_ROOT, "src/cli/bin.ts")
+const CLI_PATH = resolve(CLI_ROOT, "src/bin.ts")
 
 function runCli(args: string[]) {
 	return execSync(`npx tsx ${CLI_PATH} ${args.join(" ")}`, {

@@ -1,7 +1,7 @@
 import { realpathSync } from "node:fs"
 import { basename } from "node:path"
 import { fileURLToPath, pathToFileURL } from "node:url"
-import { CLI_NAME } from "../constants"
+import { CLI_NAME } from "./constants"
 import { runCli } from "./runner"
 
 function isDirectRun() {

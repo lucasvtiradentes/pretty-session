@@ -1,8 +1,10 @@
 import { createRequire } from "node:module"
 import type { Program as CaporalProgram } from "@caporal/core"
-import { COMPLETION_COMMAND_NAME } from "../commands/completion/register"
-import { registerCommands } from "../commands/register"
-import { CLI_NAME, VERSION } from "../constants"
+import { registerClaudeCommand } from "./commands/claude"
+import { registerCodexCommand } from "./commands/codex"
+import { COMPLETION_COMMAND_NAME, registerCompletionCommand } from "./commands/completion/register"
+import { registerGeminiCommand } from "./commands/gemini"
+import { CLI_NAME, VERSION } from "./constants"
 
 let programInstance: CaporalProgram | undefined
 let programInstanceBin: string | undefined
@@ -45,7 +47,10 @@ function createProgram(binName: string): CaporalProgram {
 			},
 		})
 
-	registerCommands(program)
+	registerClaudeCommand(program)
+	registerCodexCommand(program)
+	registerGeminiCommand(program)
+	registerCompletionCommand(program)
 	program.help(formatHelpExamples(binName))
 
 	return program

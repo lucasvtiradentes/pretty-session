@@ -5,7 +5,7 @@ export default defineConfig([
 		banner: { js: "#!/usr/bin/env node" },
 		clean: true,
 		dts: false,
-		entry: { cli: "src/cli/bin.ts" },
+		entry: { cli: "src/bin.ts" },
 		format: ["esm"],
 		outDir: "dist",
 		target: "node20",

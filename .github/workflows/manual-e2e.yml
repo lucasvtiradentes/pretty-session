@@ -11,6 +11,10 @@ on:
         description: Run Codex e2e tests
         type: boolean
         default: true
+      run_gemini:
+        description: Run Gemini e2e tests
+        type: boolean
+        default: true
 
 jobs:
   e2e:
@@ -18,4 +22,5 @@ jobs:
     with:
       run_claude: ${{ inputs.run_claude }}
       run_codex: ${{ inputs.run_codex }}
+      run_gemini: ${{ inputs.run_gemini }}
     secrets: inherit

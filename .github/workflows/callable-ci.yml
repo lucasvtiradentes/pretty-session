@@ -1,4 +1,4 @@
-name: Callable CI
+name: _callable ci
 
 on:
   workflow_call:
@@ -25,6 +25,8 @@ on:
       CLAUDE_CODE_OAUTH_TOKEN:
         required: false
       CODEX_AUTH_JSON:
+        required: false
+      GEMINI_CREDENTIALS:
         required: false
     outputs:
       should_release_npm:
@@ -96,4 +98,5 @@ jobs:
     with:
       run_claude: true
       run_codex: true
+      run_gemini: true
     secrets: inherit

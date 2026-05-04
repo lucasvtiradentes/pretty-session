@@ -9,10 +9,15 @@ on:
       run_codex:
         type: boolean
         required: true
+      run_gemini:
+        type: boolean
+        default: true
     secrets:
       CLAUDE_CODE_OAUTH_TOKEN:
         required: true
       CODEX_AUTH_JSON:
+        required: true
+      GEMINI_CREDENTIALS:
         required: true
 
 jobs:
@@ -65,4 +70,35 @@ jobs:
         with:
           name: codexpretty-session-logs
           path: ~/.codex/sessions/
+          retention-days: 7
+
+  test-e2e-gemini:
+    if: ${{ inputs.run_gemini }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-and-install
+
+      - name: Install Gemini CLI
+        run: npm install -g @google/gemini-cli
+
+      - name: Setup Gemini auth
+        env:
+          GEMINI_CREDENTIALS: ${{ secrets.GEMINI_CREDENTIALS }}
+        run: |
+          mkdir -p ~/.gemini
+          printf '%s' "$GEMINI_CREDENTIALS" > ~/.gemini/oauth_creds.json
+          chmod 600 ~/.gemini/oauth_creds.json
+          echo '{"security":{"auth":{"selectedType":"oauth-personal"}}}' > ~/.gemini/settings.json
+
+      - name: Run Gemini e2e tests
+        timeout-minutes: 10
+        run: pnpm test:e2e:gemini
+
+      - name: Upload Gemini session logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: geminipretty-session-logs
+          path: ~/.gemini/tmp/
           retention-days: 7

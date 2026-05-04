@@ -1,7 +1,7 @@
 import { createInterface } from 'node:readline'
 import type { ParseResult } from './result'
 
-export interface LineParser {
+interface LineParser {
 	parseLine(line: string): ParseResult
 	finalize?(): ParseResult
 }

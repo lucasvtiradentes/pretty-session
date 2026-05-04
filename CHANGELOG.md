@@ -1,5 +1,11 @@
 # pretty-session
 
+## 0.0.3
+
+### Patch Changes
+
+- 8193760: Bind generated shell completions to both pretty-session and pts bins.
+
 ## 0.0.2
 
 ### Patch Changes

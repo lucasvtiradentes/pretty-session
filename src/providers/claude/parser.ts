@@ -1,3 +1,4 @@
+import { ClaudeMessageType, ParserMode, SystemSubtype } from "./constants"
 import {
 	ParseResult,
 	type ParserState,
@@ -20,17 +21,17 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 
 	const msgType = (data.type as string) ?? ""
 
-	if (msgType === "system") handleSystem(data, state, result)
-	else if (msgType === "stream_event") handleStreamEvent(data, state, result)
-	else if (msgType === "user") {
+	if (msgType === ClaudeMessageType.System) handleSystem(data, state, result)
+	else if (msgType === ClaudeMessageType.StreamEvent) handleStreamEvent(data, state, result)
+	else if (msgType === ClaudeMessageType.User) {
 		if (!state.sessionShown && data.sessionId) {
 			state.pendingSessionId = (data.sessionId as string) ?? ""
 			state.pendingCwd = (data.cwd as string) ?? ""
-			state.mode = "replay"
+			state.mode = ParserMode.Replay
 		}
 		if (data.sessionId) state.turnCount++
 		handleUserMessage(data, state, result)
-	} else if (msgType === "assistant") {
+	} else if (msgType === ClaudeMessageType.Assistant) {
 		const message = (data.message as Record<string, unknown>) ?? {}
 		if (message.model) state.lastModel = (message.model as string) ?? ""
 		if (message.usage) state.lastUsage = (message.usage as Record<string, number>) ?? {}
@@ -38,7 +39,7 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 		if (!state.sessionShown && state.pendingSessionId) {
 			handleSystem(
 				{
-					subtype: "init",
+					subtype: SystemSubtype.Init,
 					session_id: state.pendingSessionId,
 					cwd: state.pendingCwd,
 					model: state.lastModel,
@@ -49,9 +50,9 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 		}
 
 		handleAssistantMessage(data, state, result)
-	} else if (msgType === "result") handleResult(data, state, result)
-	else if (msgType === "last-prompt") {
-		if (state.mode === "replay" && state.pendingSessionId) {
+	} else if (msgType === ClaudeMessageType.Result) handleResult(data, state, result)
+	else if (msgType === ClaudeMessageType.LastPrompt) {
+		if (state.mode === ParserMode.Replay && state.pendingSessionId) {
 			const usage = state.lastUsage
 			const inputTokens =
 				(usage.input_tokens ?? 0) + (usage.cache_read_input_tokens ?? 0) + (usage.cache_creation_input_tokens ?? 0)
@@ -60,7 +61,7 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 			const stats = `0.0s, $0.0000, ${state.turnCount} turns, ${inputTokens} in / ${outputTokens} out`
 			result.add(`\n${r.dim(`[done] ${stats}`)}\n`)
 		}
-	} else if (msgType === "error") {
+	} else if (msgType === ClaudeMessageType.Error) {
 		const errorMsg = (data.error as string) ?? "unknown error"
 		result.add(`\n${state.sp}${state.renderer.red(`[error] ${errorMsg}`)}`)
 	}

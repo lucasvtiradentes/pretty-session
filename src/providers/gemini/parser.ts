@@ -2,11 +2,18 @@ import { INDENT } from "../../constants"
 import { AnsiRenderer } from "../../renderers/ansi"
 import type { Renderer } from "../../renderers/base"
 import { ParseResult } from "../../result"
+import {
+	GEMINI_DEFAULT_MODEL,
+	GEMINI_SESSION_UPDATE_METHOD,
+	GeminiMessageType,
+	GeminiRole,
+	GeminiUpdateType,
+} from "./constants"
 
 export class GeminiState {
 	sessionShown = false
 	sessionId = ""
-	model = "gemini"
+	model = GEMINI_DEFAULT_MODEL
 	turnCount = 0
 	hasSessionTurns = false
 	renderer: Renderer
@@ -45,7 +52,7 @@ export function parseGeminiLine(line: string, state: GeminiState): ParseResult {
 	}
 
 	const type = (data.type as string) ?? ""
-	if (type === "gemini") {
+	if (type === GeminiMessageType.Gemini) {
 		state.model = (data.model as string) ?? state.model
 		const tokens = (data.tokens as Record<string, number>) ?? {}
 		state.lastInputTokens = tokens.input ?? 0
@@ -57,23 +64,23 @@ export function parseGeminiLine(line: string, state: GeminiState): ParseResult {
 		return result
 	}
 
-	if (type === "init") {
+	if (type === GeminiMessageType.Init) {
 		state.sessionId = (data.session_id as string) ?? state.sessionId
 		state.model = (data.model as string) ?? state.model
 		return result
 	}
 
-	if (type === "message") {
+	if (type === GeminiMessageType.Message) {
 		state.sessionId = (data.session_id as string) ?? state.sessionId
 		state.model = (data.model as string) ?? state.model
-		if (data.role !== "assistant") return result
+		if (data.role !== GeminiRole.Assistant) return result
 		showGeminiSession(state, result)
 		const raw = (data.content as string) ?? ""
 		if (raw) result.add(state.renderer.renderMarkdown(raw))
 		return result
 	}
 
-	if (type === "result") {
+	if (type === GeminiMessageType.Result) {
 		const stats = (data.stats as Record<string, number>) ?? {}
 		state.lastInputTokens = stats.input_tokens ?? stats.input ?? 0
 		state.lastOutputTokens = stats.output_tokens ?? 0
@@ -81,7 +88,7 @@ export function parseGeminiLine(line: string, state: GeminiState): ParseResult {
 	}
 
 	const method = (data.method as string) ?? ""
-	if (method !== "session/update") return result
+	if (method !== GEMINI_SESSION_UPDATE_METHOD) return result
 
 	const params = (data.params as Record<string, unknown>) ?? {}
 	if (params.sessionId) state.sessionId = (params.sessionId as string) ?? state.sessionId
@@ -89,13 +96,13 @@ export function parseGeminiLine(line: string, state: GeminiState): ParseResult {
 	const update = (params.update as Record<string, unknown>) ?? {}
 	const updateType = (update.sessionUpdate as string) ?? ""
 
-	if (updateType === "agent_message_chunk") {
+	if (updateType === GeminiUpdateType.AgentMessageChunk) {
 		showGeminiSession(state, result)
 		const content = (update.content as Record<string, unknown>) ?? {}
 		const raw = (content.text as string) ?? ""
 		if (!raw) return result
 		result.add(state.renderer.renderMarkdown(raw))
-	} else if (updateType === "usage_update") {
+	} else if (updateType === GeminiUpdateType.UsageUpdate) {
 		const usage = (update.usage as Record<string, number>) ?? {}
 		state.lastInputTokens = (usage.inputTokens ?? usage.input_tokens ?? 0) + (usage.cachedInputTokens ?? 0)
 		state.lastOutputTokens = usage.outputTokens ?? usage.output_tokens ?? 0

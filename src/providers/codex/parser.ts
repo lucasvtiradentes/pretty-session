@@ -1,5 +1,14 @@
 import { ParseResult } from "../../result"
 import {
+	CODEX_DEFAULT_MODEL,
+	CodexAppServerMethod,
+	CodexEventType,
+	CodexItemType,
+	CodexMessageType,
+	CodexRole,
+	STREAM_MESSAGE_TYPES,
+} from "./constants"
+import {
 	dispatchTool,
 	handleAssistant,
 	handleSessionMeta,
@@ -16,27 +25,22 @@ import type { CodexState } from "./state"
 export { CodexState } from "./state"
 export { finalizeCodex } from "./handlers/result"
 
-const STREAM_TYPES = new Set(["thread.started", "turn.started", "turn.completed", "item.started", "item.completed"])
-const APP_SERVER_DELTA_METHOD = "item/agentMessage/delta"
-const APP_SERVER_TOKEN_USAGE_METHOD = "thread/tokenUsage/updated"
-const APP_SERVER_TURN_COMPLETED_METHOD = "turn/completed"
-
 function parseStreamLine(type: string, data: Record<string, unknown>, state: CodexState, result: ParseResult) {
-	if (type === "thread.started") handleThreadStarted(data, state)
-	else if (type === "turn.started") state.turnCount++
-	else if (type === "turn.completed") handleTurnCompleted(data, state)
+	if (type === CodexMessageType.ThreadStarted) handleThreadStarted(data, state)
+	else if (type === CodexMessageType.TurnStarted) state.turnCount++
+	else if (type === CodexMessageType.TurnCompleted) handleTurnCompleted(data, state)
 	else handleStreamItem(data, state, result)
 }
 
 function parseSessionLine(type: string, data: Record<string, unknown>, state: CodexState, result: ParseResult) {
 	const payload = (data.payload as Record<string, unknown>) ?? {}
 
-	if (type === "session_meta") handleSessionMeta(payload, state)
-	else if (type === "turn_context") handleTurnContext(payload, state)
-	else if (type === "event_msg") {
+	if (type === CodexMessageType.SessionMeta) handleSessionMeta(payload, state)
+	else if (type === CodexMessageType.TurnContext) handleTurnContext(payload, state)
+	else if (type === CodexMessageType.EventMsg) {
 		const eventType = (payload.type as string) ?? ""
-		if (eventType === "user_message") handleUserMessage(payload, state, result)
-		else if (eventType === "token_count") {
+		if (eventType === CodexEventType.UserMessage) handleUserMessage(payload, state, result)
+		else if (eventType === CodexEventType.TokenCount) {
 			const info = payload.info as Record<string, unknown> | null
 			if (info) {
 				const usage = (info.total_token_usage as Record<string, number>) ?? {}
@@ -44,13 +48,13 @@ function parseSessionLine(type: string, data: Record<string, unknown>, state: Co
 				state.lastOutputTokens = (usage.output_tokens ?? 0) + (usage.reasoning_output_tokens ?? 0)
 			}
 		}
-	} else if (type === "response_item") {
+	} else if (type === CodexMessageType.ResponseItem) {
 		const itemType = (payload.type as string) ?? ""
-		if (itemType === "message" && (payload.role as string) === "assistant") {
+		if (itemType === CodexItemType.Message && (payload.role as string) === CodexRole.Assistant) {
 			handleAssistant(payload, state, result)
-		} else if (itemType === "function_call" || itemType === "custom_tool_call") {
+		} else if (itemType === CodexItemType.FunctionCall || itemType === CodexItemType.CustomToolCall) {
 			dispatchTool(payload, state, result)
-		} else if (itemType === "function_call_output") {
+		} else if (itemType === CodexItemType.FunctionCallOutput) {
 			handleToolResult(payload, state, result)
 		}
 	}
@@ -73,17 +77,17 @@ export function parseCodexLine(line: string, state: CodexState): ParseResult {
 
 	if (thread.id) {
 		state.sessionId = (thread.id as string) ?? ""
-		if (!state.model) state.model = "codex"
+		if (!state.model) state.model = CODEX_DEFAULT_MODEL
 		return result
 	}
 
-	if (method === APP_SERVER_DELTA_METHOD) {
+	if (method === CodexAppServerMethod.Delta) {
 		const params = (data.params as Record<string, unknown>) ?? {}
 		state.streamingAssistantText += (params.delta as string) ?? ""
 		return result
 	}
 
-	if (method === APP_SERVER_TOKEN_USAGE_METHOD) {
+	if (method === CodexAppServerMethod.TokenUsage) {
 		const params = (data.params as Record<string, unknown>) ?? {}
 		const tokenUsage = (params.tokenUsage as Record<string, unknown>) ?? {}
 		const total = (tokenUsage.total as Record<string, number>) ?? {}
@@ -92,7 +96,7 @@ export function parseCodexLine(line: string, state: CodexState): ParseResult {
 		return result
 	}
 
-	if (method === APP_SERVER_TURN_COMPLETED_METHOD) {
+	if (method === CodexAppServerMethod.TurnCompleted) {
 		if (!state.sessionShown) showSession(state, result)
 		const raw = state.streamingAssistantText.replace(/^\n+|\n+$/g, "")
 		state.streamingAssistantText = ""
@@ -104,7 +108,7 @@ export function parseCodexLine(line: string, state: CodexState): ParseResult {
 		return result
 	}
 
-	if (STREAM_TYPES.has(type)) parseStreamLine(type, data, state, result)
+	if (STREAM_MESSAGE_TYPES.has(type)) parseStreamLine(type, data, state, result)
 	else parseSessionLine(type, data, state, result)
 
 	return result

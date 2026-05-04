@@ -1,10 +1,11 @@
 import { INDENT } from "../../../constants"
+import { SystemSubtype } from "../constants"
 import type { ParseResult, ParserState } from "./base"
 
 export function handleSystem(data: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer
 
-	if (data.subtype === "init") {
+	if (data.subtype === SystemSubtype.Init) {
 		if (state.sessionShown) return
 		state.sessionShown = true
 		const sessionId = (data.session_id as string) ?? ""

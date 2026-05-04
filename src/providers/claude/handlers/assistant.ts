@@ -1,3 +1,4 @@
+import { BlockType } from "../constants"
 import type { ParseResult, ParserState } from "./base"
 import { dispatchTool } from "./tools/dispatch"
 
@@ -8,7 +9,7 @@ export function handleAssistantMessage(data: Record<string, unknown>, state: Par
 	if (!Array.isArray(content)) return
 
 	for (const block of content) {
-		if (block.type === "text") {
+		if (block.type === BlockType.Text) {
 			const raw = ((block.text as string) ?? "").replace(/^\n+|\n+$/g, "")
 			if (!raw) continue
 			const rendered = state.renderer.renderMarkdown(raw).replace(/\n+$/, "")
@@ -17,7 +18,7 @@ export function handleAssistantMessage(data: Record<string, unknown>, state: Par
 	}
 
 	for (const block of content) {
-		if (block.type !== "tool_use") continue
+		if (block.type !== BlockType.ToolUse) continue
 		const name = (block.name as string) ?? ""
 		const inp = (block.input as Record<string, unknown>) ?? {}
 		dispatchTool(name, inp, state, result)

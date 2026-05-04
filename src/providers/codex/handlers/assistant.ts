@@ -1,4 +1,5 @@
 import type { ParseResult } from "../../../result"
+import { CodexBlockType } from "../constants"
 import type { CodexState } from "../state"
 import { showSession } from "./session"
 
@@ -9,7 +10,7 @@ export function handleAssistant(payload: Record<string, unknown>, state: CodexSt
 	if (!Array.isArray(content)) return
 
 	for (const block of content) {
-		if (block.type !== "output_text") continue
+		if (block.type !== CodexBlockType.OutputText) continue
 		const raw = ((block.text as string) ?? "").replace(/^\n+|\n+$/g, "")
 		if (!raw) continue
 		const rendered = state.renderer.renderMarkdown(raw).replace(/\n+$/, "")

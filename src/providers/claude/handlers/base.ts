@@ -1,9 +1,10 @@
 import { AnsiRenderer } from "../../../renderers/ansi"
 import type { Renderer } from "../../../renderers/base"
+import { ParserMode } from "../constants"
 export { ParseResult } from "../../../result"
 
 export class ParserState {
-	mode: string
+	mode: ParserMode
 	currentTool = ""
 	sessionShown = false
 	subagentDepth = 0
@@ -21,7 +22,7 @@ export class ParserState {
 	lastCostUsd = 0
 
 	constructor() {
-		this.mode = "stream"
+		this.mode = ParserMode.Stream
 		this.renderer = new AnsiRenderer()
 	}
 

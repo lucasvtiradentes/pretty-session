@@ -1,5 +1,5 @@
 import { AGENT_DESCRIPTION_MAX_CHARS, INDENT } from "../../../../constants"
-import { Tool } from "../../constants"
+import { ParserMode, Tool } from "../../constants"
 import type { ParseResult, ParserState } from "../base"
 
 export function handleAgent(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
@@ -14,7 +14,7 @@ export function handleAgent(inp: Record<string, unknown>, state: ParserState, re
 			result.add(`${state.sp}${r.dim(`${INDENT}${line}`)}\n`)
 		}
 	}
-	if (state.mode === "stream") {
+	if (state.mode === ParserMode.Stream) {
 		state.incrementDepth()
 	}
 }

@@ -1,5 +1,6 @@
 import { formatToolOutput } from "../../../format"
 import type { ParseResult } from "../../../result"
+import { CODEX_DEFAULT_MODEL, CodexItemType, CodexMessageType } from "../constants"
 import type { CodexState } from "../state"
 import { showSession } from "./session"
 
@@ -14,16 +15,16 @@ function extractCmd(command: string): string {
 export function handleStreamItem(data: Record<string, unknown>, state: CodexState, result: ParseResult) {
 	const item = (data.item as Record<string, unknown>) ?? {}
 	const itemType = (item.type as string) ?? ""
-	const isCompleted = data.type === "item.completed"
+	const isCompleted = data.type === CodexMessageType.ItemCompleted
 	const r = state.renderer
 
-	if (itemType === "agent_message" && isCompleted) {
+	if (itemType === CodexItemType.AgentMessage && isCompleted) {
 		if (!state.sessionShown) showSession(state, result)
 		const raw = ((item.text as string) ?? "").replace(/^\n+|\n+$/g, "")
 		if (!raw) return
 		const rendered = r.renderMarkdown(raw).replace(/\n+$/, "")
 		if (rendered) result.add(`\n${rendered}\n`)
-	} else if (itemType === "command_execution") {
+	} else if (itemType === CodexItemType.CommandExecution) {
 		if (!isCompleted) {
 			if (!state.sessionShown) showSession(state, result)
 			const cmd = extractCmd((item.command as string) ?? "")
@@ -32,12 +33,12 @@ export function handleStreamItem(data: Record<string, unknown>, state: CodexStat
 			const output = ((item.aggregated_output as string) ?? "").trimEnd()
 			formatToolOutput(output, r, result)
 		}
-	} else if (itemType === "patch_application" && isCompleted) {
+	} else if (itemType === CodexItemType.PatchApplication && isCompleted) {
 		const filePaths = (item.file_paths as string[]) ?? []
 		for (const file of filePaths) {
 			result.add(`\n${r.orange(`[Edit] ${file}`)}\n`)
 		}
-	} else if (itemType === "file_change" && isCompleted) {
+	} else if (itemType === CodexItemType.FileChange && isCompleted) {
 		if (!state.sessionShown) showSession(state, result)
 		const changes = (item.changes as Array<Record<string, string>>) ?? []
 		for (const change of changes) {
@@ -48,7 +49,7 @@ export function handleStreamItem(data: Record<string, unknown>, state: CodexStat
 
 export function handleThreadStarted(data: Record<string, unknown>, state: CodexState) {
 	state.sessionId = (data.thread_id as string) ?? ""
-	if (!state.model) state.model = "codex"
+	if (!state.model) state.model = CODEX_DEFAULT_MODEL
 }
 
 export function handleTurnCompleted(data: Record<string, unknown>, state: CodexState) {

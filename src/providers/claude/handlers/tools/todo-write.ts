@@ -1,5 +1,5 @@
 import { INDENT } from "../../../../constants"
-import { Tool } from "../../constants"
+import { TodoStatus, Tool } from "../../constants"
 import type { ParseResult, ParserState } from "../base"
 
 export function handleTodo(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
@@ -7,12 +7,12 @@ export function handleTodo(inp: Record<string, unknown>, state: ParserState, res
 	result.add(`\n${state.sp}${r.yellow(`[${Tool.TodoWrite}]`)}\n`)
 	const todos = (inp.todos as Array<Record<string, unknown>>) ?? []
 	for (const todo of todos) {
-		const status = (todo.status as string) ?? "pending"
+		const status = (todo.status as string) ?? TodoStatus.Pending
 		const text = (todo.content as string) ?? ""
 		let mark: string
-		if (status === "completed") {
+		if (status === TodoStatus.Completed) {
 			mark = r.green("[x]")
-		} else if (status === "in_progress") {
+		} else if (status === TodoStatus.InProgress) {
 			mark = r.orange("[~]")
 		} else {
 			mark = r.dim("[ ]")

@@ -1,5 +1,6 @@
 import { INDENT, USER_MESSAGE_MAX_CHARS } from "../../../constants"
 import { formatToolOutput } from "../../../format"
+import { ContentType, ParserMode } from "../constants"
 import type { ParseResult, ParserState } from "./base"
 
 export function handleUserMessage(data: Record<string, unknown>, state: ParserState, result: ParseResult) {
@@ -8,7 +9,7 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 	const content = message.content
 
 	if (typeof content === "string") {
-		if (state.mode === "replay" && state.sessionShown) {
+		if (state.mode === ParserMode.Replay && state.sessionShown) {
 			const cleaned = content
 				.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, "")
 				.replace(/<task-notification>[\s\S]*?<\/task-notification>/g, "")
@@ -34,7 +35,7 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 	const first = content[0] as Record<string, unknown>
 	const contentType = (first.type as string) ?? ""
 
-	if (contentType === "tool_result") {
+	if (contentType === ContentType.ToolResult) {
 		const rawContent = first.content
 
 		if (typeof rawContent === "string") {

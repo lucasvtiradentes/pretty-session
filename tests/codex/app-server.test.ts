@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { CodexState, finalizeCodex, parseCodexLine } from "../../src/providers/codex/parser"
+import { CodexState, finalizeCodex, parseCodexLine } from "../../src/providers/codex"
 
 const ansiPattern = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g")
 const stripAnsi = (value: string) => value.replace(ansiPattern, "")

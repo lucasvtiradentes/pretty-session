@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { GeminiState, finalizeGemini, parseGeminiLine } from "../../src/providers/gemini/parser"
+import { GeminiState, finalizeGemini, parseGeminiLine } from "../../src/providers/gemini"
 
 const ansiPattern = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g")
 const stripAnsi = (value: string) => value.replace(ansiPattern, "")

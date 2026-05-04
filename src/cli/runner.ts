@@ -3,10 +3,9 @@ import { createInterface } from "node:readline"
 import type { Program as CaporalProgram } from "@caporal/core"
 import { COMPLETION_COMMAND_NAME, registerCompletionCommand } from "../completion"
 import { CLI_NAME, PROVIDER_VALUES, Provider, VERSION } from "../constants"
-import { parseJsonLine } from "../providers/claude/parser"
-import { ParserState } from "../providers/claude/state"
-import { CodexState, finalizeCodex, parseCodexLine } from "../providers/codex/parser"
-import { GeminiState, finalizeGemini, parseGeminiLine } from "../providers/gemini/parser"
+import { ParserState, parseJsonLine } from "../providers/claude"
+import { CodexState, finalizeCodex, parseCodexLine } from "../providers/codex"
+import { GeminiState, finalizeGemini, parseGeminiLine } from "../providers/gemini"
 import type { ParseResult } from "../result"
 
 let programInstance: CaporalProgram | undefined

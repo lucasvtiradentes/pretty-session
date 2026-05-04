@@ -24,9 +24,6 @@ import {
 } from "./handlers/index"
 import type { CodexState } from "./state"
 
-export { CodexState } from "./state"
-export { finalizeCodex } from "./handlers/result"
-
 function parseStreamLine(type: string, data: Record<string, unknown>, state: CodexState, result: ParseResult) {
 	if (type === CodexMessageType.ThreadStarted) handleThreadStarted(data, state)
 	else if (type === CodexMessageType.TurnStarted) state.turnCount++

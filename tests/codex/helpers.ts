@@ -90,6 +90,7 @@ export function sanitize(output: string): string {
 			.replace(/(\[Edit\]) [^\n]+/g, "$1 <ABS_PATH>")
 			.replace(/^(?!\[|\s{3}|----|\n$)[^\n]+\n?/gm, "")
 			.replace(/\n+\[done\]/g, "\n\n[done]")
+			.replace(/\n{2,}(?=\[(?!done\]))/g, "\n\n\n")
 			.replace(/(model: <MODEL>\n)\n+(?=\[(?!done\]))/g, "$1\n\n\n")
 	)
 }

@@ -1,3 +1,4 @@
+import { parseJsonRecord } from "../../lib/json"
 import { ParseResult } from "../../result"
 import {
 	CODEX_DEFAULT_MODEL,
@@ -63,12 +64,8 @@ function parseSessionLine(type: string, data: Record<string, unknown>, state: Co
 export function parseCodexLine(line: string, state: CodexState): ParseResult {
 	const result = new ParseResult()
 
-	let data: Record<string, unknown>
-	try {
-		data = JSON.parse(line)
-	} catch {
-		return result
-	}
+	const data = parseJsonRecord(line)
+	if (!data) return result
 
 	const type = (data.type as string) ?? ""
 	const method = (data.method as string) ?? ""

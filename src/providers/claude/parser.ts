@@ -1,3 +1,4 @@
+import { parseJsonRecord } from "../../lib/json"
 import { ClaudeMessageType, ParserMode, SystemSubtype } from "./constants"
 import {
 	ParseResult,
@@ -12,12 +13,8 @@ import {
 export function parseJsonLine(line: string, state: ParserState): ParseResult {
 	const result = new ParseResult()
 
-	let data: Record<string, unknown>
-	try {
-		data = JSON.parse(line)
-	} catch {
-		return result
-	}
+	const data = parseJsonRecord(line)
+	if (!data) return result
 
 	const msgType = (data.type as string) ?? ""
 

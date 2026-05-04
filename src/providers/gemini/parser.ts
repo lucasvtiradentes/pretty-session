@@ -1,4 +1,5 @@
 import { INDENT } from "../../constants"
+import { parseJsonRecord } from "../../lib/json"
 import { AnsiRenderer } from "../../renderers/ansi"
 import type { Renderer } from "../../renderers/base"
 import { ParseResult } from "../../result"
@@ -28,12 +29,8 @@ export class GeminiState {
 export function parseGeminiLine(line: string, state: GeminiState): ParseResult {
 	const result = new ParseResult()
 
-	let data: Record<string, unknown>
-	try {
-		data = JSON.parse(line)
-	} catch {
-		return result
-	}
+	const data = parseJsonRecord(line)
+	if (!data) return result
 
 	const rpcResult = (data.result as Record<string, unknown>) ?? {}
 	const models = (rpcResult.models as Record<string, unknown>) ?? {}

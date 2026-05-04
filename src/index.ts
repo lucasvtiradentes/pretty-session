@@ -1,3 +1,4 @@
+export { getCompletionScript, getSupportedCompletionShells, isCompletionShell } from "./completion"
 export { Provider, PROVIDER_VALUES } from "./constants"
 export { formatToolOutput } from "./format"
 export { parseJsonLine } from "./providers/claude/parser"

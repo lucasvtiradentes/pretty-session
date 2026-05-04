@@ -1,4 +1,5 @@
 import { createInterface } from "node:readline"
+import { getCompletionScript, getSupportedCompletionShells, isCompletionShell } from "./completion"
 import { CLI_NAME, PROVIDER_VALUES, Provider, VERSION } from "./constants"
 import { ParserState } from "./providers/claude/handlers/base"
 import { parseJsonLine } from "./providers/claude/parser"
@@ -11,6 +12,7 @@ function printHelp() {
 
 Usage:
   <provider-output> | ${CLI_NAME} <provider>
+  ${CLI_NAME} completion <shell>
 
 Providers:
   ${Provider.Claude}          Claude Code (stream + session auto-detected)
@@ -20,6 +22,11 @@ Providers:
 Options:
   -h, --help         Show this help
   -v, --version      Show version
+
+Completion:
+  ${CLI_NAME} completion zsh
+  ${CLI_NAME} completion bash
+  ${CLI_NAME} completion fish
 
 Environment:
   PS_TOOL_RESULT_MAX_CHARS   Max chars for tool results (default: 300, 0=hide)
@@ -62,6 +69,17 @@ function main() {
 	if (args.includes("-v") || args.includes("--version")) {
 		console.log(VERSION)
 		process.exit(0)
+	}
+
+	if (args[0] === "completion") {
+		const shell = args[1] ?? ""
+		if (isCompletionShell(shell)) {
+			console.log(getCompletionScript(shell))
+			process.exit(0)
+		}
+		console.error(`Unsupported shell: ${shell || "<empty>"}`)
+		console.error(`Supported: ${getSupportedCompletionShells().join(", ")}`)
+		process.exit(1)
 	}
 
 	const providerArg = args[0]

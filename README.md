@@ -68,25 +68,36 @@ Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON
    cat ~/.codex/sessions/.../session.jsonl | ps codex
    ```
 
-4. Install the local dev CLI:
-
-   ```sh
-   pnpm dev:install
-   psd --help
-   pnpm dev:uninstall
-   ```
-
 ## 🧰 Commands
 
 <!-- <DYNFIELD:COMMANDS> -->
 ```sh
-ps claude                 # format Claude Code stream or saved session JSONL
-ps codex                  # format Codex stream or saved session JSONL
-ps gemini                 # format Gemini stream or saved session JSONL
-pretty-session --help     # show usage
-pretty-session --version  # show version
+# live provider streams
+claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | ps claude
+codex exec "explain this code" --json | ps codex
+gemini -p "explain this code" --output-format stream-json | ps gemini
+
+# saved session files
+cat ~/.claude/projects/.../session.jsonl | ps claude
+cat ~/.codex/sessions/.../session.jsonl | ps codex
+cat ~/.gemini/tmp/.../session.jsonl | ps gemini
+
+# shell integration
+ps completion zsh
+ps --help
+ps --version
 ```
 <!-- </DYNFIELD:COMMANDS> -->
+
+## 🛠️ Development
+
+Install the dev CLI once to use `psd` anywhere on your machine while testing local source changes:
+
+```sh
+pnpm dev:install
+psd --help
+pnpm dev:uninstall
+```
 
 ## ⚙️ Configuration
 

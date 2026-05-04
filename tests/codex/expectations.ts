@@ -15,8 +15,6 @@ export const STREAM_SESSION_HEADER = `[session]
 
 `
 
-export const STREAM_SESSION_FOOTER = SESSION_FOOTER
-
 export const EDIT_BODY = `
 
 [Edit] <ABS_PATH>

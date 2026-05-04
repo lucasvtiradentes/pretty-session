@@ -1,12 +1,10 @@
 import { createInterface } from "node:readline"
-import { CLI_NAME, PROVIDER_VALUES, Provider } from "./constants"
+import { CLI_NAME, PROVIDER_VALUES, Provider, VERSION } from "./constants"
 import { ParserState } from "./providers/claude/handlers/base"
 import { parseJsonLine } from "./providers/claude/parser"
 import { CodexState, finalizeCodex, parseCodexLine } from "./providers/codex/parser"
 import { GeminiState, finalizeGemini, parseGeminiLine } from "./providers/gemini/parser"
 import type { ParseResult } from "./result"
-
-const VERSION = "0.1.0"
 
 function printHelp() {
 	console.log(`${CLI_NAME} - Pretty formatter for AI coding agent sessions

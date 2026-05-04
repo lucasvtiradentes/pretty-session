@@ -2,17 +2,17 @@ import { execSync } from "node:child_process"
 import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs"
 import { dirname, resolve } from "node:path"
 import { scrubFixture } from "../scrub"
-import { SESSION_FOOTER, SESSION_HEADER, STREAM_SESSION_FOOTER, STREAM_SESSION_HEADER } from "./expectations"
+import { SESSION_FOOTER, SESSION_HEADER, STREAM_SESSION_HEADER } from "./expectations"
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), "../..")
-const SANDBOX_BASE = resolve(CLI_ROOT, "../../.sandbox")
+const SANDBOX_BASE = resolve(CLI_ROOT, ".sandbox")
 const CLI_PATH = resolve(CLI_ROOT, "src/cli.ts")
 const HOME = process.env.HOME ?? ""
 
 const TEST_ENV = { ...process.env, PS_TOOL_RESULT_MAX_CHARS: "300", PS_READ_PREVIEW_LINES: "5" }
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: stripping ANSI escape codes
-export const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, "")
+const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, "")
 
 export function replayFixture(fixturePath: string): string {
 	const output = execSync(`npx tsx ${CLI_PATH} codex < ${fixturePath}`, {
@@ -98,7 +98,7 @@ export function expected(body: string): string {
 }
 
 export function expectedStream(body: string): string {
-	return STREAM_SESSION_HEADER + body + STREAM_SESSION_FOOTER
+	return STREAM_SESSION_HEADER + body + SESSION_FOOTER
 }
 
 export function fixtureExists(path: string): boolean {

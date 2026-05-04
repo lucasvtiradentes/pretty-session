@@ -1,90 +1,128 @@
-# pretty-sessions
+<a name="TOC"></a>
 
-Pretty formatter for AI coding agent sessions. Pipe provider output or saved session files and get a readable, colorized view.
+<div align="center">
+  <!-- <DYNFIELD:HEADER_LOGO> -->
+  <div>Pretty Session</div>
+  <!-- </DYNFIELD:HEADER_LOGO> -->
+  <br />
+  <a href="#-overview">Overview</a> • <a href="#-motivation">Motivation</a> • <a href="#-features">Features</a> • <a href="#-packages">Packages</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-commands">Commands</a> • <a href="#-configuration">Configuration</a> • <a href="#-license">License</a>
+</div>
 
-<table align="center">
+<!-- <DYNFIELD:TOP_DIVIDER> -->
+<div width="100%" align="center">
+  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/image/divider.png" />
+</div>
+<!-- </DYNFIELD:TOP_DIVIDER> -->
+
+## 🎺 Overview
+
+Pretty Session is a small CLI that formats AI coding agent streams and saved session files into readable terminal output.
+
+## ❓ Motivation
+
+Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON events. That format is good for machines, but bad for quick human review. Pretty Session keeps provider parsing separate and renders the same session in a cleaner, readable view.
+
+## ⭐ Features
+
+- Pipe-based formatter for provider streams and saved sessions
+- Claude Code, Codex, and Gemini support
+- Formatted tool calls for Bash, Read, Edit, Grep, Glob, Task, and more
+- Markdown-ish terminal rendering for text, code, and tables
+- Nested subagent display for Task-style workflows
+- Session totals for duration, cost, and token usage when providers expose them
+
+## 📦 Packages
+
+<div align="center">
+<table>
   <tr>
-    <th>without pretty-sessions</th>
-    <th>with pretty-sessions</th>
+    <th>Package</th>
+    <th>Repo</th>
+    <th>Download</th>
   </tr>
   <tr>
-    <td><img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-sessions@main/.github/images/without-using.png" width="400"></td>
-    <td><img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-sessions@main/.github/images/demo.png" width="400"></td>
+    <td align="center">CLI</td>
+    <td align="center"><a href="https://github.com/lucasvtiradentes/pretty-session"><code>pretty-session</code></a></td>
+    <td align="center"><a href="https://www.npmjs.com/package/pretty-session"><img src="https://img.shields.io/npm/v/pretty-session?label=npm&color=cb3837&logo=npm" alt="npm"></a></td>
   </tr>
 </table>
+</div>
 
-## Features
+## 🚀 Quick Start
 
-- pipe-based     - works with any provider via stdin
-- tool display   - formatted output for Glob, Grep, Bash, Read, Edit, etc.
-- markdown       - renders bold and code with ANSI styles
-- subagent depth - visual indentation for nested Task calls
-- cost tracking  - shows duration, cost, tokens per session
+1. Install the CLI globally:
 
-## Installation
+   ```sh
+   npm i -g pretty-session
+   ```
 
-```bash
-npm install -g @pretty-sessions/cli
+2. Format a Claude Code stream:
+
+   ```sh
+   claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | ps claude
+   ```
+
+3. Format a saved Codex session:
+
+   ```sh
+   cat ~/.codex/sessions/.../session.jsonl | ps codex
+   ```
+
+4. Install the local dev CLI:
+
+   ```sh
+   pnpm dev:install
+   psd --help
+   pnpm dev:uninstall
+   ```
+
+## 🧰 Commands
+
+<!-- <DYNFIELD:COMMANDS> -->
+```sh
+ps claude                 # format Claude Code stream or saved session JSONL
+ps codex                  # format Codex stream or saved session JSONL
+ps gemini                 # format Gemini stream or saved session JSONL
+pretty-session --help     # show usage
+pretty-session --version  # show version
 ```
+<!-- </DYNFIELD:COMMANDS> -->
 
-Aliases: `pretty-sessions`, `ps`
+## ⚙️ Configuration
 
-## Usage
+No config file is required. Pretty Session reads provider events from stdin and writes formatted output to stdout.
 
-```bash
-# Claude Code stream
-claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | ps claude
+Supported providers:
 
-# Claude Code saved session
-cat ~/.claude/projects/.../session.jsonl | ps claude
-
-# Codex stream
-codex exec "explain this code" --json | ps codex
-
-# Codex saved session
-cat ~/.codex/sessions/.../session.jsonl | ps codex
-
-# Gemini stream
-gemini -p "explain this code" --output-format stream-json | ps gemini
-
-# Gemini saved session
-cat ~/.gemini/tmp/.../chats/session.jsonl | ps gemini
+<!-- <DYNFIELD:CONFIG_JSON> -->
+```json
+{
+  "providers": ["claude", "codex", "gemini"],
+  "env": {
+    "PS_TOOL_RESULT_MAX_CHARS": "300",
+    "PS_READ_PREVIEW_LINES": "5"
+  }
+}
 ```
+<!-- </DYNFIELD:CONFIG_JSON> -->
 
-## Providers
+## 📜 License
 
-| Provider | Stream | Saved session |
-|----------|--------|---------------|
-| claude   | yes    | yes           |
-| codex    | yes    | yes           |
-| gemini   | yes    | yes           |
+[MIT](https://github.com/lucasvtiradentes/pretty-session/blob/main/LICENSE)
 
-## Environment
+<!-- <DYNFIELD:FOOTER> -->
+<div width="100%" align="center">
+  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/image/divider.png" />
+</div>
 
-| Variable                 | Default | Description                         |
-|--------------------------|---------|-------------------------------------|
-| PS_TOOL_RESULT_MAX_CHARS | 300     | Max chars for tool results (0=hide) |
-| PS_READ_PREVIEW_LINES    | 5       | Lines to preview from Read (0=hide) |
+<br />
 
-## Monorepo structure
-
-```
-pretty-sessions/
-├── apps/cli              CLI tool (TypeScript)
-├── apps/vscode-extension  VSCode extension (planned)
-└── packages/core          Shared core (planned)
-```
-
-## Development
-
-```bash
-pnpm install
-pnpm turbo build
-pnpm turbo test
-pnpm lint
-pnpm knip
-```
-
-## License
-
-MIT
+<div align="center">
+  <div>
+    <a target="_blank" href="https://www.linkedin.com/in/lucasvtiradentes/"><img src="https://img.shields.io/badge/-linkedin-blue?logo=Linkedin&logoColor=white" alt="LinkedIn"></a>
+    <a target="_blank" href="mailto:lucasvtiradentes@gmail.com"><img src="https://img.shields.io/badge/gmail-red?logo=gmail&logoColor=white" alt="Gmail"></a>
+    <a target="_blank" href="https://x.com/lucasvtiradente"><img src="https://img.shields.io/badge/-X-black?logo=X&logoColor=white" alt="X"></a>
+    <a target="_blank" href="https://github.com/lucasvtiradentes"><img src="https://img.shields.io/badge/-github-gray?logo=Github&logoColor=white" alt="Github"></a>
+  </div>
+</div>
+<!-- </DYNFIELD:FOOTER> -->

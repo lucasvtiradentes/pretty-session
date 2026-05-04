@@ -7,7 +7,7 @@ const CLI_PATH = resolve(CLI_ROOT, "src/cli.ts")
 const TEST_ENV = { ...process.env, PS_TOOL_RESULT_MAX_CHARS: "300", PS_READ_PREVIEW_LINES: "5" }
 
 const ansiPattern = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g")
-export const stripAnsi = (value: string) => value.replace(ansiPattern, "")
+const stripAnsi = (value: string) => value.replace(ansiPattern, "")
 
 export function replayFixture(fixturePath: string): string {
 	return execSync(`npx tsx ${CLI_PATH} gemini < ${fixturePath}`, {

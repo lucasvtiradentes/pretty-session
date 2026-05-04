@@ -1,54 +1,97 @@
-name: _callable CI
+name: Callable CI
 
 on:
   workflow_call:
     inputs:
-      run_tests:
+      run_lint:
+        description: Run check
         type: boolean
         required: true
+      run_build:
+        description: Run typecheck and build
+        type: boolean
+        required: true
+      run_test:
+        description: Run tests
+        type: boolean
+        required: false
+        default: false
       run_e2e_tests:
+        description: Run e2e tests
         type: boolean
-        required: true
+        required: false
+        default: false
     secrets:
-      TURBO_TOKEN:
-        required: true
-      TURBO_TEAM:
-        required: true
       CLAUDE_CODE_OAUTH_TOKEN:
-        required: true
+        required: false
       CODEX_AUTH_JSON:
-        required: true
-
-env:
-  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-  TURBO_TELEMETRY_DISABLED: 1
+        required: false
+    outputs:
+      should_release_npm:
+        description: Whether the package version changed and release tag is missing
+        value: ${{ jobs.check_version.outputs.should_release_npm }}
 
 jobs:
-  build:
+  check_version:
+    runs-on: ubuntu-latest
+    outputs:
+      should_release_npm: ${{ steps.check.outputs.should_release_npm }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - uses: ./.github/actions/setup-and-install
+        with:
+          skip-install: 'true'
+
+      - name: Check package version
+        id: check
+        run: bash .github/scripts/check-version-bump.sh
+
+  check:
+    if: inputs.run_lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: ./.github/actions/setup-and-install
-      - run: pnpm build
-      - run: pnpm check
-      - run: pnpm knip
 
-  test:
-    if: ${{ inputs.run_tests }}
-    needs: build
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+      - uses: ./.github/actions/setup-and-install
+
+      - name: Run check
+        run: pnpm run check
+
+      - name: Run knip
+        run: pnpm run knip
+
+  build:
+    if: inputs.run_build
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+
       - uses: ./.github/actions/setup-and-install
-      - run: pnpm turbo test
+
+      - name: Run typecheck
+        run: pnpm run typecheck
+
+      - name: Run build
+        run: pnpm run build
+        env:
+          CI: true
+
+  test:
+    if: inputs.run_test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: ./.github/actions/setup-and-install
+
+      - name: Run tests
+        run: pnpm run test
 
   test-e2e:
-    if: ${{ inputs.run_e2e_tests }}
-    needs: build
+    if: inputs.run_e2e_tests
     uses: ./.github/workflows/callable-run-e2e-tests.yml
     with:
       run_claude: true

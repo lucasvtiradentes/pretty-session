@@ -1,6 +1,5 @@
 node_modules/
 dist/
-.turbo/
 .venv/
 __pycache__/
 *.pyc
@@ -14,6 +13,3 @@ build/
 tmp-*
 .env
 .sandbox/
-
-# Turborepo
-.turbo

@@ -1,19 +1,59 @@
 {
-	"name": "pretty-sessions",
-	"private": true,
+	"name": "pretty-session",
+	"version": "0.0.0",
+	"description": "Pretty formatter for AI coding agent sessions",
+	"type": "module",
 	"packageManager": "pnpm@9.15.4",
+	"publishConfig": {
+		"access": "public"
+	},
+	"bin": {
+		"pretty-session": "./dist/cli.js",
+		"ps": "./dist/cli.js"
+	},
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": ["dist"],
 	"scripts": {
-		"build": "turbo build",
-		"check": "biome check . && turbo check",
-		"check:fix": "biome check --fix . && turbo check",
+		"build": "tsup",
+		"changeset": "changeset",
+		"changeset:version": "changeset version",
+		"check": "biome check src/ tests/",
+		"check:fix": "biome check --fix src/ tests/",
+		"dev": "dotenv -- tsx src/cli.ts",
+		"dev:install": "tsx scripts/install-dev-version.ts",
+		"dev:uninstall": "tsx scripts/uninstall-dev-version.ts",
 		"knip": "knip",
-		"prepare": "husky"
+		"lint-staged": "lint-staged",
+		"prepare": "husky",
+		"release": "changeset publish",
+		"test": "vitest run --exclude '**/**.e2e.test.ts'",
+		"test:e2e": "pnpm test:e2e:claude && pnpm test:e2e:codex",
+		"test:e2e:claude": "vitest run tests/claude/**/*.e2e.test.ts",
+		"test:e2e:codex": "vitest run tests/codex/**/*.e2e.test.ts",
+		"typecheck": "tsc --noEmit"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
+		"@changesets/cli": "^2.31.0",
+		"@types/node": "^25.6.0",
+		"dotenv-cli": "^11.0.0",
 		"husky": "^9.1.7",
 		"knip": "^6.4.1",
 		"lint-staged": "^15.4.3",
-		"turbo": "^2.4.4"
+		"tsup": "^8.3.6",
+		"tsx": "^4.21.0",
+		"typescript": "^5.7.3",
+		"vitest": "^4.1.4"
+	},
+	"engines": {
+		"node": ">=20",
+		"pnpm": ">=9"
 	}
 }

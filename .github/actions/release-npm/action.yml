@@ -1,0 +1,42 @@
+name: Release NPM package
+description: Publish the package to NPM with Changesets
+
+inputs:
+  npm-token:
+    description: NPM authentication token
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Build package
+      shell: bash
+      run: pnpm run build
+      env:
+        CI: true
+
+    - name: Get package version
+      id: version
+      shell: bash
+      run: |
+        version="$(node -p "require('./package.json').version")"
+        echo "current=$version" >> "$GITHUB_OUTPUT"
+
+    - name: Publish package
+      shell: bash
+      run: |
+        echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
+        pnpm changeset publish
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
+        NPM_TOKEN: ${{ inputs.npm-token }}
+
+    - name: Create git tag
+      shell: bash
+      run: |
+        tag="v${{ steps.version.outputs.current }}"
+        if git ls-remote --tags origin | grep -q "refs/tags/$tag$"; then
+          exit 0
+        fi
+        git tag "$tag"
+        git push origin "$tag"

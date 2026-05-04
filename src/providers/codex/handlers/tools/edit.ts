@@ -1,4 +1,5 @@
 import type { ParseResult } from '../../../../lib/result'
+import { CodexToolLabel } from '../../constants'
 import type { CodexState } from '../../state'
 
 export function handleEdit(payload: Record<string, unknown>, state: CodexState, result: ParseResult) {
@@ -8,9 +9,9 @@ export function handleEdit(payload: Record<string, unknown>, state: CodexState, 
 
 	if (files.length > 0) {
 		for (const file of files) {
-			result.add(`\n${r.orange(`[Edit] ${file}`)}\n`)
+			result.add(`\n${r.orange(`[${CodexToolLabel.Edit}] ${file}`)}\n`)
 		}
 	} else {
-		result.add(`\n${r.orange('[Edit]')}\n`)
+		result.add(`\n${r.orange(`[${CodexToolLabel.Edit}]`)}\n`)
 	}
 }

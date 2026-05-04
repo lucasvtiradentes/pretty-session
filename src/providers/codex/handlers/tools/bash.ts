@@ -1,5 +1,6 @@
 import { parseJsonRecord } from '../../../../lib/json'
 import type { ParseResult } from '../../../../lib/result'
+import { CodexToolLabel } from '../../constants'
 import type { CodexState } from '../../state'
 
 export function handleBash(payload: Record<string, unknown>, state: CodexState, result: ParseResult) {
@@ -7,5 +8,5 @@ export function handleBash(payload: Record<string, unknown>, state: CodexState, 
 	if (!args) return
 
 	const cmd = (args.cmd as string) ?? ''
-	result.add(`\n${state.renderer.purple(`[Bash] ${cmd}`)}\n`)
+	result.add(`\n${state.renderer.purple(`[${CodexToolLabel.Bash}] ${cmd}`)}\n`)
 }

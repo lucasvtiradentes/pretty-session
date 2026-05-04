@@ -1,7 +1,7 @@
 import { formatToolOutput } from '../../../lib/format'
 import { appendRenderedMarkdown } from '../../../lib/markdown'
 import type { ParseResult } from '../../../lib/result'
-import { CODEX_DEFAULT_MODEL, CodexItemType, CodexMessageType } from '../constants'
+import { CODEX_DEFAULT_MODEL, CodexItemType, CodexMessageType, CodexToolLabel } from '../constants'
 import type { CodexState } from '../state'
 import { showSession } from './session'
 
@@ -26,7 +26,7 @@ export function handleStreamItem(data: Record<string, unknown>, state: CodexStat
 		if (!isCompleted) {
 			if (!state.sessionShown) showSession(state, result)
 			const cmd = extractCmd((item.command as string) ?? '')
-			result.add(`\n${r.purple(`[Bash] ${cmd}`)}\n`)
+			result.add(`\n${r.purple(`[${CodexToolLabel.Bash}] ${cmd}`)}\n`)
 		} else {
 			const output = ((item.aggregated_output as string) ?? '').trimEnd()
 			formatToolOutput(output, r, result)
@@ -34,13 +34,13 @@ export function handleStreamItem(data: Record<string, unknown>, state: CodexStat
 	} else if (itemType === CodexItemType.PatchApplication && isCompleted) {
 		const filePaths = (item.file_paths as string[]) ?? []
 		for (const file of filePaths) {
-			result.add(`\n${r.orange(`[Edit] ${file}`)}\n`)
+			result.add(`\n${r.orange(`[${CodexToolLabel.Edit}] ${file}`)}\n`)
 		}
 	} else if (itemType === CodexItemType.FileChange && isCompleted) {
 		if (!state.sessionShown) showSession(state, result)
 		const changes = (item.changes as Array<Record<string, string>>) ?? []
 		for (const change of changes) {
-			result.add(`\n${r.orange(`[Edit] ${change.path ?? ''}`)}\n`)
+			result.add(`\n${r.orange(`[${CodexToolLabel.Edit}] ${change.path ?? ''}`)}\n`)
 		}
 	}
 }

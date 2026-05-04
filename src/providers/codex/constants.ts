@@ -45,6 +45,12 @@ export enum CodexCustomTool {
 	ApplyPatch = 'apply_patch',
 }
 
+export enum CodexToolLabel {
+	Bash = 'Bash',
+	Edit = 'Edit',
+	Stdin = 'Stdin',
+}
+
 export enum CodexRole {
 	Assistant = 'assistant',
 }

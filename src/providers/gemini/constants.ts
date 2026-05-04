@@ -5,6 +5,7 @@ export enum GeminiMessageType {
 	Init = 'init',
 	Message = 'message',
 	Result = 'result',
+	User = 'user',
 }
 
 export enum GeminiUpdateType {
@@ -14,6 +15,22 @@ export enum GeminiUpdateType {
 
 export enum GeminiRole {
 	Assistant = 'assistant',
+	User = 'user',
 }
 
 export const GEMINI_SESSION_UPDATE_METHOD = 'session/update'
+export const GEMINI_SAVED_KIND_MAIN = 'main'
+
+export enum GeminiTool {
+	GrepSearch = 'grep_search',
+	ReadFile = 'read_file',
+	UpdateTopic = 'update_topic',
+	WriteFile = 'write_file',
+}
+
+export enum GeminiToolLabel {
+	GrepSearch = 'Search',
+	ReadFile = 'Read',
+	UpdateTopic = 'Topic',
+	WriteFile = 'Write',
+}

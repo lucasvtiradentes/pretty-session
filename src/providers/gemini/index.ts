@@ -1,1 +1,3 @@
-export { GeminiState, finalizeGemini, parseGeminiLine } from './parser'
+export { finalizeGemini } from './handlers/result'
+export { parseGeminiLine } from './parser'
+export { GeminiState } from './state'

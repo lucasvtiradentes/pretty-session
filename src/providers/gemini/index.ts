@@ -1,1 +1,1 @@
-export { GeminiState, finalizeGemini, parseGeminiLine } from "./parser"
+export { GeminiState, finalizeGemini, parseGeminiLine } from './parser'

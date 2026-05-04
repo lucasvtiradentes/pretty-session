@@ -1,4 +1,4 @@
-import { Tool } from "../../src/providers/claude/constants"
+import { Tool } from '../../src/providers/claude/constants'
 
 export const SESSION_HEADER = `[session]
    id:    <UUID>
@@ -121,8 +121,8 @@ export const AGENT_BODY = `
 `
 
 export const TABLE_ROWS = [
-	"| Name  | Age | City |",
-	"|-------|-----|------|",
-	"| Alice | 30  | NYC  |",
-	"| Bob   | 7   | LA   |",
+	'| Name  | Age | City |',
+	'|-------|-----|------|',
+	'| Alice | 30  | NYC  |',
+	'| Bob   | 7   | LA   |',
 ]

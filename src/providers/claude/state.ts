@@ -1,21 +1,21 @@
-import { AnsiRenderer } from "../../lib/renderer"
-import type { Renderer } from "../../lib/renderer"
-import { ParserMode } from "./constants"
+import { AnsiRenderer } from '../../lib/renderer'
+import type { Renderer } from '../../lib/renderer'
+import { ParserMode } from './constants'
 
 export class ParserState {
 	mode: ParserMode
-	currentTool = ""
+	currentTool = ''
 	sessionShown = false
 	subagentDepth = 0
-	sp = ""
+	sp = ''
 	inBold = false
 	inCode = false
-	pendingChar = ""
+	pendingChar = ''
 	renderer: Renderer
-	pendingSessionId = ""
-	pendingCwd = ""
+	pendingSessionId = ''
+	pendingCwd = ''
 	lastUsage: Record<string, number> = {}
-	lastModel = ""
+	lastModel = ''
 	lastDurationMs = 0
 	turnCount = 0
 	lastCostUsd = 0
@@ -26,7 +26,7 @@ export class ParserState {
 	}
 
 	updateSp() {
-		this.sp = Array.from({ length: this.subagentDepth }, () => this.renderer.pipe()).join("")
+		this.sp = Array.from({ length: this.subagentDepth }, () => this.renderer.pipe()).join('')
 	}
 
 	incrementDepth() {
@@ -45,20 +45,20 @@ export class ParserState {
 		if (this.inBold && this.inCode) return this.renderer.styleBoldCode()
 		if (this.inBold) return this.renderer.styleBold()
 		if (this.inCode) return this.renderer.styleCode()
-		return ""
+		return ''
 	}
 
 	renderText(text: string): string {
 		const out: string[] = []
 		let i = 0
 		const buf = this.pendingChar + text
-		this.pendingChar = ""
+		this.pendingChar = ''
 
 		while (i < buf.length) {
 			const ch = buf[i]
-			if (ch === "*" && !this.inCode) {
+			if (ch === '*' && !this.inCode) {
 				if (i + 1 < buf.length) {
-					if (buf[i + 1] === "*") {
+					if (buf[i + 1] === '*') {
 						this.inBold = !this.inBold
 						out.push(this.renderer.styleReset() + this.getStyle())
 						i += 2
@@ -67,10 +67,10 @@ export class ParserState {
 					out.push(ch)
 					i++
 				} else {
-					this.pendingChar = "*"
+					this.pendingChar = '*'
 					break
 				}
-			} else if (ch === "`") {
+			} else if (ch === '`') {
 				this.inCode = !this.inCode
 				out.push(this.renderer.styleReset() + this.getStyle())
 				i++
@@ -80,6 +80,6 @@ export class ParserState {
 			}
 		}
 
-		return out.join("")
+		return out.join('')
 	}
 }

@@ -1,5 +1,5 @@
-import type { Command } from "@caporal/core"
-import { CLI_BIN_NAMES } from "../../constants"
+import type { Command } from '@caporal/core'
+import { CLI_BIN_NAMES } from '../../constants'
 
 export type CompletionGroup = {
 	description?: string
@@ -14,8 +14,8 @@ export type CompletionOption = {
 }
 
 export const globalOptions: CompletionOption[] = [
-	{ description: "Show help", long: "help", names: ["-h", "--help"], short: "h" },
-	{ description: "Show version", long: "version", names: ["-v", "--version"], short: "v" },
+	{ description: 'Show help', long: 'help', names: ['-h', '--help'], short: 'h' },
+	{ description: 'Show version', long: 'version', names: ['-v', '--version'], short: 'v' },
 ]
 
 export function isVisibleCompletionCommand(command: Command) {
@@ -31,7 +31,7 @@ export function getRootCommands(commands: Command[]) {
 	const roots = new Map<string, CompletionGroup>()
 
 	for (const command of commands) {
-		const parts = command.name.split(" ")
+		const parts = command.name.split(' ')
 		const root = parts[0]
 		if (!root || roots.has(root)) continue
 
@@ -48,7 +48,7 @@ export function getSubcommandGroups(commands: Command[]) {
 	const groups = new Map<string, CompletionGroup[]>()
 
 	for (const command of commands) {
-		const [root, subcommand] = command.name.split(" ")
+		const [root, subcommand] = command.name.split(' ')
 		if (!root || !subcommand) continue
 
 		const group = groups.get(root) ?? []
@@ -83,11 +83,11 @@ export function getOptionGroups(commands: Command[]) {
 }
 
 export function commandKey(command: string) {
-	return command.replace(/\W+/g, "_")
+	return command.replace(/\W+/g, '_')
 }
 
 export function optionWords(items: CompletionOption[]) {
-	return items.flatMap((item) => item.names).join(" ")
+	return items.flatMap((item) => item.names).join(' ')
 }
 
 export function getFunctionName(binName: string) {

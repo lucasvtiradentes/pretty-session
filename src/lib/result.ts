@@ -6,6 +6,6 @@ export class ParseResult {
 	}
 
 	getOutput(): string {
-		return this.messages.join("")
+		return this.messages.join('')
 	}
 }

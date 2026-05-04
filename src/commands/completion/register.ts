@@ -1,6 +1,6 @@
-import type { Program } from "@caporal/core"
-import { getBashCompletionScript } from "./bash"
-import { getFishCompletionScript } from "./fish"
+import type { Program } from '@caporal/core'
+import { getBashCompletionScript } from './bash'
+import { getFishCompletionScript } from './fish'
 import {
 	type CompletionGroup,
 	type CompletionOption,
@@ -9,15 +9,15 @@ import {
 	getRootCommands,
 	getSubcommandGroups,
 	isVisibleCompletionCommand,
-} from "./shared"
-import { getZshCompletionScript } from "./zsh"
+} from './shared'
+import { getZshCompletionScript } from './zsh'
 
-export const COMPLETION_COMMAND_NAME = "completion"
+export const COMPLETION_COMMAND_NAME = 'completion'
 
 enum CompletionShell {
-	Bash = "bash",
-	Fish = "fish",
-	Zsh = "zsh",
+	Bash = 'bash',
+	Fish = 'fish',
+	Zsh = 'zsh',
 }
 
 const completionShells = Object.values(CompletionShell)
@@ -38,17 +38,17 @@ const completionScriptGenerators = {
 
 export function registerCompletionCommand(program: Program) {
 	program
-		.command(COMPLETION_COMMAND_NAME, "Generate shell completion scripts")
-		.argument("[shell]", "Shell to generate completion for")
+		.command(COMPLETION_COMMAND_NAME, 'Generate shell completion scripts')
+		.argument('[shell]', 'Shell to generate completion for')
 		.strict(false)
 		.action(async ({ args, program }) => {
-			const shell = args.shell ? String(args.shell) : ""
+			const shell = args.shell ? String(args.shell) : ''
 			if (isCompletionShell(shell)) {
 				console.log(await getCompletionScript(program, shell))
 				return 0
 			}
-			console.log(`error: unsupported shell '${shell || "<empty>"}'`)
-			console.log(`supported: ${completionShells.join(", ")}`)
+			console.log(`error: unsupported shell '${shell || '<empty>'}'`)
+			console.log(`supported: ${completionShells.join(', ')}`)
 			return 1
 		})
 }

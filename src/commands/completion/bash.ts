@@ -1,4 +1,4 @@
-import { type CompletionGroup, type CompletionOption, getFunctionName, globalOptions, optionWords } from "./shared"
+import { type CompletionGroup, type CompletionOption, getFunctionName, globalOptions, optionWords } from './shared'
 
 export function getBashCompletionScript(
 	binNames: string[],
@@ -6,7 +6,7 @@ export function getBashCompletionScript(
 	subcommands: Map<string, CompletionGroup[]>,
 	_options: Map<string, CompletionOption[]>,
 ) {
-	const functionName = getFunctionName(binNames[0] ?? "pretty-session")
+	const functionName = getFunctionName(binNames[0] ?? 'pretty-session')
 	return `${functionName}() {
   local cur root subcommand
   cur="\${COMP_WORDS[COMP_CWORD]}"
@@ -21,7 +21,7 @@ export function getBashCompletionScript(
 
   case "$COMP_CWORD" in
     1)
-      COMPREPLY=($(compgen -W "${roots.map((item) => item.name).join(" ")}" -- "$cur"))
+      COMPREPLY=($(compgen -W "${roots.map((item) => item.name).join(' ')}" -- "$cur"))
       ;;
     2)
       case "\${COMP_WORDS[1]}" in
@@ -31,15 +31,15 @@ ${formatBashSubcommandCases(subcommands)}
   esac
 }
 
-${binNames.map((binName) => `complete -F ${functionName} ${binName}`).join("\n")}`
+${binNames.map((binName) => `complete -F ${functionName} ${binName}`).join('\n')}`
 }
 
 function formatBashSubcommandCases(groups: Map<string, CompletionGroup[]>) {
 	return [...groups.entries()]
 		.map(
 			([root, items]) => `        ${root})
-          COMPREPLY=($(compgen -W "${items.map((item) => item.name).join(" ")}" -- "$cur"))
+          COMPREPLY=($(compgen -W "${items.map((item) => item.name).join(' ')}" -- "$cur"))
           ;;`,
 		)
-		.join("\n")
+		.join('\n')
 }

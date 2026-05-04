@@ -1,26 +1,26 @@
-import { readFileSync, writeFileSync } from "node:fs"
+import { readFileSync, writeFileSync } from 'node:fs'
 
 const SENSITIVE_CONTENT = [
-	"<permissions",
-	"<skills_instructions",
-	"<environment_context",
-	"AGENTS.md",
-	"CLAUDE.md",
-	"<hooks",
+	'<permissions',
+	'<skills_instructions',
+	'<environment_context',
+	'AGENTS.md',
+	'CLAUDE.md',
+	'<hooks',
 ]
 
 function isSensitiveLine(d: Record<string, unknown>): boolean {
-	const type = (d.type as string) ?? ""
+	const type = (d.type as string) ?? ''
 
-	if (type === "system" && d.subtype !== "init") return true
+	if (type === 'system' && d.subtype !== 'init') return true
 
-	if (type === "response_item") {
+	if (type === 'response_item') {
 		const p = (d.payload as Record<string, unknown>) ?? {}
-		const role = (p.role as string) ?? ""
-		if (role !== "developer" && role !== "user") return false
+		const role = (p.role as string) ?? ''
+		if (role !== 'developer' && role !== 'user') return false
 		const content = (p.content as Array<Record<string, string>>) ?? []
 		if (!Array.isArray(content)) return false
-		const text = content.map((c) => c.text ?? "").join("")
+		const text = content.map((c) => c.text ?? '').join('')
 		return SENSITIVE_CONTENT.some((k) => text.includes(k))
 	}
 
@@ -28,10 +28,10 @@ function isSensitiveLine(d: Record<string, unknown>): boolean {
 }
 
 function scrubTurnContext(d: Record<string, unknown>): Record<string, unknown> {
-	if ((d.type as string) !== "turn_context") return d
+	if ((d.type as string) !== 'turn_context') return d
 	const payload = { ...((d.payload as Record<string, unknown>) ?? {}) }
 	payload.user_instructions = undefined
-	if (typeof payload.cwd === "string") payload.cwd = "<CWD>"
+	if (typeof payload.cwd === 'string') payload.cwd = '<CWD>'
 	if (payload.collaboration_mode) {
 		const cm = { ...((payload.collaboration_mode as Record<string, unknown>) ?? {}) }
 		const settings = { ...((cm.settings as Record<string, unknown>) ?? {}) }
@@ -43,9 +43,9 @@ function scrubTurnContext(d: Record<string, unknown>): Record<string, unknown> {
 }
 
 function scrubSystemInit(d: Record<string, unknown>): Record<string, unknown> {
-	if ((d.type as string) !== "system" || d.subtype !== "init") return d
+	if ((d.type as string) !== 'system' || d.subtype !== 'init') return d
 	const cleaned = { ...d }
-	if (typeof cleaned.cwd === "string") cleaned.cwd = "<CWD>"
+	if (typeof cleaned.cwd === 'string') cleaned.cwd = '<CWD>'
 	cleaned.memory_paths = undefined
 	cleaned.skills = undefined
 	cleaned.plugins = undefined
@@ -55,16 +55,16 @@ function scrubSystemInit(d: Record<string, unknown>): Record<string, unknown> {
 }
 
 function scrubSessionMeta(d: Record<string, unknown>): Record<string, unknown> {
-	if ((d.type as string) !== "session_meta") return d
+	if ((d.type as string) !== 'session_meta') return d
 	const payload = { ...((d.payload as Record<string, unknown>) ?? {}) }
-	if (typeof payload.cwd === "string") payload.cwd = "<CWD>"
+	if (typeof payload.cwd === 'string') payload.cwd = '<CWD>'
 	return { ...d, payload }
 }
 
 export function scrubFixture(filePath: string) {
-	const raw = readFileSync(filePath, "utf-8")
+	const raw = readFileSync(filePath, 'utf-8')
 	const scrubbed = raw
-		.split("\n")
+		.split('\n')
 		.filter((line) => {
 			if (!line.trim()) return false
 			try {
@@ -84,6 +84,6 @@ export function scrubFixture(filePath: string) {
 				return line
 			}
 		})
-		.join("\n")
+		.join('\n')
 	writeFileSync(filePath, `${scrubbed}\n`)
 }

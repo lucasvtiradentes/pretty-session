@@ -1,9 +1,9 @@
-import type { Program } from "@caporal/core"
-import { Provider } from "../constants"
-import { streamLines } from "../lib/stream"
-import { CodexState, finalizeCodex, parseCodexLine } from "../providers/codex"
+import type { Program } from '@caporal/core'
+import { Provider } from '../constants'
+import { streamLines } from '../lib/stream'
+import { CodexState, finalizeCodex, parseCodexLine } from '../providers/codex'
 
-const description = "Format Codex stream or saved session JSONL"
+const description = 'Format Codex stream or saved session JSONL'
 
 export function registerCodexCommand(program: Program) {
 	program

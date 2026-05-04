@@ -1,14 +1,14 @@
-import { parseJsonRecord } from "../../lib/json"
-import { ParseResult } from "../../lib/result"
-import { ClaudeMessageType, ParserMode, SystemSubtype } from "./constants"
+import { parseJsonRecord } from '../../lib/json'
+import { ParseResult } from '../../lib/result'
+import { ClaudeMessageType, ParserMode, SystemSubtype } from './constants'
 import {
 	handleAssistantMessage,
 	handleResult,
 	handleStreamEvent,
 	handleSystem,
 	handleUserMessage,
-} from "./handlers/index"
-import type { ParserState } from "./state"
+} from './handlers/index'
+import type { ParserState } from './state'
 
 export function parseJsonLine(line: string, state: ParserState): ParseResult {
 	const result = new ParseResult()
@@ -16,21 +16,21 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 	const data = parseJsonRecord(line)
 	if (!data) return result
 
-	const msgType = (data.type as string) ?? ""
+	const msgType = (data.type as string) ?? ''
 
 	if (msgType === ClaudeMessageType.System) handleSystem(data, state, result)
 	else if (msgType === ClaudeMessageType.StreamEvent) handleStreamEvent(data, state, result)
 	else if (msgType === ClaudeMessageType.User) {
 		if (!state.sessionShown && data.sessionId) {
-			state.pendingSessionId = (data.sessionId as string) ?? ""
-			state.pendingCwd = (data.cwd as string) ?? ""
+			state.pendingSessionId = (data.sessionId as string) ?? ''
+			state.pendingCwd = (data.cwd as string) ?? ''
 			state.mode = ParserMode.Replay
 		}
 		if (data.sessionId) state.turnCount++
 		handleUserMessage(data, state, result)
 	} else if (msgType === ClaudeMessageType.Assistant) {
 		const message = (data.message as Record<string, unknown>) ?? {}
-		if (message.model) state.lastModel = (message.model as string) ?? ""
+		if (message.model) state.lastModel = (message.model as string) ?? ''
 		if (message.usage) state.lastUsage = (message.usage as Record<string, number>) ?? {}
 
 		if (!state.sessionShown && state.pendingSessionId) {
@@ -59,7 +59,7 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 			result.add(`\n${r.dim(`[done] ${stats}`)}\n`)
 		}
 	} else if (msgType === ClaudeMessageType.Error) {
-		const errorMsg = (data.error as string) ?? "unknown error"
+		const errorMsg = (data.error as string) ?? 'unknown error'
 		result.add(`\n${state.sp}${state.renderer.red(`[error] ${errorMsg}`)}`)
 	}
 

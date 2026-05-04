@@ -1,8 +1,8 @@
-import { realpathSync } from "node:fs"
-import { basename } from "node:path"
-import { fileURLToPath, pathToFileURL } from "node:url"
-import { CLI_NAME } from "./constants"
-import { runCli } from "./runner"
+import { realpathSync } from 'node:fs'
+import { basename } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { CLI_NAME } from './constants'
+import { runCli } from './runner'
 
 function isDirectRun() {
 	if (!process.argv[1]) return false

@@ -1,9 +1,9 @@
-import type { Program } from "@caporal/core"
-import { Provider } from "../constants"
-import { streamLines } from "../lib/stream"
-import { GeminiState, finalizeGemini, parseGeminiLine } from "../providers/gemini"
+import type { Program } from '@caporal/core'
+import { Provider } from '../constants'
+import { streamLines } from '../lib/stream'
+import { GeminiState, finalizeGemini, parseGeminiLine } from '../providers/gemini'
 
-const description = "Format Gemini stream or saved session JSONL"
+const description = 'Format Gemini stream or saved session JSONL'
 
 export function registerGeminiCommand(program: Program) {
 	program

@@ -1,9 +1,9 @@
-import type { ParseResult } from "../../../../lib/result"
-import { CodexCustomTool, CodexFunctionTool, CodexItemType } from "../../constants"
-import type { CodexState } from "../../state"
-import { handleBash } from "./bash"
-import { handleEdit } from "./edit"
-import { handleStdin } from "./stdin"
+import type { ParseResult } from '../../../../lib/result'
+import { CodexCustomTool, CodexFunctionTool, CodexItemType } from '../../constants'
+import type { CodexState } from '../../state'
+import { handleBash } from './bash'
+import { handleEdit } from './edit'
+import { handleStdin } from './stdin'
 
 type CodexToolHandler = (payload: Record<string, unknown>, state: CodexState, result: ParseResult) => void
 
@@ -22,8 +22,8 @@ const toolHandlersByItemType: Partial<Record<CodexItemType, Partial<Record<strin
 }
 
 export function dispatchTool(payload: Record<string, unknown>, state: CodexState, result: ParseResult) {
-	const itemType = (payload.type as string) ?? ""
-	const name = (payload.name as string) ?? ""
+	const itemType = (payload.type as string) ?? ''
+	const name = (payload.name as string) ?? ''
 
 	const handlers = toolHandlersByItemType[itemType as CodexItemType]
 	const handler = handlers?.[name]

@@ -1,5 +1,5 @@
-import { ParseResult } from "../../../lib/result"
-import type { CodexState } from "../state"
+import { ParseResult } from '../../../lib/result'
+import type { CodexState } from '../state'
 
 export function finalizeCodex(state: CodexState): ParseResult {
 	const result = new ParseResult()

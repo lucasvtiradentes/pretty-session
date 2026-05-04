@@ -1,5 +1,5 @@
-import type { ParseResult } from "../../../lib/result"
-import type { ParserState } from "../state"
+import type { ParseResult } from '../../../lib/result'
+import type { ParserState } from '../state'
 
 export function handleResult(data: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer
@@ -9,7 +9,7 @@ export function handleResult(data: Record<string, unknown>, state: ParserState, 
 	}
 
 	if (data.is_error) {
-		const errorMsg = (data.result as string) ?? "unknown error"
+		const errorMsg = (data.result as string) ?? 'unknown error'
 		result.add(`\n${r.red(`[error] ${errorMsg}`)}\n`)
 	} else {
 		const durationMs = (data.duration_ms as number) ?? 0

@@ -1,11 +1,11 @@
-import { parseJsonRecord } from "../../../../lib/json"
-import type { ParseResult } from "../../../../lib/result"
-import type { CodexState } from "../../state"
+import { parseJsonRecord } from '../../../../lib/json'
+import type { ParseResult } from '../../../../lib/result'
+import type { CodexState } from '../../state'
 
 export function handleBash(payload: Record<string, unknown>, state: CodexState, result: ParseResult) {
-	const args = parseJsonRecord((payload.arguments as string) ?? "{}")
+	const args = parseJsonRecord((payload.arguments as string) ?? '{}')
 	if (!args) return
 
-	const cmd = (args.cmd as string) ?? ""
+	const cmd = (args.cmd as string) ?? ''
 	result.add(`\n${state.renderer.purple(`[Bash] ${cmd}`)}\n`)
 }

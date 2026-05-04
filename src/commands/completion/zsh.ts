@@ -1,4 +1,4 @@
-import { type CompletionGroup, type CompletionOption, commandKey, getFunctionName, globalOptions } from "./shared"
+import { type CompletionGroup, type CompletionOption, commandKey, getFunctionName, globalOptions } from './shared'
 
 export function getZshCompletionScript(
 	binNames: string[],
@@ -6,8 +6,8 @@ export function getZshCompletionScript(
 	subcommands: Map<string, CompletionGroup[]>,
 	options: Map<string, CompletionOption[]>,
 ) {
-	const functionName = getFunctionName(binNames[0] ?? "pretty-session")
-	return `#compdef ${binNames.join(" ")}
+	const functionName = getFunctionName(binNames[0] ?? 'pretty-session')
+	return `#compdef ${binNames.join(' ')}
 
 ${functionName}() {
   local -a commands
@@ -32,15 +32,15 @@ ${formatZshOptionArrays(options)}
   fi
 
   case $words[2] in
-${formatZshCompletionCases(binNames[0] ?? "pretty-session", subcommands, options)}
+${formatZshCompletionCases(binNames[0] ?? 'pretty-session', subcommands, options)}
   esac
 }
 
-compdef ${functionName} ${binNames.join(" ")}`
+compdef ${functionName} ${binNames.join(' ')}`
 }
 
 function formatZshItems(items: CompletionGroup[]) {
-	return items.map((item) => `    '${escapeZshItem(item)}'`).join("\n")
+	return items.map((item) => `    '${escapeZshItem(item)}'`).join('\n')
 }
 
 function formatZshOptionItems(items: CompletionOption[]) {
@@ -52,7 +52,7 @@ function formatZshOptionItems(items: CompletionOption[]) {
 			})),
 		)
 		.map((item) => `    '${escapeZshItem(item)}'`)
-		.join("\n")
+		.join('\n')
 }
 
 function formatSubcommandArrays(groups: Map<string, CompletionGroup[]>) {
@@ -64,7 +64,7 @@ function formatSubcommandArrays(groups: Map<string, CompletionGroup[]>) {
 ${formatZshItems(items)}
   )`,
 		)
-		.join("\n")
+		.join('\n')
 }
 
 function formatZshOptionArrays(groups: Map<string, CompletionOption[]>) {
@@ -76,7 +76,7 @@ function formatZshOptionArrays(groups: Map<string, CompletionOption[]>) {
 ${formatZshOptionItems(items)}
   )`,
 		)
-		.join("\n")
+		.join('\n')
 }
 
 function formatZshCompletionCases(
@@ -85,7 +85,7 @@ function formatZshCompletionCases(
 	options: Map<string, CompletionOption[]>,
 ) {
 	const rootCommands = new Set(
-		[...subcommands.keys(), ...[...options.keys()].map((command) => command.split(" ")[0])].filter(
+		[...subcommands.keys(), ...[...options.keys()].map((command) => command.split(' ')[0])].filter(
 			(command): command is string => Boolean(command),
 		),
 	)
@@ -103,13 +103,13 @@ function formatZshCompletionCases(
 			const subcommandCases = (subcommands.get(root) ?? [])
 				.map((item) => {
 					const key = `${root} ${item.name}`
-					if (!options.has(key)) return ""
+					if (!options.has(key)) return ''
 					return `        ${item.name})
           _describe '${binName} ${root} ${item.name} options' ${commandKey(key)}_options
           ;;`
 				})
 				.filter(Boolean)
-				.join("\n")
+				.join('\n')
 
 			return `    ${root})
       if (( CURRENT == 3 )) && [[ $words[CURRENT] != -* ]]; then
@@ -121,7 +121,7 @@ ${subcommandCases}
       esac
       ;;`
 		})
-		.join("\n")
+		.join('\n')
 }
 
 function escapeZshItem(item: CompletionGroup) {

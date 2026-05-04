@@ -1,12 +1,12 @@
-import { describe, expect, it } from "vitest"
-import { Tool } from "../../../src/providers/claude/constants"
-import { fixtureExists, replayFixture, sanitize, streamPath } from "../helpers"
+import { describe, expect, it } from 'vitest'
+import { Tool } from '../../../src/providers/claude/constants'
+import { fixtureExists, replayFixture, sanitize, streamPath } from '../helpers'
 
-const dir = new URL(".", import.meta.url).pathname
+const dir = new URL('.', import.meta.url).pathname
 const fixture = streamPath(dir)
 
-describe("tool-search - stream mode", () => {
-	it.skipIf(!fixtureExists(fixture))("parses ToolSearch tool from stream", () => {
+describe('tool-search - stream mode', () => {
+	it.skipIf(!fixtureExists(fixture))('parses ToolSearch tool from stream', () => {
 		const output = sanitize(replayFixture(fixture))
 		expect(output).toContain(`[${Tool.ToolSearch}] "select:WebFetch"`)
 	})

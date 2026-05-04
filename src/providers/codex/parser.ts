@@ -1,6 +1,6 @@
-import { parseJsonRecord } from "../../lib/json"
-import { appendRenderedMarkdown } from "../../lib/markdown"
-import { ParseResult } from "../../lib/result"
+import { parseJsonRecord } from '../../lib/json'
+import { appendRenderedMarkdown } from '../../lib/markdown'
+import { ParseResult } from '../../lib/result'
 import {
 	CODEX_DEFAULT_MODEL,
 	CodexAppServerMethod,
@@ -9,7 +9,7 @@ import {
 	CodexMessageType,
 	CodexRole,
 	STREAM_MESSAGE_TYPES,
-} from "./constants"
+} from './constants'
 import {
 	dispatchTool,
 	handleAssistant,
@@ -21,8 +21,8 @@ import {
 	handleTurnContext,
 	handleUserMessage,
 	showSession,
-} from "./handlers/index"
-import type { CodexState } from "./state"
+} from './handlers/index'
+import type { CodexState } from './state'
 
 function parseStreamLine(type: string, data: Record<string, unknown>, state: CodexState, result: ParseResult) {
 	if (type === CodexMessageType.ThreadStarted) handleThreadStarted(data, state)
@@ -37,7 +37,7 @@ function parseSessionLine(type: string, data: Record<string, unknown>, state: Co
 	if (type === CodexMessageType.SessionMeta) handleSessionMeta(payload, state)
 	else if (type === CodexMessageType.TurnContext) handleTurnContext(payload, state)
 	else if (type === CodexMessageType.EventMsg) {
-		const eventType = (payload.type as string) ?? ""
+		const eventType = (payload.type as string) ?? ''
 		if (eventType === CodexEventType.UserMessage) handleUserMessage(payload, state, result)
 		else if (eventType === CodexEventType.TokenCount) {
 			const info = payload.info as Record<string, unknown> | null
@@ -48,7 +48,7 @@ function parseSessionLine(type: string, data: Record<string, unknown>, state: Co
 			}
 		}
 	} else if (type === CodexMessageType.ResponseItem) {
-		const itemType = (payload.type as string) ?? ""
+		const itemType = (payload.type as string) ?? ''
 		if (itemType === CodexItemType.Message && (payload.role as string) === CodexRole.Assistant) {
 			handleAssistant(payload, state, result)
 		} else if (itemType === CodexItemType.FunctionCall || itemType === CodexItemType.CustomToolCall) {
@@ -65,20 +65,20 @@ export function parseCodexLine(line: string, state: CodexState): ParseResult {
 	const data = parseJsonRecord(line)
 	if (!data) return result
 
-	const type = (data.type as string) ?? ""
-	const method = (data.method as string) ?? ""
+	const type = (data.type as string) ?? ''
+	const method = (data.method as string) ?? ''
 	const rpcResult = (data.result as Record<string, unknown>) ?? {}
 	const thread = (rpcResult.thread as Record<string, unknown>) ?? {}
 
 	if (thread.id) {
-		state.sessionId = (thread.id as string) ?? ""
+		state.sessionId = (thread.id as string) ?? ''
 		if (!state.model) state.model = CODEX_DEFAULT_MODEL
 		return result
 	}
 
 	if (method === CodexAppServerMethod.Delta) {
 		const params = (data.params as Record<string, unknown>) ?? {}
-		state.streamingAssistantText += (params.delta as string) ?? ""
+		state.streamingAssistantText += (params.delta as string) ?? ''
 		return result
 	}
 
@@ -94,7 +94,7 @@ export function parseCodexLine(line: string, state: CodexState): ParseResult {
 	if (method === CodexAppServerMethod.TurnCompleted) {
 		if (!state.sessionShown) showSession(state, result)
 		const buffered = state.streamingAssistantText
-		state.streamingAssistantText = ""
+		state.streamingAssistantText = ''
 		appendRenderedMarkdown(buffered, state.renderer, result)
 		state.turnCount++
 		return result

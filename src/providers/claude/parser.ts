@@ -1,14 +1,14 @@
 import { parseJsonRecord } from "../../lib/json"
+import { ParseResult } from "../../result"
 import { ClaudeMessageType, ParserMode, SystemSubtype } from "./constants"
 import {
-	ParseResult,
-	type ParserState,
 	handleAssistantMessage,
 	handleResult,
 	handleStreamEvent,
 	handleSystem,
 	handleUserMessage,
 } from "./handlers/index"
+import type { ParserState } from "./state"
 
 export function parseJsonLine(line: string, state: ParserState): ParseResult {
 	const result = new ParseResult()

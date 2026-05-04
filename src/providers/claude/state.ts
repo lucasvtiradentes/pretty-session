@@ -1,7 +1,6 @@
-import { AnsiRenderer } from "../../../renderers/ansi"
-import type { Renderer } from "../../../renderers/base"
-import { ParserMode } from "../constants"
-export { ParseResult } from "../../../result"
+import { AnsiRenderer } from "../../renderers/ansi"
+import type { Renderer } from "../../renderers/base"
+import { ParserMode } from "./constants"
 
 export class ParserState {
 	mode: ParserMode

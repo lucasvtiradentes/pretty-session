@@ -1,6 +1,7 @@
 import { appendRenderedMarkdown } from "../../../lib/markdown"
+import type { ParseResult } from "../../../result"
 import { BlockType } from "../constants"
-import type { ParseResult, ParserState } from "./base"
+import type { ParserState } from "../state"
 import { dispatchTool } from "./tools/dispatch"
 
 export function handleAssistantMessage(data: Record<string, unknown>, state: ParserState, result: ParseResult) {

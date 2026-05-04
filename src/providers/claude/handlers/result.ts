@@ -1,4 +1,5 @@
-import type { ParseResult, ParserState } from "./base"
+import type { ParseResult } from "../../../result"
+import type { ParserState } from "../state"
 
 export function handleResult(data: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer

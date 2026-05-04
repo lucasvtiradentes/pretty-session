@@ -1,6 +1,7 @@
 import { AGENT_DESCRIPTION_MAX_CHARS, INDENT } from "../../../../constants"
+import type { ParseResult } from "../../../../result"
 import { ParserMode, Tool } from "../../constants"
-import type { ParseResult, ParserState } from "../base"
+import type { ParserState } from "../../state"
 
 export function handleAgent(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer

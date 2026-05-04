@@ -1,4 +1,3 @@
-export { ParserState, ParseResult } from "./base"
 export { handleAssistantMessage } from "./assistant"
 export { handleResult } from "./result"
 export { handleStreamEvent } from "./stream"

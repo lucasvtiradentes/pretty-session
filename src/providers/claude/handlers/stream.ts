@@ -1,5 +1,6 @@
+import type { ParseResult } from "../../../result"
 import { BlockType, DeltaType, HIDE_TOOLS, StreamEventType } from "../constants"
-import type { ParseResult, ParserState } from "./base"
+import type { ParserState } from "../state"
 
 export function handleStreamEvent(data: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer

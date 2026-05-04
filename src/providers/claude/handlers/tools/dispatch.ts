@@ -1,5 +1,6 @@
+import type { ParseResult } from "../../../../result"
 import { Tool } from "../../constants"
-import type { ParseResult, ParserState } from "../base"
+import type { ParserState } from "../../state"
 import { handleAgent } from "./agent"
 import { handleBash } from "./bash"
 import { handleEdit } from "./edit"

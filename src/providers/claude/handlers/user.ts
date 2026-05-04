@@ -1,7 +1,8 @@
 import { INDENT, USER_MESSAGE_MAX_CHARS } from "../../../constants"
 import { formatToolOutput } from "../../../format"
+import type { ParseResult } from "../../../result"
 import { ContentType, ParserMode } from "../constants"
-import type { ParseResult, ParserState } from "./base"
+import type { ParserState } from "../state"
 
 export function handleUserMessage(data: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer

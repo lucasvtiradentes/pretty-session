@@ -1,6 +1,7 @@
 import { INDENT } from "../../../constants"
+import type { ParseResult } from "../../../result"
 import { SystemSubtype } from "../constants"
-import type { ParseResult, ParserState } from "./base"
+import type { ParserState } from "../state"
 
 export function handleSystem(data: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer

@@ -1,6 +1,13 @@
 import { INDENT } from "../../../../constants"
+import type { Renderer } from "../../../../renderers/base"
 import { TodoStatus, Tool } from "../../constants"
 import type { ParseResult, ParserState } from "../base"
+
+const todoMarkRenderers = {
+	[TodoStatus.Completed]: (r: Renderer) => r.green("[x]"),
+	[TodoStatus.InProgress]: (r: Renderer) => r.orange("[~]"),
+	[TodoStatus.Pending]: (r: Renderer) => r.dim("[ ]"),
+} as const satisfies Record<TodoStatus, (r: Renderer) => string>
 
 export function handleTodo(inp: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer
@@ -9,15 +16,8 @@ export function handleTodo(inp: Record<string, unknown>, state: ParserState, res
 	for (const todo of todos) {
 		const status = (todo.status as string) ?? TodoStatus.Pending
 		const text = (todo.content as string) ?? ""
-		let mark: string
-		if (status === TodoStatus.Completed) {
-			mark = r.green("[x]")
-		} else if (status === TodoStatus.InProgress) {
-			mark = r.orange("[~]")
-		} else {
-			mark = r.dim("[ ]")
-		}
-		result.add(`${state.sp}${INDENT}${mark} ${text}\n`)
+		const renderMark = todoMarkRenderers[status as TodoStatus] ?? todoMarkRenderers[TodoStatus.Pending]
+		result.add(`${state.sp}${INDENT}${renderMark(r)} ${text}\n`)
 	}
 	result.add("\n")
 }

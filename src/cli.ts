@@ -67,15 +67,14 @@ function createProgram(binName: string): CaporalProgram {
 	return program
 }
 
+const providerDescriptions = {
+	[Provider.Claude]: "Format Claude Code stream or saved session JSONL",
+	[Provider.Codex]: "Format Codex stream or saved session JSONL",
+	[Provider.Gemini]: "Format Gemini stream or saved session JSONL",
+} as const satisfies Record<Provider, string>
+
 function getProviderDescription(provider: Provider) {
-	switch (provider) {
-		case Provider.Claude:
-			return "Format Claude Code stream or saved session JSONL"
-		case Provider.Codex:
-			return "Format Codex stream or saved session JSONL"
-		case Provider.Gemini:
-			return "Format Gemini stream or saved session JSONL"
-	}
+	return providerDescriptions[provider]
 }
 
 function formatHelpExamples(binName: string) {

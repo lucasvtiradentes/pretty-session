@@ -85,11 +85,12 @@ export function sanitize(output: string): string {
 			.replace(/model: [\w.-]*/g, "model: <MODEL>")
 			.replace(/\d+ turns/g, "<N> turns")
 			.replace(/\d+ in \/ \d+ out/g, "<N> in / <N> out")
-			.replace(/(Mon|Tue|Wed|Thu|Fri|Sat|Sun) \w+ \d+ [\d:]+ [+-]?\w+ \d+/g, "<DATE>")
+			.replace(/(Mon|Tue|Wed|Thu|Fri|Sat|Sun) \w+\s+\d+ [\d:]+ [+-]?\w+ \d+/g, "<DATE>")
 			.replace(/\/(?:Users|home|root|tmp|test|private)\b[^\s]*/g, "<ABS_PATH>")
 			.replace(/(\[Edit\]) [^\n]+/g, "$1 <ABS_PATH>")
 			.replace(/^(?!\[|\s{3}|----|\n$)[^\n]+\n?/gm, "")
 			.replace(/\n+\[done\]/g, "\n\n[done]")
+			.replace(/(model: <MODEL>\n)\n+(?=\[(?!done\]))/g, "$1\n\n\n")
 	)
 }
 

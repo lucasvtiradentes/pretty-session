@@ -81,7 +81,7 @@ export function sanitize(output: string): string {
 			.replace(/\d+ turns/g, "<N> turns")
 			.replace(/\d+ in \/ \d+ out/g, "<N> in / <N> out")
 			.replace(/\[rerun: b\d+\]/g, "")
-			.replace(/(Mon|Tue|Wed|Thu|Fri|Sat|Sun) \w+ \d+ [\d:]+ [+-]?\w+ \d+/g, "<DATE>")
+			.replace(/(Mon|Tue|Wed|Thu|Fri|Sat|Sun) \w+\s+\d+ [\d:]+ [+-]?\w+ \d+/g, "<DATE>")
 			.replace(/\b[0-9a-f]{8}\b/g, "<HEX>")
 			.replace(/\/(?:Users|home|root|tmp)\b[^\s]*/g, "<ABS_PATH>")
 			.replace(/\/[^\s]+\.txt/g, "<PATH>.txt")
@@ -94,6 +94,7 @@ export function sanitize(output: string): string {
 			.replace(/^ +→\n/gm, "")
 			.replace(/^(?!\[|\s{3}|\n$)[^\n]+\n?/gm, "")
 			.replace(/\n+\[done\]/g, "\n\n[done]")
+			.replace(/(\[Grep\][^\n]*\n\s*→ )No files found/g, "$1No matches found")
 	)
 }
 

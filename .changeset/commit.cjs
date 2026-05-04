@@ -7,7 +7,7 @@ function syncVersionConstant() {
 	const constantsPath = join(process.cwd(), 'src', 'constants.ts')
 	const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'))
 	const content = readFileSync(constantsPath, 'utf8')
-	const nextContent = content.replace(/export const VERSION = "[^"]+"/, `export const VERSION = "${packageJson.version}"`)
+	const nextContent = content.replace(/export const VERSION = '[^']+'/, `export const VERSION = '${packageJson.version}'`)
 
 	if (nextContent !== content) {
 		writeFileSync(constantsPath, nextContent, 'utf8')

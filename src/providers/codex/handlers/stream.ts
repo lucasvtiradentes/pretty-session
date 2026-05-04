@@ -1,6 +1,6 @@
-import { formatToolOutput } from "../../../format"
+import { formatToolOutput } from "../../../lib/format"
 import { appendRenderedMarkdown } from "../../../lib/markdown"
-import type { ParseResult } from "../../../result"
+import type { ParseResult } from "../../../lib/result"
 import { CODEX_DEFAULT_MODEL, CodexItemType, CodexMessageType } from "../constants"
 import type { CodexState } from "../state"
 import { showSession } from "./session"

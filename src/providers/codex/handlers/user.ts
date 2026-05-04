@@ -1,5 +1,5 @@
 import { USER_MESSAGE_MAX_CHARS } from "../../../constants"
-import type { ParseResult } from "../../../result"
+import type { ParseResult } from "../../../lib/result"
 import type { CodexState } from "../state"
 
 export function handleUserMessage(payload: Record<string, unknown>, state: CodexState, result: ParseResult) {

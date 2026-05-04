@@ -1,4 +1,4 @@
-import type { ParseResult } from "../../../result"
+import type { ParseResult } from "../../../lib/result"
 import { BlockType, DeltaType, HIDE_TOOLS, StreamEventType } from "../constants"
 import type { ParserState } from "../state"
 

@@ -1,4 +1,4 @@
-import type { ParseResult } from "../../../../result"
+import type { ParseResult } from "../../../../lib/result"
 import type { CodexState } from "../../state"
 
 export function handleEdit(payload: Record<string, unknown>, state: CodexState, result: ParseResult) {

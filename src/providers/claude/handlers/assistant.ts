@@ -1,5 +1,5 @@
 import { appendRenderedMarkdown } from "../../../lib/markdown"
-import type { ParseResult } from "../../../result"
+import type { ParseResult } from "../../../lib/result"
 import { BlockType } from "../constants"
 import type { ParserState } from "../state"
 import { dispatchTool } from "./tools/dispatch"

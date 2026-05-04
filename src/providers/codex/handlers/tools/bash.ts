@@ -1,5 +1,5 @@
 import { parseJsonRecord } from "../../../../lib/json"
-import type { ParseResult } from "../../../../result"
+import type { ParseResult } from "../../../../lib/result"
 import type { CodexState } from "../../state"
 
 export function handleBash(payload: Record<string, unknown>, state: CodexState, result: ParseResult) {

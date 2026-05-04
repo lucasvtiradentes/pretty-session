@@ -1,5 +1,5 @@
 import { appendRenderedMarkdown } from "../../../lib/markdown"
-import type { ParseResult } from "../../../result"
+import type { ParseResult } from "../../../lib/result"
 import { CodexBlockType } from "../constants"
 import type { CodexState } from "../state"
 import { showSession } from "./session"

@@ -1,5 +1,5 @@
 import { INDENT } from "../../../constants"
-import type { ParseResult } from "../../../result"
+import type { ParseResult } from "../../../lib/result"
 import { SystemSubtype } from "../constants"
 import type { ParserState } from "../state"
 

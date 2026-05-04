@@ -1,4 +1,4 @@
-import { ParseResult } from "../../../result"
+import { ParseResult } from "../../../lib/result"
 import type { CodexState } from "../state"
 
 export function finalizeCodex(state: CodexState): ParseResult {

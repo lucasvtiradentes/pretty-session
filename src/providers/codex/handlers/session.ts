@@ -1,7 +1,7 @@
 import { readdirSync } from "node:fs"
 import { resolve } from "node:path"
 import { INDENT } from "../../../constants"
-import type { ParseResult } from "../../../result"
+import type { ParseResult } from "../../../lib/result"
 import type { CodexState } from "../state"
 
 function buildSessionPath(state: CodexState): string {

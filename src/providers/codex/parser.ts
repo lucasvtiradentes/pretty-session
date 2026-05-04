@@ -1,6 +1,6 @@
 import { parseJsonRecord } from "../../lib/json"
 import { appendRenderedMarkdown } from "../../lib/markdown"
-import { ParseResult } from "../../result"
+import { ParseResult } from "../../lib/result"
 import {
 	CODEX_DEFAULT_MODEL,
 	CodexAppServerMethod,

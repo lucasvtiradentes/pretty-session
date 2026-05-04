@@ -1,8 +1,8 @@
 import { INDENT } from "../../constants"
 import { parseJsonRecord } from "../../lib/json"
-import { AnsiRenderer } from "../../renderer"
-import type { Renderer } from "../../renderer"
-import { ParseResult } from "../../result"
+import { AnsiRenderer } from "../../lib/renderer"
+import type { Renderer } from "../../lib/renderer"
+import { ParseResult } from "../../lib/result"
 import {
 	GEMINI_DEFAULT_MODEL,
 	GEMINI_SESSION_UPDATE_METHOD,

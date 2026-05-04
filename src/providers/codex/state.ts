@@ -1,5 +1,5 @@
-import { AnsiRenderer } from "../../renderer"
-import type { Renderer } from "../../renderer"
+import { AnsiRenderer } from "../../lib/renderer"
+import type { Renderer } from "../../lib/renderer"
 
 export class CodexState {
 	sessionShown = false

@@ -1,5 +1,5 @@
 import { parseJsonRecord } from "../../lib/json"
-import { ParseResult } from "../../result"
+import { ParseResult } from "../../lib/result"
 import { ClaudeMessageType, ParserMode, SystemSubtype } from "./constants"
 import {
 	handleAssistantMessage,

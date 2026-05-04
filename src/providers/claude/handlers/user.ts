@@ -1,6 +1,6 @@
 import { INDENT, USER_MESSAGE_MAX_CHARS } from "../../../constants"
-import { formatToolOutput } from "../../../format"
-import type { ParseResult } from "../../../result"
+import { formatToolOutput } from "../../../lib/format"
+import type { ParseResult } from "../../../lib/result"
 import { ContentType, ParserMode } from "../constants"
 import type { ParserState } from "../state"
 

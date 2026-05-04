@@ -1,5 +1,5 @@
 import { TASK_SUBJECT_MAX_CHARS } from "../../../../constants"
-import type { ParseResult } from "../../../../result"
+import type { ParseResult } from "../../../../lib/result"
 import { Tool } from "../../constants"
 import type { ParserState } from "../../state"
 

@@ -1,4 +1,4 @@
-import type { ParseResult } from "../../../../result"
+import type { ParseResult } from "../../../../lib/result"
 import { CodexCustomTool, CodexFunctionTool, CodexItemType } from "../../constants"
 import type { CodexState } from "../../state"
 import { handleBash } from "./bash"

@@ -1,5 +1,5 @@
 import { AGENT_DESCRIPTION_MAX_CHARS, INDENT } from "../../../../constants"
-import type { ParseResult } from "../../../../result"
+import type { ParseResult } from "../../../../lib/result"
 import { ParserMode, Tool } from "../../constants"
 import type { ParserState } from "../../state"
 

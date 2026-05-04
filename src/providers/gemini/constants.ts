@@ -5,7 +5,6 @@ export enum GeminiMessageType {
 	Init = 'init',
 	Message = 'message',
 	Result = 'result',
-	User = 'user',
 }
 
 export enum GeminiUpdateType {
@@ -15,7 +14,6 @@ export enum GeminiUpdateType {
 
 export enum GeminiRole {
 	Assistant = 'assistant',
-	User = 'user',
 }
 
 export const GEMINI_SESSION_UPDATE_METHOD = 'session/update'

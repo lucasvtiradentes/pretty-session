@@ -1,4 +1,19 @@
-import type { Renderer } from "./base"
+export interface Renderer {
+	bold(text: string): string
+	dim(text: string): string
+	red(text: string): string
+	green(text: string): string
+	orange(text: string): string
+	purple(text: string): string
+	blue(text: string): string
+	yellow(text: string): string
+	renderMarkdown(text: string): string
+	styleReset(): string
+	styleBold(): string
+	styleCode(): string
+	styleBoldCode(): string
+	pipe(): string
+}
 
 const BOLD = "\x1b[1m"
 const INVERSE = "\x1b[7m"

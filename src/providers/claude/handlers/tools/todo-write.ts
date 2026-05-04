@@ -1,5 +1,5 @@
 import { INDENT } from "../../../../constants"
-import type { Renderer } from "../../../../renderers/base"
+import type { Renderer } from "../../../../renderer"
 import type { ParseResult } from "../../../../result"
 import { TodoStatus, Tool } from "../../constants"
 import type { ParserState } from "../../state"

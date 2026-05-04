@@ -1,5 +1,5 @@
 import { INDENT, READ_PREVIEW_LINES, TOOL_RESULT_MAX_CHARS } from "./constants"
-import type { Renderer } from "./renderers/base"
+import type { Renderer } from "./renderer"
 import type { ParseResult } from "./result"
 
 export function formatToolOutput(content: string, r: Renderer, result: ParseResult, prefix = "") {

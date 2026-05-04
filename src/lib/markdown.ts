@@ -1,4 +1,4 @@
-import type { Renderer } from "../renderers/base"
+import type { Renderer } from "../renderer"
 import type { ParseResult } from "../result"
 
 export function appendRenderedMarkdown(text: string, renderer: Renderer, result: ParseResult): void {

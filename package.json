@@ -19,16 +19,14 @@
 			"import": "./dist/index.js"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"scripts": {
 		"build": "tsup",
 		"changeset": "changeset",
 		"changeset:version": "changeset version",
 		"check": "biome check src/ tests/",
 		"check:fix": "biome check --fix src/ tests/",
-		"dev": "PRETTY_SESSION_PROG_NAME=pretty-session dotenv -- tsx src/cli.ts",
+		"dev": "PRETTY_SESSION_PROG_NAME=pretty-session dotenv -- tsx src/cli/bin.ts",
 		"dev:install": "tsx scripts/install-dev-version.ts",
 		"dev:uninstall": "tsx scripts/uninstall-dev-version.ts",
 		"knip": "knip",

@@ -3,7 +3,7 @@ import { existsSync } from "node:fs"
 import { dirname, resolve } from "node:path"
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), "../..")
-const CLI_PATH = resolve(CLI_ROOT, "src/cli.ts")
+const CLI_PATH = resolve(CLI_ROOT, "src/cli/bin.ts")
 const TEST_ENV = { ...process.env, PS_TOOL_RESULT_MAX_CHARS: "300", PS_READ_PREVIEW_LINES: "5" }
 
 const ansiPattern = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g")

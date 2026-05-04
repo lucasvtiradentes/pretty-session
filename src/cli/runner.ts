@@ -1,23 +1,20 @@
-import { realpathSync } from "node:fs"
 import { createRequire } from "node:module"
-import { basename } from "node:path"
 import { createInterface } from "node:readline"
-import { fileURLToPath, pathToFileURL } from "node:url"
 import type { Program as CaporalProgram } from "@caporal/core"
-import { COMPLETION_COMMAND_NAME, registerCompletionCommand } from "./completion"
-import { CLI_NAME, PROVIDER_VALUES, Provider, VERSION } from "./constants"
-import { ParserState } from "./providers/claude/handlers/base"
-import { parseJsonLine } from "./providers/claude/parser"
-import { CodexState, finalizeCodex, parseCodexLine } from "./providers/codex/parser"
-import { GeminiState, finalizeGemini, parseGeminiLine } from "./providers/gemini/parser"
-import type { ParseResult } from "./result"
+import { COMPLETION_COMMAND_NAME, registerCompletionCommand } from "../completion"
+import { CLI_NAME, PROVIDER_VALUES, Provider, VERSION } from "../constants"
+import { ParserState } from "../providers/claude/handlers/base"
+import { parseJsonLine } from "../providers/claude/parser"
+import { CodexState, finalizeCodex, parseCodexLine } from "../providers/codex/parser"
+import { GeminiState, finalizeGemini, parseGeminiLine } from "../providers/gemini/parser"
+import type { ParseResult } from "../result"
 
 let programInstance: CaporalProgram | undefined
 let programInstanceBin: string | undefined
 
-export async function runCli(args = process.argv.slice(2)) {
+export async function runCli(args = process.argv.slice(2), binName = CLI_NAME) {
 	try {
-		const result = await getProgram().run(args.length === 0 ? ["--help"] : args)
+		const result = await getProgram(binName).run(args.length === 0 ? ["--help"] : args)
 		return typeof result === "number" && result > 0 ? result : 0
 	} catch (error) {
 		const message = error instanceof Error ? error.message : String(error)
@@ -26,8 +23,7 @@ export async function runCli(args = process.argv.slice(2)) {
 	}
 }
 
-function getProgram(): CaporalProgram {
-	const binName = getProgramBin()
+function getProgram(binName: string): CaporalProgram {
 	if (!programInstance || programInstanceBin !== binName) {
 		programInstance = createProgram(binName)
 		programInstanceBin = binName
@@ -128,22 +124,6 @@ function createParser(provider: Provider): { parseLine: (line: string) => ParseR
 	}
 }
 
-function getProgramBin() {
-	if (process.env.PRETTY_SESSION_PROG_NAME) return process.env.PRETTY_SESSION_PROG_NAME
-	if (isDirectRun() && process.argv[1]) return basename(process.argv[1])
-	return CLI_NAME
-}
-
-function isDirectRun() {
-	if (!process.argv[1]) return false
-
-	try {
-		return realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))
-	} catch {
-		return import.meta.url === pathToFileURL(process.argv[1]).href
-	}
-}
-
 function getProgramConstructor() {
 	const require = createRequire(import.meta.url)
 	const module = require("@caporal/core") as {
@@ -154,6 +134,3 @@ function getProgramConstructor() {
 	if (!Program) throw new Error("Caporal Program constructor not found")
 	return Program
 }
-
-const exitCode = await runCli()
-if (exitCode > 0) process.exit(exitCode)

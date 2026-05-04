@@ -8,6 +8,7 @@ export const PROVIDER_VALUES = Object.values(Provider) as string[]
 
 export const VERSION = "0.0.2"
 export const CLI_NAME = process.env.PRETTY_SESSION_PROG_NAME ?? "pretty-session"
+export const CLI_BIN_NAMES = ["pretty-session", "pts"]
 export const INDENT = "   "
 
 export const TOOL_RESULT_MAX_CHARS = Number(process.env.PS_TOOL_RESULT_MAX_CHARS ?? 300)

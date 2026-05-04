@@ -9,7 +9,7 @@
 	},
 	"bin": {
 		"pretty-session": "./dist/cli.js",
-		"ps": "./dist/cli.js"
+		"pts": "./dist/cli.js"
 	},
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -19,16 +19,14 @@
 			"import": "./dist/index.js"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"scripts": {
 		"build": "tsup",
 		"changeset": "changeset",
 		"changeset:version": "changeset version",
 		"check": "biome check src/ tests/",
 		"check:fix": "biome check --fix src/ tests/",
-		"dev": "dotenv -- tsx src/cli.ts",
+		"dev": "PRETTY_SESSION_PROG_NAME=pretty-session dotenv -- tsx src/cli.ts",
 		"dev:install": "tsx scripts/install-dev-version.ts",
 		"dev:uninstall": "tsx scripts/uninstall-dev-version.ts",
 		"knip": "knip",
@@ -40,6 +38,9 @@
 		"test:e2e:claude": "vitest run tests/claude/**/*.e2e.test.ts",
 		"test:e2e:codex": "vitest run tests/codex/**/*.e2e.test.ts",
 		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@caporal/core": "^2.0.7"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",

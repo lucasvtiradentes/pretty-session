@@ -5,7 +5,7 @@ import { join } from "node:path"
 import { CLI_NAME } from "../src/constants"
 
 const binDir = getBinDir()
-const devBinNames = [`${CLI_NAME}d`, "prettysessiond", "psd"]
+const devBinNames = [`${CLI_NAME}d`, "prettysessiond", "ptsd"]
 
 for (const binName of devBinNames) {
 	rmSync(join(binDir, binName), { force: true })

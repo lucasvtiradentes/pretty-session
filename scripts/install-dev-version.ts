@@ -8,7 +8,7 @@ import { CLI_NAME } from "../src/constants"
 const scriptDir = dirname(fileURLToPath(import.meta.url))
 const rootDir = resolve(scriptDir, "..")
 const binDir = getBinDir()
-const devBinNames = [`${CLI_NAME}d`, "prettysessiond", "psd"]
+const devBinNames = [`${CLI_NAME}d`, "prettysessiond", "ptsd"]
 
 mkdirSync(binDir, { recursive: true })
 

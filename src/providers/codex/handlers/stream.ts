@@ -1,4 +1,5 @@
 import { formatToolOutput } from "../../../format"
+import { appendRenderedMarkdown } from "../../../lib/markdown"
 import type { ParseResult } from "../../../result"
 import { CODEX_DEFAULT_MODEL, CodexItemType, CodexMessageType } from "../constants"
 import type { CodexState } from "../state"
@@ -20,10 +21,7 @@ export function handleStreamItem(data: Record<string, unknown>, state: CodexStat
 
 	if (itemType === CodexItemType.AgentMessage && isCompleted) {
 		if (!state.sessionShown) showSession(state, result)
-		const raw = ((item.text as string) ?? "").replace(/^\n+|\n+$/g, "")
-		if (!raw) return
-		const rendered = r.renderMarkdown(raw).replace(/\n+$/, "")
-		if (rendered) result.add(`\n${rendered}\n`)
+		appendRenderedMarkdown((item.text as string) ?? "", r, result)
 	} else if (itemType === CodexItemType.CommandExecution) {
 		if (!isCompleted) {
 			if (!state.sessionShown) showSession(state, result)

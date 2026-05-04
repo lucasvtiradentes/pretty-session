@@ -1,4 +1,5 @@
 import { parseJsonRecord } from "../../lib/json"
+import { appendRenderedMarkdown } from "../../lib/markdown"
 import { ParseResult } from "../../result"
 import {
 	CODEX_DEFAULT_MODEL,
@@ -95,12 +96,9 @@ export function parseCodexLine(line: string, state: CodexState): ParseResult {
 
 	if (method === CodexAppServerMethod.TurnCompleted) {
 		if (!state.sessionShown) showSession(state, result)
-		const raw = state.streamingAssistantText.replace(/^\n+|\n+$/g, "")
+		const buffered = state.streamingAssistantText
 		state.streamingAssistantText = ""
-		if (raw) {
-			const rendered = state.renderer.renderMarkdown(raw).replace(/\n+$/, "")
-			if (rendered) result.add(`\n${rendered}\n`)
-		}
+		appendRenderedMarkdown(buffered, state.renderer, result)
 		state.turnCount++
 		return result
 	}

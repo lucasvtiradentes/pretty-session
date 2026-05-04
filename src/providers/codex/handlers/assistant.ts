@@ -1,3 +1,4 @@
+import { appendRenderedMarkdown } from "../../../lib/markdown"
 import type { ParseResult } from "../../../result"
 import { CodexBlockType } from "../constants"
 import type { CodexState } from "../state"
@@ -11,9 +12,6 @@ export function handleAssistant(payload: Record<string, unknown>, state: CodexSt
 
 	for (const block of content) {
 		if (block.type !== CodexBlockType.OutputText) continue
-		const raw = ((block.text as string) ?? "").replace(/^\n+|\n+$/g, "")
-		if (!raw) continue
-		const rendered = state.renderer.renderMarkdown(raw).replace(/\n+$/, "")
-		if (rendered) result.add(`\n${rendered}\n`)
+		appendRenderedMarkdown((block.text as string) ?? "", state.renderer, result)
 	}
 }

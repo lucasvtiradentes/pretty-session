@@ -1,7 +1,7 @@
 import type { ParseResult } from '../../../lib/result'
-import { CODEX_DEFAULT_MODEL, CodexItemType, ITEM_TYPE_ALIASES } from '../constants'
+import { CODEX_DEFAULT_MODEL, CodexItemType, ITEM_TYPE_ALIASES, type PlanItem, type PlanStatus } from '../constants'
 import type { CodexState } from '../state'
-import { renderAgentMarkdown, renderBashStart, renderEdit, renderToolOutput } from './render'
+import { renderAgentMarkdown, renderBashStart, renderEdit, renderPlan, renderToolOutput } from './render'
 
 function extractCmd(command: string): string {
 	const singleQuoted = command.match(/^\/bin\/\w+ -\w+c '([\s\S]+)'$/)
@@ -73,6 +73,16 @@ export function handleStreamItem(
 	if (itemType === CodexItemType.FileChange && isCompleted) {
 		const changes = (rawItem.changes as Array<Record<string, string>>) ?? []
 		for (const change of changes) renderEdit(change.path ?? '', state, result)
+		return
+	}
+
+	if (itemType === CodexItemType.TodoList && isCompleted) {
+		const rawItems = (rawItem.items as Array<Record<string, unknown>>) ?? []
+		const items: PlanItem[] = rawItems.map((it) => ({
+			text: (it.text as string) ?? '',
+			status: (it.completed ? 'completed' : 'pending') as PlanStatus,
+		}))
+		renderPlan(items, state, result)
 	}
 }
 

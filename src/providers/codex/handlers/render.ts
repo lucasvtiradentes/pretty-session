@@ -1,7 +1,8 @@
+import { INDENT } from '../../../constants'
 import { formatToolOutput } from '../../../lib/format'
 import { appendRenderedMarkdown } from '../../../lib/markdown'
 import type { ParseResult } from '../../../lib/result'
-import { CodexToolLabel } from '../constants'
+import { CodexToolLabel, PLAN_MARKERS, type PlanItem } from '../constants'
 import type { CodexState } from '../state'
 import { showSession } from './session'
 
@@ -30,4 +31,14 @@ export function renderAgentMarkdown(text: string, state: CodexState, result: Par
 	if (!text) return
 	showSession(state, result)
 	appendRenderedMarkdown(text, state.renderer, result)
+}
+
+export function renderPlan(items: PlanItem[], state: CodexState, result: ParseResult) {
+	if (items.length === 0) return
+	showSession(state, result)
+	result.add(`\n${state.renderer.purple(`[${CodexToolLabel.Plan}]`)}\n`)
+	for (const item of items) {
+		const marker = PLAN_MARKERS[item.status] ?? PLAN_MARKERS.pending
+		result.add(`${INDENT}${marker} ${item.text}\n`)
+	}
 }

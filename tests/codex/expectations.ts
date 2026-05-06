@@ -38,3 +38,12 @@ export const BASH_BODY = `
    → <DATE>
 
 `
+
+export const TABLE_ROWS = [
+	'| Name  | Age | City |',
+	'|-------|-----|------|',
+	'| Alice | 30  | NYC  |',
+	'| Bob   | 7   | LA   |',
+]
+
+export const PLAN_BODY_LINES = ['[Plan]', '[ ] read README', '[ ] summarize', '[ ] report']

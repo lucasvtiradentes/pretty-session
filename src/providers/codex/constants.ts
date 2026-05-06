@@ -34,11 +34,13 @@ export enum CodexItemType {
 	CommandExecution = 'command_execution',
 	PatchApplication = 'patch_application',
 	FileChange = 'file_change',
+	TodoList = 'todo_list',
 }
 
 export enum CodexFunctionTool {
 	ExecCommand = 'exec_command',
 	WriteStdin = 'write_stdin',
+	UpdatePlan = 'update_plan',
 }
 
 export enum CodexCustomTool {
@@ -49,6 +51,7 @@ export enum CodexToolLabel {
 	Bash = 'Bash',
 	Edit = 'Edit',
 	Stdin = 'Stdin',
+	Plan = 'Plan',
 }
 
 export enum CodexRole {
@@ -72,8 +75,20 @@ export const ITEM_TYPE_ALIASES: Record<string, CodexItemType> = {
 	[CodexItemType.AgentMessage]: CodexItemType.AgentMessage,
 	[CodexItemType.PatchApplication]: CodexItemType.PatchApplication,
 	[CodexItemType.FileChange]: CodexItemType.FileChange,
+	[CodexItemType.TodoList]: CodexItemType.TodoList,
 	commandExecution: CodexItemType.CommandExecution,
 	agentMessage: CodexItemType.AgentMessage,
 	patchApplication: CodexItemType.PatchApplication,
 	fileChange: CodexItemType.FileChange,
+	todoList: CodexItemType.TodoList,
+}
+
+export type PlanStatus = 'completed' | 'in_progress' | 'pending'
+
+export type PlanItem = { text: string; status: PlanStatus }
+
+export const PLAN_MARKERS: Record<PlanStatus, string> = {
+	completed: '[x]',
+	in_progress: '[~]',
+	pending: '[ ]',
 }

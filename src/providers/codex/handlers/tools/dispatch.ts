@@ -3,6 +3,7 @@ import { CodexCustomTool, CodexFunctionTool, CodexItemType } from '../../constan
 import type { CodexState } from '../../state'
 import { handleBash } from './bash'
 import { handleEdit } from './edit'
+import { handleUpdatePlan } from './plan'
 import { handleStdin } from './stdin'
 
 type CodexToolHandler = (payload: Record<string, unknown>, state: CodexState, result: ParseResult) => void
@@ -10,6 +11,7 @@ type CodexToolHandler = (payload: Record<string, unknown>, state: CodexState, re
 const functionCallHandlers: Partial<Record<CodexFunctionTool, CodexToolHandler>> = {
 	[CodexFunctionTool.ExecCommand]: handleBash,
 	[CodexFunctionTool.WriteStdin]: handleStdin,
+	[CodexFunctionTool.UpdatePlan]: handleUpdatePlan,
 }
 
 const customToolHandlers: Partial<Record<CodexCustomTool, CodexToolHandler>> = {

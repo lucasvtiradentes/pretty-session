@@ -12,7 +12,7 @@ const HOME = process.env.HOME ?? ''
 const TEST_ENV = { ...process.env, PS_TOOL_RESULT_MAX_CHARS: '300', PS_READ_PREVIEW_LINES: '5' }
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: stripping ANSI escape codes
-const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')
+export const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')
 
 export function replayFixture(fixturePath: string): string {
 	const output = execSync(`npx tsx ${CLI_PATH} codex < ${fixturePath}`, {

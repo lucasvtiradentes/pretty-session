@@ -1,0 +1,1 @@
+Call the update_plan tool exactly once with three steps in this exact order: step 1 'analyse repo' marked completed, step 2 'write summary' marked in_progress, step 3 'send report' marked pending. Then say 'Done.' and stop. Do not actually do any of the steps.

@@ -1,0 +1,1 @@
+Use the update_plan tool to track exactly these three steps in order: 1. read README, 2. summarize, 3. report. Call update_plan once with all three steps as pending and then say "Done." and stop. Do not actually do any of the steps.

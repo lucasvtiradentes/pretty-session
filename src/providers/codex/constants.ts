@@ -34,11 +34,16 @@ export enum CodexItemType {
 	CommandExecution = 'command_execution',
 	PatchApplication = 'patch_application',
 	FileChange = 'file_change',
+	TodoList = 'todo_list',
+	CollabToolCall = 'collab_tool_call',
 }
 
 export enum CodexFunctionTool {
 	ExecCommand = 'exec_command',
 	WriteStdin = 'write_stdin',
+	UpdatePlan = 'update_plan',
+	SpawnAgent = 'spawn_agent',
+	WaitAgent = 'wait_agent',
 }
 
 export enum CodexCustomTool {
@@ -49,6 +54,8 @@ export enum CodexToolLabel {
 	Bash = 'Bash',
 	Edit = 'Edit',
 	Stdin = 'Stdin',
+	Plan = 'Plan',
+	Agent = 'Agent',
 }
 
 export enum CodexRole {
@@ -63,4 +70,36 @@ export enum CodexAppServerMethod {
 	Delta = 'item/agentMessage/delta',
 	TokenUsage = 'thread/tokenUsage/updated',
 	TurnCompleted = 'turn/completed',
+	ItemStarted = 'item/started',
+	ItemCompleted = 'item/completed',
+}
+
+export const ITEM_TYPE_ALIASES: Record<string, CodexItemType> = {
+	[CodexItemType.CommandExecution]: CodexItemType.CommandExecution,
+	[CodexItemType.AgentMessage]: CodexItemType.AgentMessage,
+	[CodexItemType.PatchApplication]: CodexItemType.PatchApplication,
+	[CodexItemType.FileChange]: CodexItemType.FileChange,
+	[CodexItemType.TodoList]: CodexItemType.TodoList,
+	[CodexItemType.CollabToolCall]: CodexItemType.CollabToolCall,
+	commandExecution: CodexItemType.CommandExecution,
+	agentMessage: CodexItemType.AgentMessage,
+	patchApplication: CodexItemType.PatchApplication,
+	fileChange: CodexItemType.FileChange,
+	todoList: CodexItemType.TodoList,
+	collabToolCall: CodexItemType.CollabToolCall,
+}
+
+export enum CodexCollabTool {
+	SpawnAgent = 'spawn_agent',
+	Wait = 'wait',
+}
+
+export type PlanStatus = 'completed' | 'in_progress' | 'pending'
+
+export type PlanItem = { text: string; status: PlanStatus }
+
+export const PLAN_MARKERS: Record<PlanStatus, string> = {
+	completed: '[x]',
+	in_progress: '[~]',
+	pending: '[ ]',
 }

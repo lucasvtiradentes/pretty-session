@@ -38,3 +38,20 @@ export const BASH_BODY = `
    → <DATE>
 
 `
+
+export const TABLE_ROWS = [
+	'| Name  | Age | City |',
+	'|-------|-----|------|',
+	'| Alice | 30  | NYC  |',
+	'| Bob   | 7   | LA   |',
+]
+
+export const PLAN_BODY_LINES = ['[Plan]', '[ ] read README', '[ ] summarize', '[ ] report']
+
+export const PLAN_MIXED_SESSION_LINES = ['[Plan]', '[x] analyse repo', '[~] write summary', '[ ] send report']
+
+export const PLAN_MIXED_STREAM_LINES = ['[Plan]', '[x] analyse repo', '[ ] write summary', '[ ] send report']
+
+export const AGENT_SESSION_LINES = ['[Agent] (explorer) just say ok']
+
+export const AGENT_STREAM_LINES = ['[Agent] just say ok', '→ ok']

@@ -1,0 +1,6 @@
+{"type":"init","timestamp":"2026-05-06T03:51:32.471Z","session_id":"dd71b2f8-0194-4983-9dac-376b78beb15f","model":"gemini-3-flash-preview"}
+{"type":"message","timestamp":"2026-05-06T03:51:32.472Z","role":"user","content":"<hook_context>repo: gemini-search | branch: main | model: n/a | started: 2026-05-06 00:51:31 | session: dd71b2f8-0194-4983-9dac-376b78beb15f | path: ~/.gemini/tmp/gemini-search/chats/session-2026-05-06T03-51-dd71b2f8.jsonl</hook_context>\n\nUse the grep_search tool exactly once with pattern \"version\" in the current directory. After searching, say done. Do nothing else."}
+{"type":"tool_use","timestamp":"2026-05-06T03:51:42.379Z","tool_name":"grep_search","tool_id":"grep_search_1778039502379_0","parameters":{"pattern":"version"}}
+{"type":"tool_result","timestamp":"2026-05-06T03:51:42.445Z","tool_id":"grep_search_1778039502379_0","status":"success"}
+{"type":"message","timestamp":"2026-05-06T03:51:50.431Z","role":"assistant","content":"done","delta":true}
+{"type":"result","timestamp":"2026-05-06T03:51:51.579Z","status":"success","stats":{"total_tokens":23983,"input_tokens":23549,"output_tokens":17,"cached":19166,"input":4383,"duration_ms":19108,"tool_calls":1,"models":{"gemini-3-flash-preview":{"total_tokens":23983,"input_tokens":23549,"output_tokens":17,"cached":19166,"input":4383}}}}

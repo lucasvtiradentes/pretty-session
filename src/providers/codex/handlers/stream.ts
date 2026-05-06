@@ -1,46 +1,109 @@
-import { formatToolOutput } from '../../../lib/format'
-import { appendRenderedMarkdown } from '../../../lib/markdown'
 import type { ParseResult } from '../../../lib/result'
-import { CODEX_DEFAULT_MODEL, CodexItemType, CodexMessageType, CodexToolLabel } from '../constants'
+import {
+	CODEX_DEFAULT_MODEL,
+	CodexCollabTool,
+	CodexItemType,
+	ITEM_TYPE_ALIASES,
+	type PlanItem,
+	type PlanStatus,
+} from '../constants'
 import type { CodexState } from '../state'
-import { showSession } from './session'
+import { renderAgent, renderAgentMarkdown, renderBashStart, renderEdit, renderPlan, renderToolOutput } from './render'
 
 function extractCmd(command: string): string {
-	const quoted = command.match(/^\/bin\/\w+ -\w+c '([\s\S]+)'$/)
-	if (quoted) return quoted[1]
+	const singleQuoted = command.match(/^\/bin\/\w+ -\w+c '([\s\S]+)'$/)
+	if (singleQuoted) return singleQuoted[1]
+	const doubleQuoted = command.match(/^\/bin\/\w+ -\w+c "([\s\S]+)"$/)
+	if (doubleQuoted) return doubleQuoted[1]
 	const unquoted = command.match(/^\/bin\/\w+ -\w+c (.+)$/)
 	if (unquoted) return unquoted[1]
 	return command
 }
 
-export function handleStreamItem(data: Record<string, unknown>, state: CodexState, result: ParseResult) {
-	const item = (data.item as Record<string, unknown>) ?? {}
-	const itemType = (item.type as string) ?? ''
-	const isCompleted = data.type === CodexMessageType.ItemCompleted
-	const r = state.renderer
+function fieldOr(item: Record<string, unknown>, snake: string, camel: string): unknown {
+	return item[snake] ?? item[camel]
+}
 
-	if (itemType === CodexItemType.AgentMessage && isCompleted) {
-		if (!state.sessionShown) showSession(state, result)
-		appendRenderedMarkdown((item.text as string) ?? '', r, result)
-	} else if (itemType === CodexItemType.CommandExecution) {
+function num(value: unknown): number {
+	return typeof value === 'number' ? value : 0
+}
+
+export function applyTokenUsage(state: CodexState, usage: Record<string, unknown>) {
+	const input =
+		num(fieldOr(usage, 'input_tokens', 'inputTokens')) + num(fieldOr(usage, 'cached_input_tokens', 'cachedInputTokens'))
+	const output =
+		num(fieldOr(usage, 'output_tokens', 'outputTokens')) +
+		num(fieldOr(usage, 'reasoning_output_tokens', 'reasoningOutputTokens'))
+	state.lastInputTokens = input
+	state.lastOutputTokens = output
+}
+
+export function flushStreamingText(state: CodexState, result: ParseResult) {
+	if (!state.streamingAssistantText) return
+	const buffered = state.streamingAssistantText
+	state.streamingAssistantText = ''
+	renderAgentMarkdown(buffered, state, result)
+}
+
+export function handleStreamItem(
+	rawItem: Record<string, unknown>,
+	isCompleted: boolean,
+	state: CodexState,
+	result: ParseResult,
+) {
+	const itemType = ITEM_TYPE_ALIASES[(rawItem.type as string) ?? '']
+	if (!itemType) return
+
+	if (itemType === CodexItemType.AgentMessage) {
+		if (!isCompleted) return
+		if (state.streamingAssistantText) flushStreamingText(state, result)
+		else renderAgentMarkdown((rawItem.text as string) ?? '', state, result)
+		return
+	}
+
+	if (itemType === CodexItemType.CommandExecution) {
 		if (!isCompleted) {
-			if (!state.sessionShown) showSession(state, result)
-			const cmd = extractCmd((item.command as string) ?? '')
-			result.add(`\n${r.purple(`[${CodexToolLabel.Bash}] ${cmd}`)}\n`)
+			flushStreamingText(state, result)
+			renderBashStart(extractCmd((rawItem.command as string) ?? ''), state, result)
 		} else {
-			const output = ((item.aggregated_output as string) ?? '').trimEnd()
-			formatToolOutput(output, r, result)
+			renderToolOutput((fieldOr(rawItem, 'aggregated_output', 'aggregatedOutput') as string) ?? '', state, result)
 		}
-	} else if (itemType === CodexItemType.PatchApplication && isCompleted) {
-		const filePaths = (item.file_paths as string[]) ?? []
-		for (const file of filePaths) {
-			result.add(`\n${r.orange(`[${CodexToolLabel.Edit}] ${file}`)}\n`)
-		}
-	} else if (itemType === CodexItemType.FileChange && isCompleted) {
-		if (!state.sessionShown) showSession(state, result)
-		const changes = (item.changes as Array<Record<string, string>>) ?? []
-		for (const change of changes) {
-			result.add(`\n${r.orange(`[${CodexToolLabel.Edit}] ${change.path ?? ''}`)}\n`)
+		return
+	}
+
+	if (itemType === CodexItemType.PatchApplication && isCompleted) {
+		const filePaths = (fieldOr(rawItem, 'file_paths', 'filePaths') as string[]) ?? []
+		for (const file of filePaths) renderEdit(file, state, result)
+		return
+	}
+
+	if (itemType === CodexItemType.FileChange && isCompleted) {
+		const changes = (rawItem.changes as Array<Record<string, string>>) ?? []
+		for (const change of changes) renderEdit(change.path ?? '', state, result)
+		return
+	}
+
+	if (itemType === CodexItemType.TodoList && isCompleted) {
+		const rawItems = (rawItem.items as Array<Record<string, unknown>>) ?? []
+		const items: PlanItem[] = rawItems.map((it) => ({
+			text: (it.text as string) ?? '',
+			status: (it.completed ? 'completed' : 'pending') as PlanStatus,
+		}))
+		renderPlan(items, state, result)
+		return
+	}
+
+	if (itemType === CodexItemType.CollabToolCall) {
+		const tool = (rawItem.tool as string) ?? ''
+		if (tool === CodexCollabTool.SpawnAgent && !isCompleted) {
+			renderAgent('', (rawItem.prompt as string) ?? '', state, result)
+		} else if (tool === CodexCollabTool.Wait && isCompleted) {
+			const states =
+				(fieldOr(rawItem, 'agents_states', 'agentsStates') as Record<string, Record<string, unknown>>) ?? {}
+			for (const id of Object.keys(states)) {
+				const msg = (states[id]?.message as string) ?? ''
+				if (msg) renderToolOutput(msg, state, result)
+			}
 		}
 	}
 }
@@ -51,7 +114,5 @@ export function handleThreadStarted(data: Record<string, unknown>, state: CodexS
 }
 
 export function handleTurnCompleted(data: Record<string, unknown>, state: CodexState) {
-	const usage = (data.usage as Record<string, number>) ?? {}
-	state.lastInputTokens = (usage.input_tokens ?? 0) + (usage.cached_input_tokens ?? 0)
-	state.lastOutputTokens = usage.output_tokens ?? 0
+	applyTokenUsage(state, (data.usage as Record<string, unknown>) ?? {})
 }

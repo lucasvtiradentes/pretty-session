@@ -11,6 +11,9 @@ export class GeminiState {
 	renderer: Renderer
 	lastInputTokens = 0
 	lastOutputTokens = 0
+	acpToolCallsRendered = new Set<string>()
+	acpToolCallPreviews = new Map<string, string>()
+	streamingAssistantText = ''
 
 	constructor() {
 		this.renderer = new AnsiRenderer()

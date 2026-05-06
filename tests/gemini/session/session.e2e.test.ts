@@ -6,5 +6,5 @@ describe('gemini session - e2e', () => {
 		const output = sanitize(runE2E('Reply with only e2e-gemini-ok'))
 		expect(output).toContain('e2e-gemini-ok')
 		expect(output).toContain('[done]')
-	}, 120_000)
+	}, 240_000)
 })

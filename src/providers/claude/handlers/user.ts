@@ -43,6 +43,7 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 			const toolContent = rawContent
 				.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, '')
 				.replace(/\[rerun: \w+\]/g, '')
+				.replace(/ \(file state is current in your context .+ no need to Read it back\)$/g, '')
 				.trim()
 			if (!toolContent) return
 			if (

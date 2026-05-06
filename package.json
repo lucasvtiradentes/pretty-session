@@ -19,9 +19,7 @@
 			"import": "./dist/index.js"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"scripts": {
 		"build": "tsup",
 		"changeset": "changeset",
@@ -39,7 +37,7 @@
 		"test:e2e": "pnpm test:e2e:claude && pnpm test:e2e:codex && pnpm test:e2e:gemini",
 		"test:e2e:claude": "vitest run tests/claude/**/*.e2e.test.ts",
 		"test:e2e:codex": "vitest run tests/codex/**/*.e2e.test.ts",
-		"test:e2e:gemini": "vitest run tests/gemini/**/*.e2e.test.ts",
+		"test:e2e:gemini": "vitest run tests/gemini/**/*.e2e.test.ts --no-file-parallelism",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {

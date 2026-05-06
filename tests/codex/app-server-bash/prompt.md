@@ -1,1 +1,0 @@
-Use Bash to run: echo "hello from codex test" && date. Do nothing else.

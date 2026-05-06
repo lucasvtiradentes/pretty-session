@@ -98,7 +98,8 @@ export function handleStreamItem(
 		if (tool === CodexCollabTool.SpawnAgent && !isCompleted) {
 			renderAgent('', (rawItem.prompt as string) ?? '', state, result)
 		} else if (tool === CodexCollabTool.Wait && isCompleted) {
-			const states = (rawItem.agents_states as Record<string, Record<string, unknown>>) ?? {}
+			const states =
+				(fieldOr(rawItem, 'agents_states', 'agentsStates') as Record<string, Record<string, unknown>>) ?? {}
 			for (const id of Object.keys(states)) {
 				const msg = (states[id]?.message as string) ?? ''
 				if (msg) renderToolOutput(msg, state, result)

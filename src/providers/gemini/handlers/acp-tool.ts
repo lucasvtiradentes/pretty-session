@@ -30,6 +30,14 @@ function extractContentText(content: unknown): string {
 	return parts.join('\n').trim()
 }
 
+function renderPreviewOnce(id: string, preview: string, state: GeminiState, result: ParseResult) {
+	if (!preview) return
+	const line = preview.split('\n')[0]
+	if (id && state.acpToolCallPreviews.get(id) === line) return
+	if (id) state.acpToolCallPreviews.set(id, line)
+	renderToolPreview(line, state, result)
+}
+
 export function handleAcpToolCall(update: Record<string, unknown>, state: GeminiState, result: ParseResult) {
 	const id = (update.toolCallId as string) ?? ''
 	if (id && state.acpToolCallsRendered.has(id)) return
@@ -41,7 +49,7 @@ export function handleAcpToolCall(update: Record<string, unknown>, state: Gemini
 	renderToolHeader(rendering.label, title, rendering.color, state, result)
 
 	const preview = extractContentText(update.content)
-	if (preview) renderToolPreview(preview.split('\n')[0], state, result)
+	renderPreviewOnce(id, preview, state, result)
 }
 
 export function handleAcpToolCallUpdate(update: Record<string, unknown>, state: GeminiState, result: ParseResult) {
@@ -50,5 +58,5 @@ export function handleAcpToolCallUpdate(update: Record<string, unknown>, state: 
 		return
 	}
 	const preview = extractContentText(update.content)
-	if (preview) renderToolPreview(preview.split('\n')[0], state, result)
+	renderPreviewOnce((update.toolCallId as string) ?? '', preview, state, result)
 }

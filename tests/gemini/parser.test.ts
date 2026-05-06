@@ -233,4 +233,58 @@ describe('gemini parser', () => {
 		expect(clean).toContain('[Read] README.md')
 		expect(clean).toContain('[Edit] new.txt')
 	})
+
+	it('does not duplicate ACP tool previews for repeated updates', () => {
+		const state = new GeminiState()
+		let output = ''
+
+		output += parseGeminiLine(
+			JSON.stringify({
+				jsonrpc: '2.0',
+				id: 2,
+				result: { sessionId: 'session-5', models: { currentModelId: 'gemini-3-flash-preview' } },
+			}),
+			state,
+		).getOutput()
+		output += parseGeminiLine(
+			JSON.stringify({
+				jsonrpc: '2.0',
+				method: 'session/update',
+				params: {
+					sessionId: 'session-5',
+					update: {
+						sessionUpdate: 'tool_call',
+						toolCallId: 'call_preview_1',
+						status: 'in_progress',
+						title: 'ls /tmp',
+						kind: 'execute',
+						content: [{ type: 'content', content: { type: 'text', text: 'fileA' } }],
+					},
+				},
+			}),
+			state,
+		).getOutput()
+		output += parseGeminiLine(
+			JSON.stringify({
+				jsonrpc: '2.0',
+				method: 'session/update',
+				params: {
+					sessionId: 'session-5',
+					update: {
+						sessionUpdate: 'tool_call_update',
+						toolCallId: 'call_preview_1',
+						status: 'completed',
+						title: 'ls /tmp',
+						kind: 'execute',
+						content: [{ type: 'content', content: { type: 'text', text: 'fileA' } }],
+					},
+				},
+			}),
+			state,
+		).getOutput()
+
+		const clean = stripAnsi(output)
+		expect(clean).toContain('[Shell] ls /tmp')
+		expect(clean.split('→ fileA').length - 1).toBe(1)
+	})
 })

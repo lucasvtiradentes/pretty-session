@@ -268,4 +268,52 @@ describe('codex app-server parser', () => {
 		expect(clean).toContain('[x] a')
 		expect(clean).toContain('[ ] b')
 	})
+
+	it('renders app-server collab wait results with camelCase agent states', () => {
+		const state = new CodexState()
+		let output = ''
+
+		output += parseCodexLine(
+			JSON.stringify({
+				id: 2,
+				result: { thread: { id: 'thread-agent' }, model: 'gpt-5.5' },
+			}),
+			state,
+		).getOutput()
+		output += parseCodexLine(
+			JSON.stringify({
+				method: 'item/started',
+				params: {
+					item: {
+						type: 'collabToolCall',
+						id: 'call_spawn',
+						tool: 'spawn_agent',
+						prompt: 'just say ok',
+						agentsStates: {},
+						status: 'inProgress',
+					},
+				},
+			}),
+			state,
+		).getOutput()
+		output += parseCodexLine(
+			JSON.stringify({
+				method: 'item/completed',
+				params: {
+					item: {
+						type: 'collabToolCall',
+						id: 'call_wait',
+						tool: 'wait',
+						agentsStates: { agent_1: { status: 'completed', message: 'ok' } },
+						status: 'completed',
+					},
+				},
+			}),
+			state,
+		).getOutput()
+
+		const clean = stripAnsi(output)
+		expect(clean).toContain('[Agent] just say ok')
+		expect(clean).toContain('→ ok')
+	})
 })

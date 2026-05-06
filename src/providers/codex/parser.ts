@@ -1,5 +1,4 @@
 import { parseJsonRecord } from '../../lib/json'
-import { appendRenderedMarkdown } from '../../lib/markdown'
 import { ParseResult } from '../../lib/result'
 import {
 	CODEX_DEFAULT_MODEL,
@@ -11,7 +10,9 @@ import {
 	STREAM_MESSAGE_TYPES,
 } from './constants'
 import {
+	applyTokenUsage,
 	dispatchTool,
+	flushStreamingText,
 	handleAssistant,
 	handleSessionMeta,
 	handleStreamItem,
@@ -29,7 +30,19 @@ function parseStreamLine(type: string, data: Record<string, unknown>, state: Cod
 	if (type === CodexMessageType.ThreadStarted) handleThreadStarted(data, state)
 	else if (type === CodexMessageType.TurnStarted) state.turnCount++
 	else if (type === CodexMessageType.TurnCompleted) handleTurnCompleted(data, state)
-	else handleStreamItem(data, state, result)
+	else {
+		const item = (data.item as Record<string, unknown>) ?? {}
+		const isCompleted = type === CodexMessageType.ItemCompleted
+		handleStreamItem(item, isCompleted, state, result)
+	}
+}
+
+function parseAppServerItem(method: string, data: Record<string, unknown>, state: CodexState, result: ParseResult) {
+	result.markRecognized()
+	const params = (data.params as Record<string, unknown>) ?? {}
+	const item = (params.item as Record<string, unknown>) ?? {}
+	const isCompleted = method === CodexAppServerMethod.ItemCompleted
+	handleStreamItem(item, isCompleted, state, result)
 }
 
 function parseSessionLine(type: string, data: Record<string, unknown>, state: CodexState, result: ParseResult) {
@@ -47,11 +60,7 @@ function parseSessionLine(type: string, data: Record<string, unknown>, state: Co
 		if (eventType === CodexEventType.UserMessage) handleUserMessage(payload, state, result)
 		else if (eventType === CodexEventType.TokenCount) {
 			const info = payload.info as Record<string, unknown> | null
-			if (info) {
-				const usage = (info.total_token_usage as Record<string, number>) ?? {}
-				state.lastInputTokens = (usage.input_tokens ?? 0) + (usage.cached_input_tokens ?? 0)
-				state.lastOutputTokens = (usage.output_tokens ?? 0) + (usage.reasoning_output_tokens ?? 0)
-			}
+			if (info) applyTokenUsage(state, (info.total_token_usage as Record<string, unknown>) ?? {})
 		}
 	} else if (type === CodexMessageType.ResponseItem) {
 		result.markRecognized()
@@ -95,19 +104,20 @@ export function parseCodexLine(line: string, state: CodexState): ParseResult {
 		result.markRecognized()
 		const params = (data.params as Record<string, unknown>) ?? {}
 		const tokenUsage = (params.tokenUsage as Record<string, unknown>) ?? {}
-		const total = (tokenUsage.total as Record<string, number>) ?? {}
-		state.lastInputTokens = (total.inputTokens ?? 0) + (total.cachedInputTokens ?? 0)
-		state.lastOutputTokens = (total.outputTokens ?? 0) + (total.reasoningOutputTokens ?? 0)
+		applyTokenUsage(state, (tokenUsage.total as Record<string, unknown>) ?? {})
 		return result
 	}
 
 	if (method === CodexAppServerMethod.TurnCompleted) {
 		result.markRecognized()
-		if (!state.sessionShown) showSession(state, result)
-		const buffered = state.streamingAssistantText
-		state.streamingAssistantText = ''
-		appendRenderedMarkdown(buffered, state.renderer, result)
+		showSession(state, result)
+		flushStreamingText(state, result)
 		state.turnCount++
+		return result
+	}
+
+	if (method === CodexAppServerMethod.ItemStarted || method === CodexAppServerMethod.ItemCompleted) {
+		parseAppServerItem(method, data, state, result)
 		return result
 	}
 

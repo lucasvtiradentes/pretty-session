@@ -63,4 +63,17 @@ export enum CodexAppServerMethod {
 	Delta = 'item/agentMessage/delta',
 	TokenUsage = 'thread/tokenUsage/updated',
 	TurnCompleted = 'turn/completed',
+	ItemStarted = 'item/started',
+	ItemCompleted = 'item/completed',
+}
+
+export const ITEM_TYPE_ALIASES: Record<string, CodexItemType> = {
+	[CodexItemType.CommandExecution]: CodexItemType.CommandExecution,
+	[CodexItemType.AgentMessage]: CodexItemType.AgentMessage,
+	[CodexItemType.PatchApplication]: CodexItemType.PatchApplication,
+	[CodexItemType.FileChange]: CodexItemType.FileChange,
+	commandExecution: CodexItemType.CommandExecution,
+	agentMessage: CodexItemType.AgentMessage,
+	patchApplication: CodexItemType.PatchApplication,
+	fileChange: CodexItemType.FileChange,
 }

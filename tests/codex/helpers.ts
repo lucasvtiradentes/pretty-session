@@ -51,6 +51,33 @@ export function runE2E(promptPath: string, dir: string): string {
 	return output
 }
 
+export function runE2EAppServer(promptPath: string, dir: string): string {
+	const prompt = readFileSync(promptPath, 'utf-8').trim()
+	const streamFile = resolve(dir, 'stream.jsonl')
+	const testName = dir.split('/').filter(Boolean).pop() ?? 'default'
+	const sandboxDir = resolve(SANDBOX_BASE, `codex-app-server-${testName}`)
+	const sessionName = `e2e-${testName}-${Date.now()}`
+	execSync(`rm -rf ${sandboxDir} && mkdir -p ${sandboxDir} && git -C ${sandboxDir} init -q`)
+
+	const escapedPrompt = prompt.replace(/'/g, "'\\''")
+	const output = execSync(
+		`cd ${sandboxDir} && printf '%s' '${escapedPrompt}' | omsd ask --provider codex --session-name ${sessionName} --output stream-json 2>/dev/null | tee ${streamFile} | npx tsx ${CLI_PATH} codex`,
+		{ encoding: 'utf-8', timeout: 120_000, cwd: CLI_ROOT, env: TEST_ENV },
+	)
+
+	const sessionSrc = extractSessionPath(output)
+	if (sessionSrc) {
+		const dest = resolve(dir, 'session.jsonl')
+		copyFileSync(sessionSrc, dest)
+		scrubFixture(dest)
+	}
+
+	scrubFixture(streamFile)
+	execSync(`rm -rf ${sandboxDir}`)
+
+	return output
+}
+
 function enrichStreamFixture(streamFile: string, sessionFile: string) {
 	if (!existsSync(sessionFile)) return
 	const sessionLines = readFileSync(sessionFile, 'utf-8').split('\n')

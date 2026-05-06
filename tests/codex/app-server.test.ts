@@ -198,4 +198,74 @@ describe('codex app-server parser', () => {
 		const occurrences = clean.split('unique-text-marker').length - 1
 		expect(occurrences).toBe(1)
 	})
+
+	it('renders write_stdin tool calls from rollout function_call', () => {
+		const state = new CodexState()
+		let output = ''
+
+		output += parseCodexLine(
+			JSON.stringify({ type: 'session_meta', payload: { id: 'thread-stdin', timestamp: '2026-05-06T00:00:00.000Z' } }),
+			state,
+		).getOutput()
+		output += parseCodexLine(
+			JSON.stringify({ type: 'turn_context', payload: { model: 'gpt-5.5', timezone: 'UTC' } }),
+			state,
+		).getOutput()
+		output += parseCodexLine(
+			JSON.stringify({
+				type: 'response_item',
+				payload: {
+					type: 'function_call',
+					name: 'write_stdin',
+					arguments: JSON.stringify({ session_id: 'shell-abc', stdin: 'echo hi\n' }),
+				},
+			}),
+			state,
+		).getOutput()
+		output += parseCodexLine(
+			JSON.stringify({
+				type: 'response_item',
+				payload: { type: 'message', role: 'assistant', content: [{ type: 'output_text', text: 'sent.' }] },
+			}),
+			state,
+		).getOutput()
+		output += finalizeCodex(state).getOutput()
+
+		const clean = stripAnsi(output)
+		expect(clean).toContain('id:    thread-stdin')
+		expect(clean).toContain('[Stdin] session=shell-abc')
+		expect(clean).toContain('sent.')
+	})
+
+	it('renders todo_list items as a checklist when emitted by item.completed', () => {
+		const state = new CodexState()
+		let output = ''
+
+		output += parseCodexLine(JSON.stringify({ type: 'thread.started', thread_id: 'thread-plan' }), state).getOutput()
+		output += parseCodexLine(JSON.stringify({ type: 'turn.started' }), state).getOutput()
+		output += parseCodexLine(
+			JSON.stringify({
+				type: 'item.completed',
+				item: {
+					id: 'plan-1',
+					type: 'todo_list',
+					items: [
+						{ text: 'a', completed: true },
+						{ text: 'b', completed: false },
+					],
+				},
+			}),
+			state,
+		).getOutput()
+		output += parseCodexLine(
+			JSON.stringify({ type: 'turn.completed', usage: { input_tokens: 1, output_tokens: 1 } }),
+			state,
+		).getOutput()
+		output += finalizeCodex(state).getOutput()
+
+		const clean = stripAnsi(output)
+		expect(clean).toContain('[Plan]')
+		expect(clean).toContain('[x] a')
+		expect(clean).toContain('[ ] b')
+	})
 })

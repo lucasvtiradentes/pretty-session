@@ -47,3 +47,7 @@ export const TABLE_ROWS = [
 ]
 
 export const PLAN_BODY_LINES = ['[Plan]', '[ ] read README', '[ ] summarize', '[ ] report']
+
+export const PLAN_MIXED_SESSION_LINES = ['[Plan]', '[x] analyse repo', '[~] write summary', '[ ] send report']
+
+export const PLAN_MIXED_STREAM_LINES = ['[Plan]', '[x] analyse repo', '[ ] write summary', '[ ] send report']

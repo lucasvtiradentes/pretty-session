@@ -5,6 +5,8 @@ export enum GeminiMessageType {
 	Init = 'init',
 	Message = 'message',
 	Result = 'result',
+	ToolUse = 'tool_use',
+	ToolResult = 'tool_result',
 }
 
 export enum GeminiUpdateType {
@@ -37,6 +39,7 @@ export enum GeminiTool {
 	ReadFile = 'read_file',
 	UpdateTopic = 'update_topic',
 	WriteFile = 'write_file',
+	RunShellCommand = 'run_shell_command',
 }
 
 export enum GeminiToolLabel {

@@ -4,6 +4,7 @@ import type { GeminiState } from '../../state'
 import { handleDefaultTool } from './default'
 import { handleReadFile } from './read'
 import { handleGrepSearch } from './search'
+import { handleShellCommand } from './shell'
 import { handleUpdateTopic } from './topic'
 import { handleWriteFile } from './write'
 
@@ -14,10 +15,19 @@ const handlers: Record<string, ToolHandler> = {
 	[GeminiTool.ReadFile]: handleReadFile,
 	[GeminiTool.UpdateTopic]: handleUpdateTopic,
 	[GeminiTool.WriteFile]: handleWriteFile,
+	[GeminiTool.RunShellCommand]: handleShellCommand,
 }
 
 export function dispatchTool(toolCall: Record<string, unknown>, state: GeminiState, result: ParseResult) {
 	const name = (toolCall.name as string) ?? ''
 	const handler = handlers[name] ?? handleDefaultTool
 	handler(toolCall, state, result)
+}
+
+export function dispatchStreamToolUse(data: Record<string, unknown>, state: GeminiState, result: ParseResult) {
+	const toolCall = {
+		name: (data.tool_name as string) ?? '',
+		args: (data.parameters as Record<string, unknown>) ?? {},
+	}
+	dispatchTool(toolCall, state, result)
 }

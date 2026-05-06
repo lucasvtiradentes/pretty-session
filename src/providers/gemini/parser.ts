@@ -8,6 +8,8 @@ import {
 	GeminiUpdateType,
 } from './constants'
 import {
+	dispatchStreamToolUse,
+	flushStreamingText,
 	handleAcpAgentMessageChunk,
 	handleAcpInitialize,
 	handleAcpSessionUpdateParams,
@@ -43,7 +45,7 @@ export function parseGeminiLine(line: string, state: GeminiState): ParseResult {
 		}
 		if (rpcResult._meta) {
 			result.markRecognized()
-			handleAcpTurnResult(data, state)
+			handleAcpTurnResult(data, state, result)
 		}
 	}
 
@@ -69,7 +71,19 @@ export function parseGeminiLine(line: string, state: GeminiState): ParseResult {
 
 	if (type === GeminiMessageType.Result) {
 		result.markRecognized()
-		handleStreamResult(data, state)
+		handleStreamResult(data, state, result)
+		return result
+	}
+
+	if (type === GeminiMessageType.ToolUse) {
+		result.markRecognized()
+		flushStreamingText(state, result)
+		dispatchStreamToolUse(data, state, result)
+		return result
+	}
+
+	if (type === GeminiMessageType.ToolResult) {
+		result.markRecognized()
 		return result
 	}
 

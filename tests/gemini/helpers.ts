@@ -1,13 +1,22 @@
 import { execSync } from 'node:child_process'
-import { existsSync } from 'node:fs'
+import { copyFileSync, existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
+import { SESSION_FOOTER, SESSION_HEADER } from './expectations'
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '../..')
+const SANDBOX_BASE = resolve(CLI_ROOT, '.sandbox')
 const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
-const TEST_ENV = { ...process.env, PS_TOOL_RESULT_MAX_CHARS: '300', PS_READ_PREVIEW_LINES: '5' }
+const HOME = process.env.HOME ?? ''
 
-const ansiPattern = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, 'g')
-const stripAnsi = (value: string) => value.replace(ansiPattern, '')
+const TEST_ENV = {
+	...process.env,
+	PS_TOOL_RESULT_MAX_CHARS: '300',
+	PS_READ_PREVIEW_LINES: '5',
+	GEMINI_CLI_TRUST_WORKSPACE: 'true',
+}
+
+// biome-ignore lint/suspicious/noControlCharactersInRegex: stripping ANSI escape codes
+export const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')
 
 export function replayFixture(fixturePath: string): string {
 	return execSync(`npx tsx ${CLI_PATH} gemini < ${fixturePath}`, {
@@ -18,17 +27,47 @@ export function replayFixture(fixturePath: string): string {
 	})
 }
 
-export function runE2E(prompt: string): string {
+export function runE2E(promptOrPath: string, dir?: string): string {
+	if (dir === undefined) {
+		const escapedPrompt = promptOrPath.replace(/"/g, '\\"')
+		return execSync(
+			`gemini -p "${escapedPrompt}" --yolo --output-format stream-json 2>/dev/null | npx tsx ${CLI_PATH} gemini`,
+			{ encoding: 'utf-8', timeout: 240_000, cwd: CLI_ROOT, env: TEST_ENV },
+		)
+	}
+
+	const prompt = readFileSync(promptOrPath, 'utf-8').trim()
 	const escapedPrompt = prompt.replace(/"/g, '\\"')
-	return execSync(
-		`gemini -p "${escapedPrompt}" --yolo --output-format stream-json 2>/dev/null | npx tsx ${CLI_PATH} gemini`,
-		{
-			encoding: 'utf-8',
-			timeout: 120_000,
-			cwd: CLI_ROOT,
-			env: TEST_ENV,
-		},
+	const streamFile = resolve(dir, 'stream.jsonl')
+	const testName = dir.split('/').filter(Boolean).pop() ?? 'default'
+	const sandboxName = `gemini-${testName}`
+	const sandboxDir = resolve(SANDBOX_BASE, sandboxName)
+	execSync(`rm -rf ${sandboxDir} && mkdir -p ${sandboxDir} && git -C ${sandboxDir} init -q`)
+
+	const output = execSync(
+		`cd ${sandboxDir} && gemini -p "${escapedPrompt}" --yolo --output-format stream-json 2>/dev/null | tee ${streamFile} | npx tsx ${CLI_PATH} gemini`,
+		{ encoding: 'utf-8', timeout: 240_000, cwd: CLI_ROOT, env: TEST_ENV },
 	)
+
+	const sessionSrc = findGeminiSession(sandboxName)
+	if (sessionSrc) {
+		const dest = resolve(dir, 'session.jsonl')
+		copyFileSync(sessionSrc, dest)
+	}
+	execSync(`rm -rf ${sandboxDir}`)
+
+	return output
+}
+
+function findGeminiSession(projectName: string): string | null {
+	const dir = resolve(HOME, '.gemini', 'tmp', projectName, 'chats')
+	if (!existsSync(dir)) return null
+	try {
+		const latest = execSync(`ls -t ${dir}/*.jsonl 2>/dev/null | head -1`, { encoding: 'utf-8' }).trim()
+		return latest || null
+	} catch {
+		return null
+	}
 }
 
 export function sanitize(output: string): string {
@@ -37,6 +76,10 @@ export function sanitize(output: string): string {
 		.replace(/model: [\w.-]*/g, 'model: <MODEL>')
 		.replace(/\d+ turns/g, '<N> turns')
 		.replace(/\d+ in \/ \d+ out/g, '<N> in / <N> out')
+}
+
+export function expected(body: string): string {
+	return SESSION_HEADER + body + SESSION_FOOTER
 }
 
 export function fixtureExists(path: string): boolean {
@@ -51,13 +94,6 @@ export function streamPath(dir: string): string {
 	return resolve(dir, 'stream.jsonl')
 }
 
-export function expected(body: string): string {
-	return `[session]
-   id:    <UUID>
-   model: <MODEL>
-
-${body}
-
-[done] <N> turns, <N> in / <N> out
-`
+export function promptPath(dir: string): string {
+	return resolve(dir, 'prompt.md')
 }

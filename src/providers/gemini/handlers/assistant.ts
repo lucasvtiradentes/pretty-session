@@ -1,6 +1,6 @@
 import type { ParseResult } from '../../../lib/result'
 import type { GeminiState } from '../state'
-import { renderAgentText } from './render'
+import { bufferAgentText, flushStreamingText, renderAgentText } from './render'
 import { applySavedTokens } from './result'
 import { dispatchTool } from './tools/dispatch'
 
@@ -16,11 +16,17 @@ export function handleSavedGeminiMessage(data: Record<string, unknown>, state: G
 	for (const toolCall of toolCalls) dispatchTool(toolCall, state, result)
 }
 
-export function handleStreamAssistantMessage(data: Record<string, unknown>, state: GeminiState, result: ParseResult) {
-	renderAgentText((data.content as string) ?? '', state, result)
+export function handleStreamAssistantMessage(data: Record<string, unknown>, state: GeminiState, _result: ParseResult) {
+	const text = (data.content as string) ?? ''
+	if (data.delta) bufferAgentText(text, state)
+	else {
+		flushStreamingText(state, _result)
+		bufferAgentText(text, state)
+		flushStreamingText(state, _result)
+	}
 }
 
-export function handleAcpAgentMessageChunk(update: Record<string, unknown>, state: GeminiState, result: ParseResult) {
+export function handleAcpAgentMessageChunk(update: Record<string, unknown>, state: GeminiState, _result: ParseResult) {
 	const content = (update.content as Record<string, unknown>) ?? {}
-	renderAgentText((content.text as string) ?? '', state, result)
+	bufferAgentText((content.text as string) ?? '', state)
 }

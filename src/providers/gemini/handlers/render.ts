@@ -12,6 +12,18 @@ export function renderAgentText(text: string, state: GeminiState, result: ParseR
 	result.add(state.renderer.renderMarkdown(text))
 }
 
+export function bufferAgentText(text: string, state: GeminiState) {
+	if (!text) return
+	state.streamingAssistantText += text
+}
+
+export function flushStreamingText(state: GeminiState, result: ParseResult) {
+	if (!state.streamingAssistantText) return
+	const buffered = state.streamingAssistantText
+	state.streamingAssistantText = ''
+	renderAgentText(buffered, state, result)
+}
+
 export function renderToolHeader(
 	label: string,
 	body: string,

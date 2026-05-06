@@ -1,5 +1,6 @@
 import { ParseResult } from '../../../lib/result'
 import type { GeminiState } from '../state'
+import { flushStreamingText } from './render'
 
 function num(value: unknown): number {
 	return typeof value === 'number' ? value : 0
@@ -17,6 +18,7 @@ export function applySavedTokens(state: GeminiState, tokens: Record<string, unkn
 
 export function finalizeGemini(state: GeminiState): ParseResult {
 	const result = new ParseResult()
+	flushStreamingText(state, result)
 	if (!state.sessionShown) return result
 
 	if (!state.hasSessionTurns) state.turnCount += 1
@@ -25,13 +27,15 @@ export function finalizeGemini(state: GeminiState): ParseResult {
 	return result
 }
 
-export function handleStreamResult(data: Record<string, unknown>, state: GeminiState) {
+export function handleStreamResult(data: Record<string, unknown>, state: GeminiState, result: ParseResult) {
+	flushStreamingText(state, result)
 	const stats = (data.stats as Record<string, unknown>) ?? {}
 	state.lastInputTokens = num(fieldOr(stats, 'input_tokens', 'input'))
 	state.lastOutputTokens = num(fieldOr(stats, 'output_tokens', 'output'))
 }
 
-export function handleAcpTurnResult(data: Record<string, unknown>, state: GeminiState) {
+export function handleAcpTurnResult(data: Record<string, unknown>, state: GeminiState, result: ParseResult) {
+	flushStreamingText(state, result)
 	const rpcResult = (data.result as Record<string, unknown>) ?? {}
 	const meta = (rpcResult._meta as Record<string, unknown>) ?? {}
 	const quota = (meta.quota as Record<string, unknown>) ?? {}

@@ -25,6 +25,7 @@ import {
 import type { CodexState } from './state'
 
 function parseStreamLine(type: string, data: Record<string, unknown>, state: CodexState, result: ParseResult) {
+	result.markRecognized()
 	if (type === CodexMessageType.ThreadStarted) handleThreadStarted(data, state)
 	else if (type === CodexMessageType.TurnStarted) state.turnCount++
 	else if (type === CodexMessageType.TurnCompleted) handleTurnCompleted(data, state)
@@ -34,9 +35,14 @@ function parseStreamLine(type: string, data: Record<string, unknown>, state: Cod
 function parseSessionLine(type: string, data: Record<string, unknown>, state: CodexState, result: ParseResult) {
 	const payload = (data.payload as Record<string, unknown>) ?? {}
 
-	if (type === CodexMessageType.SessionMeta) handleSessionMeta(payload, state)
-	else if (type === CodexMessageType.TurnContext) handleTurnContext(payload, state)
-	else if (type === CodexMessageType.EventMsg) {
+	if (type === CodexMessageType.SessionMeta) {
+		result.markRecognized()
+		handleSessionMeta(payload, state)
+	} else if (type === CodexMessageType.TurnContext) {
+		result.markRecognized()
+		handleTurnContext(payload, state)
+	} else if (type === CodexMessageType.EventMsg) {
+		result.markRecognized()
 		const eventType = (payload.type as string) ?? ''
 		if (eventType === CodexEventType.UserMessage) handleUserMessage(payload, state, result)
 		else if (eventType === CodexEventType.TokenCount) {
@@ -48,6 +54,7 @@ function parseSessionLine(type: string, data: Record<string, unknown>, state: Co
 			}
 		}
 	} else if (type === CodexMessageType.ResponseItem) {
+		result.markRecognized()
 		const itemType = (payload.type as string) ?? ''
 		if (itemType === CodexItemType.Message && (payload.role as string) === CodexRole.Assistant) {
 			handleAssistant(payload, state, result)
@@ -71,18 +78,21 @@ export function parseCodexLine(line: string, state: CodexState): ParseResult {
 	const thread = (rpcResult.thread as Record<string, unknown>) ?? {}
 
 	if (thread.id) {
+		result.markRecognized()
 		state.sessionId = (thread.id as string) ?? ''
 		if (!state.model) state.model = CODEX_DEFAULT_MODEL
 		return result
 	}
 
 	if (method === CodexAppServerMethod.Delta) {
+		result.markRecognized()
 		const params = (data.params as Record<string, unknown>) ?? {}
 		state.streamingAssistantText += (params.delta as string) ?? ''
 		return result
 	}
 
 	if (method === CodexAppServerMethod.TokenUsage) {
+		result.markRecognized()
 		const params = (data.params as Record<string, unknown>) ?? {}
 		const tokenUsage = (params.tokenUsage as Record<string, unknown>) ?? {}
 		const total = (tokenUsage.total as Record<string, number>) ?? {}
@@ -92,6 +102,7 @@ export function parseCodexLine(line: string, state: CodexState): ParseResult {
 	}
 
 	if (method === CodexAppServerMethod.TurnCompleted) {
+		result.markRecognized()
 		if (!state.sessionShown) showSession(state, result)
 		const buffered = state.streamingAssistantText
 		state.streamingAssistantText = ''
@@ -101,7 +112,7 @@ export function parseCodexLine(line: string, state: CodexState): ParseResult {
 	}
 
 	if (STREAM_MESSAGE_TYPES.has(type)) parseStreamLine(type, data, state, result)
-	else parseSessionLine(type, data, state, result)
+	else if (type) parseSessionLine(type, data, state, result)
 
 	return result
 }

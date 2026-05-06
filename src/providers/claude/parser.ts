@@ -18,9 +18,14 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 
 	const msgType = (data.type as string) ?? ''
 
-	if (msgType === ClaudeMessageType.System) handleSystem(data, state, result)
-	else if (msgType === ClaudeMessageType.StreamEvent) handleStreamEvent(data, state, result)
-	else if (msgType === ClaudeMessageType.User) {
+	if (msgType === ClaudeMessageType.System) {
+		result.markRecognized()
+		handleSystem(data, state, result)
+	} else if (msgType === ClaudeMessageType.StreamEvent) {
+		result.markRecognized()
+		handleStreamEvent(data, state, result)
+	} else if (msgType === ClaudeMessageType.User) {
+		result.markRecognized()
 		if (!state.sessionShown && data.sessionId) {
 			state.pendingSessionId = (data.sessionId as string) ?? ''
 			state.pendingCwd = (data.cwd as string) ?? ''
@@ -29,6 +34,7 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 		if (data.sessionId) state.turnCount++
 		handleUserMessage(data, state, result)
 	} else if (msgType === ClaudeMessageType.Assistant) {
+		result.markRecognized()
 		const message = (data.message as Record<string, unknown>) ?? {}
 		if (message.model) state.lastModel = (message.model as string) ?? ''
 		if (message.usage) state.lastUsage = (message.usage as Record<string, number>) ?? {}
@@ -47,8 +53,11 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 		}
 
 		handleAssistantMessage(data, state, result)
-	} else if (msgType === ClaudeMessageType.Result) handleResult(data, state, result)
-	else if (msgType === ClaudeMessageType.LastPrompt) {
+	} else if (msgType === ClaudeMessageType.Result) {
+		result.markRecognized()
+		handleResult(data, state, result)
+	} else if (msgType === ClaudeMessageType.LastPrompt) {
+		result.markRecognized()
 		if (state.mode === ParserMode.Replay && state.pendingSessionId) {
 			const usage = state.lastUsage
 			const inputTokens =
@@ -59,6 +68,7 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 			result.add(`\n${r.dim(`[done] ${stats}`)}\n`)
 		}
 	} else if (msgType === ClaudeMessageType.Error) {
+		result.markRecognized()
 		const errorMsg = (data.error as string) ?? 'unknown error'
 		result.add(`\n${state.sp}${state.renderer.red(`[error] ${errorMsg}`)}`)
 	}

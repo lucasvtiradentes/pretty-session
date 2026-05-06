@@ -1,5 +1,11 @@
 # pretty-session
 
+## 0.0.6
+
+### Patch Changes
+
+- 78e1570: Normalize Claude Write success output when newer Claude CLI versions append the file-state hint.
+
 ## 0.0.5
 
 ### Patch Changes

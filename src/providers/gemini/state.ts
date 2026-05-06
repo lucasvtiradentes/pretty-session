@@ -11,6 +11,7 @@ export class GeminiState {
 	renderer: Renderer
 	lastInputTokens = 0
 	lastOutputTokens = 0
+	acpToolCallsRendered = new Set<string>()
 
 	constructor() {
 		this.renderer = new AnsiRenderer()

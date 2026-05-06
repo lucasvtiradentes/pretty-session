@@ -1,16 +1,13 @@
-import { formatToolOutput } from '../../../../lib/format'
 import type { ParseResult } from '../../../../lib/result'
 import { GeminiToolLabel } from '../../constants'
 import type { GeminiState } from '../../state'
+import { renderToolHeader, renderToolOutput } from '../render'
 
 export function handleReadFile(toolCall: Record<string, unknown>, state: GeminiState, result: ParseResult) {
-	const r = state.renderer
 	const args = (toolCall.args as Record<string, unknown>) ?? {}
 	const filePath = (args.file_path as string) ?? ''
-	result.add(`\n${r.purple(`[${GeminiToolLabel.ReadFile}] ${filePath}`)}\n`)
-
-	const output = extractOutput(toolCall)
-	if (output) formatToolOutput(output, r, result)
+	renderToolHeader(GeminiToolLabel.ReadFile, filePath, 'purple', state, result)
+	renderToolOutput(extractOutput(toolCall), state, result)
 }
 
 function extractOutput(toolCall: Record<string, unknown>): string {

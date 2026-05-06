@@ -10,6 +10,19 @@ export enum GeminiMessageType {
 export enum GeminiUpdateType {
 	AgentMessageChunk = 'agent_message_chunk',
 	UsageUpdate = 'usage_update',
+	ToolCall = 'tool_call',
+	ToolCallUpdate = 'tool_call_update',
+}
+
+export enum GeminiToolKind {
+	Execute = 'execute',
+	Read = 'read',
+	Edit = 'edit',
+	Search = 'search',
+	Think = 'think',
+	Delete = 'delete',
+	Move = 'move',
+	Other = 'other',
 }
 
 export enum GeminiRole {
@@ -31,4 +44,9 @@ export enum GeminiToolLabel {
 	ReadFile = 'Read',
 	UpdateTopic = 'Topic',
 	WriteFile = 'Write',
+	Shell = 'Shell',
+	Edit = 'Edit',
+	Delete = 'Delete',
+	Move = 'Move',
+	Tool = 'Tool',
 }

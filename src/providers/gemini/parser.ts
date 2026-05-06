@@ -11,6 +11,8 @@ import {
 	handleAcpAgentMessageChunk,
 	handleAcpInitialize,
 	handleAcpSessionUpdateParams,
+	handleAcpToolCall,
+	handleAcpToolCallUpdate,
 	handleAcpTurnResult,
 	handleAcpUsageUpdate,
 	handleSavedGeminiMessage,
@@ -83,6 +85,8 @@ export function parseGeminiLine(line: string, state: GeminiState): ParseResult {
 
 	if (updateType === GeminiUpdateType.AgentMessageChunk) handleAcpAgentMessageChunk(update, state, result)
 	else if (updateType === GeminiUpdateType.UsageUpdate) handleAcpUsageUpdate(update, state)
+	else if (updateType === GeminiUpdateType.ToolCall) handleAcpToolCall(update, state, result)
+	else if (updateType === GeminiUpdateType.ToolCallUpdate) handleAcpToolCallUpdate(update, state, result)
 
 	return result
 }

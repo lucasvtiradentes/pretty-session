@@ -51,3 +51,7 @@ export const PLAN_BODY_LINES = ['[Plan]', '[ ] read README', '[ ] summarize', '[
 export const PLAN_MIXED_SESSION_LINES = ['[Plan]', '[x] analyse repo', '[~] write summary', '[ ] send report']
 
 export const PLAN_MIXED_STREAM_LINES = ['[Plan]', '[x] analyse repo', '[ ] write summary', '[ ] send report']
+
+export const AGENT_SESSION_LINES = ['[Agent] (explorer) just say ok']
+
+export const AGENT_STREAM_LINES = ['[Agent] just say ok', '→ ok']

@@ -1,6 +1,7 @@
 import type { ParseResult } from '../../../../lib/result'
 import { CodexCustomTool, CodexFunctionTool, CodexItemType } from '../../constants'
 import type { CodexState } from '../../state'
+import { handleSpawnAgent } from './agent'
 import { handleBash } from './bash'
 import { handleEdit } from './edit'
 import { handleUpdatePlan } from './plan'
@@ -12,6 +13,7 @@ const functionCallHandlers: Partial<Record<CodexFunctionTool, CodexToolHandler>>
 	[CodexFunctionTool.ExecCommand]: handleBash,
 	[CodexFunctionTool.WriteStdin]: handleStdin,
 	[CodexFunctionTool.UpdatePlan]: handleUpdatePlan,
+	[CodexFunctionTool.SpawnAgent]: handleSpawnAgent,
 }
 
 const customToolHandlers: Partial<Record<CodexCustomTool, CodexToolHandler>> = {

@@ -1,7 +1,14 @@
 import type { ParseResult } from '../../../lib/result'
-import { CODEX_DEFAULT_MODEL, CodexItemType, ITEM_TYPE_ALIASES, type PlanItem, type PlanStatus } from '../constants'
+import {
+	CODEX_DEFAULT_MODEL,
+	CodexCollabTool,
+	CodexItemType,
+	ITEM_TYPE_ALIASES,
+	type PlanItem,
+	type PlanStatus,
+} from '../constants'
 import type { CodexState } from '../state'
-import { renderAgentMarkdown, renderBashStart, renderEdit, renderPlan, renderToolOutput } from './render'
+import { renderAgent, renderAgentMarkdown, renderBashStart, renderEdit, renderPlan, renderToolOutput } from './render'
 
 function extractCmd(command: string): string {
 	const singleQuoted = command.match(/^\/bin\/\w+ -\w+c '([\s\S]+)'$/)
@@ -83,6 +90,20 @@ export function handleStreamItem(
 			status: (it.completed ? 'completed' : 'pending') as PlanStatus,
 		}))
 		renderPlan(items, state, result)
+		return
+	}
+
+	if (itemType === CodexItemType.CollabToolCall) {
+		const tool = (rawItem.tool as string) ?? ''
+		if (tool === CodexCollabTool.SpawnAgent && !isCompleted) {
+			renderAgent('', (rawItem.prompt as string) ?? '', state, result)
+		} else if (tool === CodexCollabTool.Wait && isCompleted) {
+			const states = (rawItem.agents_states as Record<string, Record<string, unknown>>) ?? {}
+			for (const id of Object.keys(states)) {
+				const msg = (states[id]?.message as string) ?? ''
+				if (msg) renderToolOutput(msg, state, result)
+			}
+		}
 	}
 }
 

@@ -42,3 +42,17 @@ export function renderPlan(items: PlanItem[], state: CodexState, result: ParseRe
 		result.add(`${INDENT}${marker} ${item.text}\n`)
 	}
 }
+
+const AGENT_MESSAGE_PREVIEW_CHARS = 80
+
+export function renderAgent(agentType: string, message: string, state: CodexState, result: ParseResult) {
+	showSession(state, result)
+	const firstLine = message.split('\n')[0].trim()
+	const summary =
+		firstLine.length <= AGENT_MESSAGE_PREVIEW_CHARS
+			? firstLine
+			: `${firstLine.slice(0, AGENT_MESSAGE_PREVIEW_CHARS)}...`
+	const head = agentType ? `[${CodexToolLabel.Agent}] (${agentType})` : `[${CodexToolLabel.Agent}]`
+	const line = summary ? `${head} ${summary}` : head
+	result.add(`\n${state.renderer.purple(line)}\n`)
+}

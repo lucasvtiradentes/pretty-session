@@ -36,6 +36,24 @@ describe('resolveSessionSource', () => {
 		await expect(resolveSessionSource(Provider.Gemini, 'full-session-id', { searchRoot: root })).resolves.toBe(path)
 	})
 
+	it('resolves a Claude session id from snake_case file content', async () => {
+		const root = createDir()
+		const path = join(root, 'project', 'session.jsonl')
+		mkdirSync(join(root, 'project'), { recursive: true })
+		writeFileSync(path, '{"session_id":"claude-session-id"}\n')
+
+		await expect(resolveSessionSource(Provider.Claude, 'claude-session-id', { searchRoot: root })).resolves.toBe(path)
+	})
+
+	it('resolves a Gemini session id from snake_case file content', async () => {
+		const root = createDir()
+		const path = join(root, 'project', 'chats', 'session.jsonl')
+		mkdirSync(join(root, 'project', 'chats'), { recursive: true })
+		writeFileSync(path, '{"session_id":"gemini-session-id"}\n')
+
+		await expect(resolveSessionSource(Provider.Gemini, 'gemini-session-id', { searchRoot: root })).resolves.toBe(path)
+	})
+
 	it('errors when multiple files match', async () => {
 		const root = createDir()
 		writeFileSync(join(root, 'one-shared.jsonl'), '{}\n')

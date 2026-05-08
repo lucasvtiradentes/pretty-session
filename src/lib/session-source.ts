@@ -73,8 +73,8 @@ async function fileHasSessionId(provider: Provider, path: string, sessionId: str
 }
 
 function getSessionId(provider: Provider, record: Record<string, unknown>) {
-	if (provider === Provider.Claude) return stringValue(record.sessionId)
-	if (provider === Provider.Gemini) return stringValue(record.sessionId)
+	if (provider === Provider.Claude) return stringValue(record.session_id)
+	if (provider === Provider.Gemini) return stringValue(record.sessionId) ?? stringValue(record.session_id)
 	if (provider === Provider.Codex) {
 		const payload = record.payload
 		if (isRecord(payload)) return stringValue(payload.id)

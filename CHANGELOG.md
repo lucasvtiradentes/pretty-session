@@ -1,5 +1,20 @@
 # pretty-session
 
+## 0.1.0
+
+### Minor Changes
+
+- f38f59e: Restructure the CLI around verb-first commands.
+
+  Use `pts parse <provider>` for stdin parsing and `pts watch <provider> <path-or-session-id>` for following saved sessions. The root provider commands were removed, and watch mode can now resolve provider session ids to local session files.
+
+- c69924d: Add `pts update` to update the globally installed package with the detected package manager.
+- e9c8898: Rename formatting environment variables from `PS_*` to `PTS_*` and refresh README usage, completion, and configuration docs.
+
+### Patch Changes
+
+- 5b1f900: Keep development shell completions bound only to development binary names.
+
 ## 0.0.6
 
 ### Patch Changes

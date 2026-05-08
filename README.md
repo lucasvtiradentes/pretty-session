@@ -5,7 +5,7 @@
   <div>Pretty Session</div>
   <!-- </DYNFIELD:HEADER_LOGO> -->
   <br />
-  <a href="#-overview">Overview</a> • <a href="#-motivation">Motivation</a> • <a href="#-features">Features</a> • <a href="#-packages">Packages</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-commands">Commands</a> • <a href="#-configuration">Configuration</a> • <a href="#-license">License</a>
+  <a href="#-overview">Overview</a> • <a href="#-motivation">Motivation</a> • <a href="#-features">Features</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-commands">Commands</a> • <a href="#-configuration">Configuration</a> • <a href="#-license">License</a>
 </div>
 
 <!-- <DYNFIELD:TOP_DIVIDER> -->
@@ -31,30 +31,18 @@ Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON
 - Nested subagent display for Task-style workflows
 - Session totals for duration, cost, and token usage when providers expose them
 
-## 📦 Packages
-
-<div align="center">
-<table>
-  <tr>
-    <th>Package</th>
-    <th>Repo</th>
-    <th>Download</th>
-  </tr>
-  <tr>
-    <td align="center">CLI</td>
-    <td align="center"><a href="https://github.com/lucasvtiradentes/pretty-session"><code>pretty-session</code></a></td>
-    <td align="center"><a href="https://www.npmjs.com/package/pretty-session"><img src="https://img.shields.io/npm/v/pretty-session?label=npm&color=cb3837&logo=npm" alt="npm"></a></td>
-  </tr>
-</table>
-</div>
-
 ## 🚀 Quick Start
 
 1. Install the CLI globally:
 
    ```sh
    npm i -g pretty-session
+   # now you can use "pts" or "pretty-session" in your terminal 
    ```
+
+<div  align="center">
+  <a href="https://www.npmjs.com/package/pretty-session"><img src="https://img.shields.io/npm/v/pretty-session?label=npm&color=cb3837&logo=npm" alt="npm"></a>
+</div>
 
 2. Format a Claude Code stream:
 
@@ -81,6 +69,8 @@ pts parse gemini
 pts watch claude <session> [--from-end] [--interval <value>]
 pts watch codex <session> [--from-end] [--interval <value>]
 pts watch gemini <session> [--from-end] [--interval <value>]
+
+pts update
 
 # completion commands
 pts completion bash

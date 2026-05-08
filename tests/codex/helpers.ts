@@ -9,7 +9,7 @@ const SANDBOX_BASE = resolve(CLI_ROOT, '.sandbox')
 const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
 const HOME = process.env.HOME ?? ''
 
-const TEST_ENV = { ...process.env, PS_TOOL_RESULT_MAX_CHARS: '300', PS_READ_PREVIEW_LINES: '5' }
+const TEST_ENV = { ...process.env, PTS_TOOL_RESULT_MAX_CHARS: '300', PTS_READ_PREVIEW_LINES: '5' }
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: stripping ANSI escape codes
 export const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')

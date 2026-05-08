@@ -20,7 +20,7 @@ Pretty Session is a small CLI that formats AI coding agent streams and saved ses
 
 ## ❓ Motivation
 
-Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON events. That format is good for machines, but bad for quick human review. Pretty Session keeps provider parsing separate and renders the same session in a cleaner, readable view.
+Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON events. That format is good for machines, but bad for quick human review. This is especially useful when AI coding agents run in CI/CD and you want readable progress instead of raw JSONL logs. Pretty Session keeps provider parsing separate and renders the same session in a cleaner, readable view.
 
 ## ⭐ Features
 
@@ -37,23 +37,37 @@ Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON
 
    ```sh
    npm i -g pretty-session
-   # now you can use "pts" or "pretty-session" in your terminal 
+   # now you can use "pts" or "pretty-session" in your terminal
    ```
 
 <div  align="center">
   <a href="https://www.npmjs.com/package/pretty-session"><img src="https://img.shields.io/npm/v/pretty-session?label=npm&color=cb3837&logo=npm" alt="npm"></a>
 </div>
 
-2. Format a Claude Code stream:
+2. Use whichever mode matches what you are inspecting:
+
+   Mode A: Live provider stream
 
    ```sh
    claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | pts parse claude
+   # codex exec "explain this code" --json | pts parse codex
+   # gemini -p "explain this code" --output-format stream-json | pts parse gemini
    ```
 
-3. Format a saved Codex session:
+   Mode B: Saved session snapshot
 
    ```sh
-   cat ~/.codex/sessions/.../session.jsonl | pts parse codex
+   cat ~/.claude/projects/.../session.jsonl | pts parse claude
+   # cat ~/.codex/sessions/.../session.jsonl | pts parse codex
+   # cat ~/.gemini/tmp/.../session.jsonl | pts parse gemini
+   ```
+
+   Mode C: Follow an active session
+
+   ```sh
+   pts watch claude <path-or-session-id>
+   # pts watch codex <path-or-session-id>
+   # pts watch gemini <path-or-session-id>
    ```
 
 ## 🧰 Commands
@@ -79,13 +93,39 @@ pts completion zsh
 ```
 <!-- </DYNFIELD:COMMANDS> -->
 
+## 🧩 Completion
+
+Add completion to your shell config so `pts <tab>` can show available commands, subcommands, and flags.
+
+```sh
+eval "$(pts completion zsh)"
+```
+
+For the interactive completion menu shown while typing, install the [zsh-autocomplete](https://github.com/marlonrichert/zsh-autocomplete). Bash and Fish completion scripts are also available:
+
+```sh
+pts completion bash
+pts completion fish
+```
+
 ## 🛠️ Development
 
-Install the dev CLI once to use `ptsd` anywhere on your machine while testing local source changes:
+Install the development binary when you want local code changes to be available from any terminal. This creates `ptsd`, which runs the current workspace version:
 
 ```sh
 pnpm dev:install
 ptsd --help
+```
+
+For development autocomplete, follow the Completion section and use the dev binary in your shell config:
+
+```sh
+command -v ptsd >/dev/null 2>&1 && eval "$(ptsd completion zsh)"
+```
+
+Remove the development binary when you no longer need it:
+
+```sh
 pnpm dev:uninstall
 ```
 
@@ -93,19 +133,12 @@ pnpm dev:uninstall
 
 No config file is required. Pretty Session reads provider events from stdin and writes formatted output to stdout.
 
-Supported providers:
+Environment variables:
 
-<!-- <DYNFIELD:CONFIG_JSON> -->
-```json
-{
-  "providers": ["claude", "codex", "gemini"],
-  "env": {
-    "PS_TOOL_RESULT_MAX_CHARS": "300",
-    "PS_READ_PREVIEW_LINES": "5"
-  }
-}
-```
-<!-- </DYNFIELD:CONFIG_JSON> -->
+| Variable                    | Default | Description                                      |
+| --------------------------- | ------- | ------------------------------------------------ |
+| `PTS_TOOL_RESULT_MAX_CHARS` | `300`   | Maximum characters shown in tool result previews |
+| `PTS_READ_PREVIEW_LINES`    | `5`     | Maximum lines shown in read/file previews        |
 
 ## 📜 License
 

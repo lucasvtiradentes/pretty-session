@@ -10,8 +10,8 @@ const HOME = process.env.HOME ?? ''
 
 const TEST_ENV = {
 	...process.env,
-	PS_TOOL_RESULT_MAX_CHARS: '300',
-	PS_READ_PREVIEW_LINES: '5',
+	PTS_TOOL_RESULT_MAX_CHARS: '300',
+	PTS_READ_PREVIEW_LINES: '5',
 	GEMINI_CLI_TRUST_WORKSPACE: 'true',
 }
 

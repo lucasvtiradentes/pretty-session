@@ -1,11 +1,11 @@
-import { execFileSync } from "node:child_process"
-import { rmSync } from "node:fs"
-import { homedir } from "node:os"
-import { join } from "node:path"
-import { CLI_NAME } from "../src/constants"
+import { execFileSync } from 'node:child_process'
+import { rmSync } from 'node:fs'
+import { homedir } from 'node:os'
+import { join } from 'node:path'
+import { CLI_NAME } from '../src/constants'
 
 const binDir = getBinDir()
-const devBinNames = [`${CLI_NAME}d`, "prettysessiond", "ptsd"]
+const devBinNames = [`${CLI_NAME}d`, 'prettysessiond', 'ptsd']
 
 for (const binName of devBinNames) {
 	rmSync(join(binDir, binName), { force: true })
@@ -15,18 +15,18 @@ for (const binName of devBinNames) {
 function getBinDir() {
 	if (process.env.PRETTY_SESSION_DEV_BIN_DIR) return process.env.PRETTY_SESSION_DEV_BIN_DIR
 
-	if (process.platform === "win32") {
-		return getNpmPrefix() ?? join(homedir(), "AppData", "Roaming", "npm")
+	if (process.platform === 'win32') {
+		return getNpmPrefix() ?? join(homedir(), 'AppData', 'Roaming', 'npm')
 	}
 
-	return join(homedir(), ".local", "bin")
+	return join(homedir(), '.local', 'bin')
 }
 
 function getNpmPrefix() {
 	try {
-		return execFileSync(process.platform === "win32" ? "npm.cmd" : "npm", ["config", "get", "prefix"], {
-			encoding: "utf8",
-			stdio: ["ignore", "pipe", "ignore"],
+		return execFileSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['config', 'get', 'prefix'], {
+			encoding: 'utf8',
+			stdio: ['ignore', 'pipe', 'ignore'],
 		}).trim()
 	} catch {
 		return null

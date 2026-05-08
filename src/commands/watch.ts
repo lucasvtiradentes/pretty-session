@@ -1,4 +1,4 @@
-import type { Program } from '@caporal/core'
+import { argument, defineCommand, defineSubCommand, flag } from '../cli/define'
 import { Provider } from '../constants'
 import { createProviderParser } from '../lib/provider-parser'
 import { resolveSessionSource } from '../lib/session-source'
@@ -6,15 +6,19 @@ import { watchLines } from '../lib/stream'
 
 const WATCH_COMMAND_NAME = 'watch'
 
-export function registerWatchCommand(program: Program) {
-	for (const provider of Object.values(Provider)) {
-		program
-			.command(`${WATCH_COMMAND_NAME} ${provider}`, `Follow a saved ${provider} session JSONL file`)
-			.argument('<session>', 'Session JSONL file path or session id to follow')
-			.option('--from-end', 'Start at the end of the file instead of replaying existing events')
-			.option('--interval <ms>', 'Polling interval in milliseconds', { default: 250 })
-			.strict(false)
-			.action(async ({ args, options }) => {
+export const watchCommand = defineCommand({
+	name: WATCH_COMMAND_NAME,
+	description: 'Follow saved session JSONL files',
+	subcommands: Object.values(Provider).map((provider) =>
+		defineSubCommand({
+			name: provider,
+			description: `Follow a saved ${provider} session JSONL file`,
+			arguments: [argument.string('session', 'Session JSONL file path or session id to follow', { required: true })],
+			flags: [
+				flag.boolean('--from-end', 'Start at the end of the file instead of replaying existing events'),
+				flag.string('--interval', 'Polling interval in milliseconds', { default: '250' }),
+			],
+			action: async ({ args, options }) => {
 				const intervalMs = Number(options.interval)
 				if (!Number.isFinite(intervalMs) || intervalMs <= 0) {
 					console.log(`error: invalid interval '${String(options.interval)}'`)
@@ -35,6 +39,7 @@ export function registerWatchCommand(program: Program) {
 				})
 
 				return 0
-			})
-	}
-}
+			},
+		}),
+	),
+})

@@ -19,20 +19,21 @@
 			"import": "./dist/index.js"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"scripts": {
 		"build": "tsup",
 		"changeset": "changeset",
 		"changeset:version": "changeset version",
-		"check": "biome check src/ tests/",
-		"check:fix": "biome check --fix src/ tests/",
+		"check": "biome check src/ scripts/ tests/",
+		"check:docs": "pnpm gen:docs && git diff --exit-code README.md",
+		"check:fix": "biome check --fix src/ scripts/ tests/",
 		"dev": "PRETTY_SESSION_PROG_NAME=pretty-session dotenv -- tsx src/bin.ts",
 		"dev:install": "tsx scripts/install-dev-version.ts",
 		"dev:uninstall": "tsx scripts/uninstall-dev-version.ts",
+		"gen:docs": "tsx scripts/gen-docs.ts",
 		"knip": "knip",
 		"lint-staged": "lint-staged",
+		"postbuild": "pnpm gen:docs",
 		"prepare": "husky",
 		"release": "changeset publish",
 		"test": "vitest run --exclude '**/**.e2e.test.ts'",

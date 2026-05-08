@@ -1,18 +1,21 @@
-import type { Program } from '@caporal/core'
+import { defineCommand, defineSubCommand } from '../cli/define'
 import { Provider } from '../constants'
 import { createProviderParser } from '../lib/provider-parser'
 import { streamLines } from '../lib/stream'
 
 const PARSE_COMMAND_NAME = 'parse'
 
-export function registerParseCommand(program: Program) {
-	for (const provider of Object.values(Provider)) {
-		program
-			.command(`${PARSE_COMMAND_NAME} ${provider}`, `Parse a ${provider} session stream from stdin`)
-			.strict(false)
-			.action(() => {
+export const parseCommand = defineCommand({
+	name: PARSE_COMMAND_NAME,
+	description: 'Parse provider session streams from stdin',
+	subcommands: Object.values(Provider).map((provider) =>
+		defineSubCommand({
+			name: provider,
+			description: `Parse a ${provider} session stream from stdin`,
+			action: () => {
 				streamLines(createProviderParser(provider))
 				return 0
-			})
-	}
-}
+			},
+		}),
+	),
+})

@@ -1,8 +1,8 @@
 import { createRequire } from 'node:module'
 import type { Program as CaporalProgram } from '@caporal/core'
-import { COMPLETION_COMMAND_NAME, registerCompletionCommand } from './commands/completion/register'
-import { registerParseCommand } from './commands/parse'
-import { registerWatchCommand } from './commands/watch'
+import { cliCommands } from './cli/catalog'
+import { registerProgram } from './cli/register'
+import { COMPLETION_COMMAND_NAME } from './commands/completion/register'
 import { CLI_NAME, VERSION } from './constants'
 
 let programInstance: CaporalProgram | undefined
@@ -46,9 +46,7 @@ function createProgram(binName: string): CaporalProgram {
 			},
 		})
 
-	registerParseCommand(program)
-	registerWatchCommand(program)
-	registerCompletionCommand(program)
+	registerProgram(program, cliCommands)
 	program.help(formatHelpExamples(binName))
 
 	return program

@@ -1,4 +1,4 @@
-export { COMPLETION_COMMAND_NAME, registerCompletionCommand } from './commands/completion/register'
+export { COMPLETION_COMMAND_NAME, completionCommand } from './commands/completion/register'
 export { Provider, PROVIDER_VALUES } from './constants'
 export { formatToolOutput } from './lib/format'
 export { parseJsonLine } from './providers/claude'

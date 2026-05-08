@@ -1,4 +1,4 @@
-import type { Program } from '@caporal/core'
+import { defineCommand, defineSubCommand } from '../../cli/define'
 import { getBashCompletionScript } from './bash'
 import { getFishCompletionScript } from './fish'
 import {
@@ -22,6 +22,25 @@ enum CompletionShell {
 
 const completionShells = Object.values(CompletionShell)
 
+export const completionCommand = defineCommand({
+	name: COMPLETION_COMMAND_NAME,
+	description: 'Generate shell completion scripts',
+	action: () => {
+		console.log(`Available shells: ${completionShells.join(', ')}`)
+		return 0
+	},
+	subcommands: completionShells.map((shell) =>
+		defineSubCommand({
+			name: shell,
+			description: `Generate ${shell} completion script`,
+			action: async ({ program }) => {
+				console.log(await getCompletionScript(program, shell))
+				return 0
+			},
+		}),
+	),
+})
+
 const completionScriptGenerators = {
 	[CompletionShell.Bash]: getBashCompletionScript,
 	[CompletionShell.Fish]: getFishCompletionScript,
@@ -36,35 +55,10 @@ const completionScriptGenerators = {
 	) => string
 >
 
-export function registerCompletionCommand(program: Program) {
-	program
-		.command(COMPLETION_COMMAND_NAME, 'Generate shell completion scripts')
-		.argument('[shell]', 'Shell to generate completion for')
-		.strict(false)
-		.action(async ({ args, program }) => {
-			const shell = args.shell ? String(args.shell) : ''
-			if (isCompletionShell(shell)) {
-				console.log(await getCompletionScript(program, shell))
-				return 0
-			}
-			console.log(`error: unsupported shell '${shell || '<empty>'}'`)
-			console.log(`supported: ${completionShells.join(', ')}`)
-			return 1
-		})
-}
-
-function isCompletionShell(value: string): value is CompletionShell {
-	return (completionShells as readonly string[]).includes(value)
-}
-
-async function getCompletionScript(program: Program, shell: CompletionShell) {
+async function getCompletionScript(program: import('@caporal/core').Program, shell: CompletionShell) {
 	const commands = (await program.getAllCommands()).filter(isVisibleCompletionCommand)
 	const roots = getRootCommands(commands)
 	const subcommands = getSubcommandGroups(commands)
-	subcommands.set(
-		COMPLETION_COMMAND_NAME,
-		completionShells.map((shell) => ({ name: shell, description: `Generate ${shell} completion` })),
-	)
 	const options = getOptionGroups(commands)
 	return completionScriptGenerators[shell](getCompletionBinNames(program.getBin()), roots, subcommands, options)
 }

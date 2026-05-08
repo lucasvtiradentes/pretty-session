@@ -72,23 +72,20 @@ Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON
 
 <!-- <DYNFIELD:COMMANDS> -->
 ```sh
-# live provider streams
-claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | pts parse claude
-codex exec "explain this code" --json | pts parse codex
-gemini -p "explain this code" --output-format stream-json | pts parse gemini
+# parse commands
+pts parse claude
+pts parse codex
+pts parse gemini
 
-# saved session files
-cat ~/.claude/projects/.../session.jsonl | pts parse claude
-cat ~/.codex/sessions/.../session.jsonl | pts parse codex
-cat ~/.gemini/tmp/.../session.jsonl | pts parse gemini
+# watch commands
+pts watch claude <session> [--from-end] [--interval <value>]
+pts watch codex <session> [--from-end] [--interval <value>]
+pts watch gemini <session> [--from-end] [--interval <value>]
 
-# watch saved session files
-pts watch codex <path-or-session-id>
-
-# shell integration
+# completion commands
+pts completion bash
+pts completion fish
 pts completion zsh
-pts --help
-pts --version
 ```
 <!-- </DYNFIELD:COMMANDS> -->
 

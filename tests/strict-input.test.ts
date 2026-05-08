@@ -13,6 +13,14 @@ function runProvider(provider: string, input: string) {
 	})
 }
 
+function runParse(args: string[], input: string) {
+	return spawnSync('npx', ['tsx', CLI_PATH, 'parse', ...args], {
+		cwd: CLI_ROOT,
+		encoding: 'utf8',
+		input,
+	})
+}
+
 describe('strict input validation', () => {
 	it('fails when stdin contains no recognized provider events', () => {
 		const result = runProvider('claude', '{"type":"not-real"}\n')
@@ -37,5 +45,15 @@ describe('strict input validation', () => {
 		expect(result.status).toBe(0)
 		expect(result.stdout).toContain('[session]')
 		expect(result.stderr).toBe('')
+	})
+
+	it('allows extra arguments for provider stream commands', () => {
+		const result = runParse(
+			['claude', 'extra'],
+			'{"type":"system","subtype":"init","session_id":"test-session","cwd":"/tmp","model":"test-model"}\n',
+		)
+
+		expect(result.status).toBe(0)
+		expect(result.stdout).toContain('[session]')
 	})
 })

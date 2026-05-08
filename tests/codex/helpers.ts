@@ -15,7 +15,7 @@ const TEST_ENV = { ...process.env, PS_TOOL_RESULT_MAX_CHARS: '300', PS_READ_PREV
 export const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')
 
 export function replayFixture(fixturePath: string): string {
-	const output = execSync(`npx tsx ${CLI_PATH} codex < ${fixturePath}`, {
+	const output = execSync(`npx tsx ${CLI_PATH} parse codex < ${fixturePath}`, {
 		encoding: 'utf-8',
 		timeout: 30_000,
 		cwd: CLI_ROOT,
@@ -33,7 +33,7 @@ export function runE2E(promptPath: string, dir: string): string {
 	execSync(`rm -rf ${sandboxDir} && mkdir -p ${sandboxDir} && git -C ${sandboxDir} init -q`)
 
 	const output = execSync(
-		`cd ${sandboxDir} && codex exec "${escapedPrompt}" --json --dangerously-bypass-approvals-and-sandbox 2>/dev/null | tee ${streamFile} | npx tsx ${CLI_PATH} codex`,
+		`cd ${sandboxDir} && codex exec "${escapedPrompt}" --json --dangerously-bypass-approvals-and-sandbox 2>/dev/null | tee ${streamFile} | npx tsx ${CLI_PATH} parse codex`,
 		{ encoding: 'utf-8', timeout: 120_000, cwd: CLI_ROOT, env: TEST_ENV },
 	)
 

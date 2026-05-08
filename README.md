@@ -59,13 +59,13 @@ Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON
 2. Format a Claude Code stream:
 
    ```sh
-   claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | pts claude
+   claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | pts parse claude
    ```
 
 3. Format a saved Codex session:
 
    ```sh
-   cat ~/.codex/sessions/.../session.jsonl | pts codex
+   cat ~/.codex/sessions/.../session.jsonl | pts parse codex
    ```
 
 ## 🧰 Commands
@@ -73,14 +73,17 @@ Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON
 <!-- <DYNFIELD:COMMANDS> -->
 ```sh
 # live provider streams
-claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | pts claude
-codex exec "explain this code" --json | pts codex
-gemini -p "explain this code" --output-format stream-json | pts gemini
+claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | pts parse claude
+codex exec "explain this code" --json | pts parse codex
+gemini -p "explain this code" --output-format stream-json | pts parse gemini
 
 # saved session files
-cat ~/.claude/projects/.../session.jsonl | pts claude
-cat ~/.codex/sessions/.../session.jsonl | pts codex
-cat ~/.gemini/tmp/.../session.jsonl | pts gemini
+cat ~/.claude/projects/.../session.jsonl | pts parse claude
+cat ~/.codex/sessions/.../session.jsonl | pts parse codex
+cat ~/.gemini/tmp/.../session.jsonl | pts parse gemini
+
+# watch saved session files
+pts watch codex <path-or-session-id>
 
 # shell integration
 pts completion zsh

@@ -6,7 +6,7 @@ const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..')
 const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
 
 function runProvider(provider: string, input: string) {
-	return spawnSync('npx', ['tsx', CLI_PATH, provider], {
+	return spawnSync('npx', ['tsx', CLI_PATH, 'parse', provider], {
 		cwd: CLI_ROOT,
 		encoding: 'utf8',
 		input,

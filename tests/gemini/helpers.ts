@@ -19,7 +19,7 @@ const TEST_ENV = {
 export const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')
 
 export function replayFixture(fixturePath: string): string {
-	return execSync(`npx tsx ${CLI_PATH} gemini < ${fixturePath}`, {
+	return execSync(`npx tsx ${CLI_PATH} parse gemini < ${fixturePath}`, {
 		encoding: 'utf-8',
 		timeout: 30_000,
 		cwd: CLI_ROOT,
@@ -31,7 +31,7 @@ export function runE2E(promptOrPath: string, dir?: string): string {
 	if (dir === undefined) {
 		const escapedPrompt = promptOrPath.replace(/"/g, '\\"')
 		return execSync(
-			`gemini -p "${escapedPrompt}" --yolo --output-format stream-json 2>/dev/null | npx tsx ${CLI_PATH} gemini`,
+			`gemini -p "${escapedPrompt}" --yolo --output-format stream-json 2>/dev/null | npx tsx ${CLI_PATH} parse gemini`,
 			{ encoding: 'utf-8', timeout: 240_000, cwd: CLI_ROOT, env: TEST_ENV },
 		)
 	}
@@ -45,7 +45,7 @@ export function runE2E(promptOrPath: string, dir?: string): string {
 	execSync(`rm -rf ${sandboxDir} && mkdir -p ${sandboxDir} && git -C ${sandboxDir} init -q`)
 
 	const output = execSync(
-		`cd ${sandboxDir} && gemini -p "${escapedPrompt}" --yolo --output-format stream-json 2>/dev/null | tee ${streamFile} | npx tsx ${CLI_PATH} gemini`,
+		`cd ${sandboxDir} && gemini -p "${escapedPrompt}" --yolo --output-format stream-json 2>/dev/null | tee ${streamFile} | npx tsx ${CLI_PATH} parse gemini`,
 		{ encoding: 'utf-8', timeout: 240_000, cwd: CLI_ROOT, env: TEST_ENV },
 	)
 

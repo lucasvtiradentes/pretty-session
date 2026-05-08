@@ -1,5 +1,5 @@
 import type { Command } from '@caporal/core'
-import { CLI_BIN_NAMES } from '../../constants'
+import { CLI_BIN_NAMES, DEV_CLI_BIN_NAMES } from '../../constants'
 
 export type CompletionGroup = {
 	description?: string
@@ -23,7 +23,8 @@ export function isVisibleCompletionCommand(command: Command) {
 }
 
 export function getCompletionBinNames(binName: string) {
-	const names = [binName, ...CLI_BIN_NAMES]
+	const aliases = DEV_CLI_BIN_NAMES.includes(binName) ? DEV_CLI_BIN_NAMES : CLI_BIN_NAMES
+	const names = [binName, ...aliases]
 	return [...new Set(names)]
 }
 

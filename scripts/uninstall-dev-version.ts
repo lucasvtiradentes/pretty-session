@@ -2,10 +2,10 @@ import { execFileSync } from 'node:child_process'
 import { rmSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { CLI_NAME } from '../src/constants'
+import { DEV_CLI_BIN_NAMES } from '../src/constants'
 
 const binDir = getBinDir()
-const devBinNames = [`${CLI_NAME}d`, 'prettysessiond', 'ptsd']
+const devBinNames = DEV_CLI_BIN_NAMES
 
 for (const binName of devBinNames) {
 	rmSync(join(binDir, binName), { force: true })

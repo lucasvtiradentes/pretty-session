@@ -120,7 +120,7 @@ ptsd --help
 For development autocomplete, follow the Completion section and use the dev binary in your shell config:
 
 ```sh
-command -v ptsd >/dev/null 2>&1 && eval "$(ptsd completion zsh)"
+eval "$(ptsd completion zsh)"
 ```
 
 Remove the development binary when you no longer need it:

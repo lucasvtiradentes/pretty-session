@@ -3,12 +3,12 @@ import { chmodSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { CLI_NAME } from '../src/constants'
+import { DEV_CLI_BIN_NAMES } from '../src/constants'
 
 const scriptDir = dirname(fileURLToPath(import.meta.url))
 const rootDir = resolve(scriptDir, '..')
 const binDir = getBinDir()
-const devBinNames = [`${CLI_NAME}d`, 'prettysessiond', 'ptsd']
+const devBinNames = DEV_CLI_BIN_NAMES
 
 mkdirSync(binDir, { recursive: true })
 

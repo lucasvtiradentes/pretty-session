@@ -1,6 +1,6 @@
 {
 	"name": "pretty-session",
-	"version": "0.0.6",
+	"version": "0.1.0",
 	"description": "Pretty formatter for AI coding agent sessions",
 	"type": "module",
 	"packageManager": "pnpm@9.15.4",
@@ -19,7 +19,9 @@
 			"import": "./dist/index.js"
 		}
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"build": "tsup",
 		"changeset": "changeset",

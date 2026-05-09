@@ -20,7 +20,9 @@ Pretty Session is a small CLI that formats AI coding agent streams and saved ses
 
 ## ❓ Motivation
 
-Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON events. That format is good for machines, but bad for quick human review. This is especially useful when AI coding agents run in CI/CD and you want readable progress instead of raw JSONL logs. Pretty Session keeps provider parsing separate and renders the same session in a cleaner, readable view.
+I wanted a way to actually understand what my coding agents are doing while they run, especially in CI, where the default stream-json logs are noisy and painful to read.
+
+Why? To quickly review progress, debug a run, or catch what happened at a glance.
 
 ## ⭐ Features
 
@@ -39,10 +41,6 @@ Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON
    npm i -g pretty-session
    # now you can use "pts" or "pretty-session" in your terminal
    ```
-
-<div  align="center">
-  <a href="https://www.npmjs.com/package/pretty-session"><img src="https://img.shields.io/npm/v/pretty-session?label=npm&color=cb3837&logo=npm" alt="npm"></a>
-</div>
 
 2. Use whichever mode matches what you are inspecting:
 

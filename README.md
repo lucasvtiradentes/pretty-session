@@ -139,15 +139,15 @@ For a better terminal experience, enable shell completion so `pts <tab>` can sho
   <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/shell-completion.png" alt="Shell completion" />
 </div>
 
-For zsh, add this line to your `.zshrc`:
+Add this to your `.zshrc`:
 
 ```sh
 eval "$(pts completion zsh)"
 ```
 
-This enables completion for commands, subcommands, and flags. For a richer menu while you type, install [zsh-autocomplete](https://github.com/marlonrichert/zsh-autocomplete).
+This enables completion for `pts` commands, subcommands, and flags. To get the interactive menu shown above, install [zsh-autocomplete](https://github.com/marlonrichert/zsh-autocomplete).
 
-Bash and Fish are available too:
+For other shells, generate the matching completion script:
 
 ```sh
 pts completion bash

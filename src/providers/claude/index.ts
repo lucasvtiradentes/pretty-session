@@ -1,2 +1,2 @@
-export { parseJsonLine } from './parser'
+export { finalizeClaude, parseJsonLine } from './parser'
 export { ParserState } from './state'

@@ -86,20 +86,27 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 		handleResult(data, state, result)
 	} else if (msgType === ClaudeMessageType.LastPrompt) {
 		result.markRecognized()
-		if (state.mode === ParserMode.Replay && state.pendingSessionId) {
-			const usage = state.lastUsage
-			const inputTokens =
-				(usage.input_tokens ?? 0) + (usage.cache_read_input_tokens ?? 0) + (usage.cache_creation_input_tokens ?? 0)
-			const outputTokens = usage.output_tokens ?? 0
-			const r = state.renderer
-			const stats = `0.0s, $0.0000, ${state.turnCount} turns, ${inputTokens} in / ${outputTokens} out`
-			result.add(`\n${r.dim(`[done] ${stats}`)}\n`)
-		}
+		state.sawLastPrompt = true
 	} else if (msgType === ClaudeMessageType.Error) {
 		result.markRecognized()
 		const errorMsg = (data.error as string) ?? 'unknown error'
 		result.add(`\n${state.sp}${state.renderer.red(`[error] ${errorMsg}`)}`)
 	}
 
+	return result
+}
+
+export function finalizeClaude(state: ParserState): ParseResult {
+	const result = new ParseResult()
+	if (!state.sawLastPrompt || state.doneRendered || state.mode !== ParserMode.Replay || !state.pendingSessionId)
+		return result
+
+	const usage = state.lastUsage
+	const inputTokens =
+		(usage.input_tokens ?? 0) + (usage.cache_read_input_tokens ?? 0) + (usage.cache_creation_input_tokens ?? 0)
+	const outputTokens = usage.output_tokens ?? 0
+	const stats = `0.0s, $0.0000, ${state.turnCount} turns, ${inputTokens} in / ${outputTokens} out`
+	result.add(`\n${state.renderer.dim(`[done] ${stats}`)}\n`)
+	state.doneRendered = true
 	return result
 }

@@ -23,6 +23,8 @@ export class ParserState {
 	lastDurationMs = 0
 	turnCount = 0
 	lastCostUsd = 0
+	sawLastPrompt = false
+	doneRendered = false
 
 	constructor() {
 		this.mode = ParserMode.Stream

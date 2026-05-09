@@ -8,7 +8,7 @@ export enum Provider {
 
 export const PROVIDER_VALUES = Object.values(Provider) as string[]
 
-export const VERSION = '0.1.0'
+export const VERSION = '0.1.1'
 export const CLI_NAME = env.PRETTY_SESSION_PROG_NAME ?? 'pretty-session'
 export const CLI_BIN_NAMES = ['pretty-session', 'pts']
 export const DEV_CLI_BIN_NAMES = ['pretty-sessiond', 'prettysessiond', 'ptsd']

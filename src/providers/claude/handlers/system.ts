@@ -3,11 +3,11 @@ import type { ParseResult } from '../../../lib/result'
 import { SystemSubtype } from '../constants'
 import type { ParserState } from '../state'
 
-export function formatClaudeProjectName(cwd: string) {
+function formatClaudeProjectName(cwd: string) {
 	return cwd.replace(/[\/_.]/g, '-')
 }
 
-export function getClaudeSessionPath(cwd: string, sessionId: string) {
+function getClaudeSessionPath(cwd: string, sessionId: string) {
 	if (!cwd || !sessionId || cwd.includes('<')) return ''
 	const home = process.env.HOME ?? ''
 	if (!home) return ''

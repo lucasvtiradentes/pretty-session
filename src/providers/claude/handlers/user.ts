@@ -4,7 +4,7 @@ import type { ParseResult } from '../../../lib/result'
 import { ContentType, ParserMode } from '../constants'
 import type { ParserState } from '../state'
 
-export function cleanUserMessage(content: string) {
+function cleanUserMessage(content: string) {
 	return content
 		.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, '')
 		.replace(/<task-notification>[\s\S]*?<\/task-notification>/g, '')

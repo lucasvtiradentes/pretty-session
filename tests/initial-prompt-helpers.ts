@@ -7,7 +7,7 @@ const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..')
 const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: stripping ANSI escape codes
-export const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')
+const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')
 
 function runParse(provider: 'claude' | 'codex', input: string, home: string) {
 	return stripAnsi(

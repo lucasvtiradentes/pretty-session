@@ -26,12 +26,9 @@ Why? To quickly review progress, debug a run, or catch what happened at a glance
 
 ## ⭐ Features
 
-- Pipe-based formatter for provider streams and saved sessions
-- Claude Code, Codex, and Gemini support
-- Formatted tool calls for Bash, Read, Edit, Grep, Glob, Task, and more
-- Markdown-ish terminal rendering for text, code, and tables
-- Nested subagent display for Task-style workflows
-- Session totals for duration, cost, and token usage when providers expose them
+- Three ways to format agent sessions: parse a saved session, watch an active one, or stream one live.
+- Multi-provider support for [Claude Code](https://claude.com/product/claude-code), [Codex](https://openai.com/codex/), and [Gemini](https://geminicli.com/), with a parser structure that is easy to extend.
+- Cleaner terminal output for tool calls, subagents, markdown-ish text, tables, token usage, cost, and duration when available.
 
 ## 🚀 Quick Start
 

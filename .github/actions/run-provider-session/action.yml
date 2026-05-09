@@ -8,7 +8,12 @@ inputs:
     required: true
   prompt:
     description: Prompt to send to the provider
-    required: true
+    required: false
+    default: ''
+  command:
+    description: Command to run instead of sending a prompt to the provider
+    required: false
+    default: ''
 
   # step 1: install provider CLI
   install-cli:
@@ -73,6 +78,7 @@ runs:
       env:
         BYPASS_PERMISSIONS: ${{ inputs.bypass-permissions }}
         CLAUDE_CODE_OAUTH_TOKEN: ${{ inputs.provider == 'claude' && inputs.claude-code-oauth-token || '' }}
+        COMMAND: ${{ inputs.command }}
         MODE: ${{ inputs.mode }}
         MODEL: ${{ inputs.model }}
         PROMPT: ${{ inputs.prompt }}
@@ -80,7 +86,7 @@ runs:
       run: bash "${{ github.action_path }}/scripts/run-provider.sh"
 
     - name: Upload raw output
-      if: ${{ always() && inputs.mode == 'raw' }}
+      if: ${{ always() && inputs.command == '' && inputs.mode == 'raw' }}
       uses: actions/upload-artifact@v7
       with:
         name: ${{ inputs.provider }}-session-raw
@@ -89,7 +95,7 @@ runs:
         retention-days: 7
 
     - name: Upload Pretty Session output
-      if: ${{ always() && inputs.mode == 'pretty' }}
+      if: ${{ always() && inputs.command == '' && inputs.mode == 'pretty' }}
       uses: actions/upload-artifact@v7
       with:
         name: ${{ inputs.provider }}-session-pretty

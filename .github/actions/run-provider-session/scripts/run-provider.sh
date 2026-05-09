@@ -2,9 +2,10 @@
 set -euo pipefail
 
 : "${BYPASS_PERMISSIONS:=true}"
+: "${COMMAND:=}"
 : "${MODE:?MODE is required}"
 : "${MODEL:=}"
-: "${PROMPT:?PROMPT is required}"
+: "${PROMPT:=}"
 : "${PROVIDER:?PROVIDER is required}"
 
 write_output() {
@@ -16,6 +17,16 @@ write_output() {
 }
 
 run_provider() {
+	if [ -n "$COMMAND" ]; then
+		bash -c "$COMMAND"
+		return
+	fi
+
+	if [ -z "$PROMPT" ]; then
+		echo "PROMPT is required when COMMAND is not set" >&2
+		exit 1
+	fi
+
 	case "$PROVIDER" in
 		claude)
 			flags=()

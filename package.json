@@ -24,7 +24,7 @@
 		"build": "tsup",
 		"changeset": "changeset",
 		"changeset:version": "changeset version",
-		"check": "biome check src/ scripts/ tests/",
+		"check": "biome check src/ scripts/ tests/ vitest.config.ts",
 		"check:docs": "pnpm gen:docs && git diff --exit-code README.md",
 		"check:fix": "biome check --fix src/ scripts/ tests/",
 		"dev": "PRETTY_SESSION_PROG_NAME=pretty-session dotenv -- tsx src/bin.ts",

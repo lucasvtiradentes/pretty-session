@@ -5,6 +5,8 @@ export const SESSION_HEADER = `[session]
    path:  ~/.claude/projects/<CWD>/<UUID>.jsonl
    model: <MODEL>
 
+----
+
 `
 
 export const SESSION_FOOTER = `[done] <DURATION>s, $<COST>, <N> turns, <N> in / <N> out

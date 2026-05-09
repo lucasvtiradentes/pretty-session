@@ -94,15 +94,16 @@ export function sanitize(output: string): string {
 			.replace(/→ \(Bash completed with no output\)/g, '→')
 			.replace(/→ \n/g, '→\n')
 			.replace(/^ +→\n/gm, '')
-			.replace(/^(?!\[|\s{3}|\n$)[^\n]+\n?/gm, '')
+			.replace(/^(?!\[|\s{3}|----$|\n$)[^\n]+\n?/gm, '')
 			.replace(/(model: <MODEL>\n)\n+(?=\[(?!done\]))/g, '$1\n\n')
 			.replace(/\n+\[done\]/g, '\n\n[done]')
+			.replace(/----\n{2,}/g, '----\n\n')
 			.replace(/(\[Grep\][^\n]*\n\s*→ )No files found/g, '$1No matches found')
 	)
 }
 
 export function expected(body: string): string {
-	return SESSION_HEADER + body + SESSION_FOOTER
+	return SESSION_HEADER + body.replace(/^\n+/, '') + SESSION_FOOTER
 }
 
 export function fixtureExists(path: string): boolean {

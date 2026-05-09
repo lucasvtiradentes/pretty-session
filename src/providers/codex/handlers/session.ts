@@ -77,7 +77,7 @@ export function showSession(state: CodexState, result: ParseResult) {
 	let lines = `[session]\n${INDENT}id:    ${state.sessionId}`
 	if (path) lines += `\n${INDENT}path:  ${displaySessionPath(path)}`
 	lines += `\n${INDENT}model: ${state.model}`
-	result.add(`${r.dim(lines)}\n\n`)
+	result.add(`${r.dim(lines)}\n\n${r.dim('----')}\n`)
 	flushInitialUserMessage(state, result)
 }
 

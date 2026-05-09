@@ -32,6 +32,6 @@ export function handleSystem(data: Record<string, unknown>, state: ParserState, 
 		let lines = `[session]\n${INDENT}id:    ${sessionId}`
 		if (state.sessionFilePath) lines += `\n${INDENT}path:  ${toTildePath(state.sessionFilePath)}`
 		lines += `\n${INDENT}model: ${modelName}`
-		result.add(`${r.dim(lines)}\n\n`)
+		result.add(`${r.dim(lines)}\n\n${r.dim('----')}\n`)
 	}
 }

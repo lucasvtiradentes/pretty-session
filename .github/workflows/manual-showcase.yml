@@ -27,14 +27,25 @@ jobs:
       - uses: ./.github/actions/run-provider-session
         with:
           provider: ${{ inputs.provider }}
-          prompt: ${{ env.SHOWCASE_PROMPT }}
           install-cli: 'true'
           mode: raw
           bypass-permissions: 'true'
-          save-session: 'true'
+          run-session: 'false'
+          save-session: 'false'
           claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           codex-auth-json: ${{ secrets.CODEX_AUTH_JSON }}
           gemini-credentials: ${{ secrets.GEMINI_CREDENTIALS }}
+      - name: Run Claude Code
+        if: ${{ inputs.provider == 'claude' }}
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: claude -p "${{ env.SHOWCASE_PROMPT }}" --print --verbose --dangerously-skip-permissions --output-format stream-json
+      - name: Run Codex
+        if: ${{ inputs.provider == 'codex' }}
+        run: codex exec "${{ env.SHOWCASE_PROMPT }}" --json --dangerously-bypass-approvals-and-sandbox
+      - name: Run Gemini
+        if: ${{ inputs.provider == 'gemini' }}
+        run: gemini -p "${{ env.SHOWCASE_PROMPT }}" --output-format stream-json --yolo
 
   with-pretty-session:
     name: With Pretty Session
@@ -46,11 +57,24 @@ jobs:
       - uses: ./.github/actions/run-provider-session
         with:
           provider: ${{ inputs.provider }}
-          prompt: ${{ env.SHOWCASE_PROMPT }}
           install-cli: 'true'
           mode: pretty
           bypass-permissions: 'true'
-          save-session: 'true'
+          run-session: 'false'
+          save-session: 'false'
           claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           codex-auth-json: ${{ secrets.CODEX_AUTH_JSON }}
           gemini-credentials: ${{ secrets.GEMINI_CREDENTIALS }}
+      - name: Install Pretty Session
+        run: npm install --global pretty-session
+      - name: Run Claude Code with Pretty Session
+        if: ${{ inputs.provider == 'claude' }}
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: claude -p "${{ env.SHOWCASE_PROMPT }}" --print --verbose --dangerously-skip-permissions --output-format stream-json | pts parse claude
+      - name: Run Codex with Pretty Session
+        if: ${{ inputs.provider == 'codex' }}
+        run: codex exec "${{ env.SHOWCASE_PROMPT }}" --json --dangerously-bypass-approvals-and-sandbox | pts parse codex
+      - name: Run Gemini with Pretty Session
+        if: ${{ inputs.provider == 'gemini' }}
+        run: gemini -p "${{ env.SHOWCASE_PROMPT }}" --output-format stream-json --yolo | pts parse gemini

@@ -42,6 +42,10 @@ inputs:
   bypass-permissions:
     description: Run with provider auto-approval or bypass flags
     required: true
+  run-session:
+    description: Run the selected provider session
+    required: false
+    default: 'true'
 
   # step 4: upload artifacts
   save-session:
@@ -73,26 +77,8 @@ runs:
         PROVIDER: ${{ inputs.provider }}
       run: bash "${{ github.action_path }}/scripts/setup-auth.sh"
 
-    - name: Run Claude Code
-      if: ${{ inputs.command == '' && inputs.provider == 'claude' }}
-      shell: bash
-      env:
-        CLAUDE_CODE_OAUTH_TOKEN: ${{ inputs.claude-code-oauth-token }}
-      run: claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json
-
-    - name: Install Pretty Session
-      if: ${{ inputs.command == '' && inputs.provider == 'claude' }}
-      shell: bash
-      run: npm install --global pretty-session
-
-    - name: Run Claude Code with Pretty Session
-      if: ${{ inputs.command == '' && inputs.provider == 'claude' }}
-      shell: bash
-      env:
-        CLAUDE_CODE_OAUTH_TOKEN: ${{ inputs.claude-code-oauth-token }}
-      run: claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | pts parse claude
-
     - name: Run provider session
+      if: ${{ inputs.run-session == 'true' }}
       shell: bash
       env:
         BYPASS_PERMISSIONS: ${{ inputs.bypass-permissions }}
@@ -105,7 +91,7 @@ runs:
       run: bash "${{ github.action_path }}/scripts/run-provider.sh"
 
     - name: Upload raw output
-      if: ${{ always() && inputs.command == '' && inputs.mode == 'raw' }}
+      if: ${{ always() && inputs.run-session == 'true' && inputs.command == '' && inputs.mode == 'raw' }}
       uses: actions/upload-artifact@v7
       with:
         name: ${{ inputs.provider }}-session-raw
@@ -114,7 +100,7 @@ runs:
         retention-days: 7
 
     - name: Upload Pretty Session output
-      if: ${{ always() && inputs.command == '' && inputs.mode == 'pretty' }}
+      if: ${{ always() && inputs.run-session == 'true' && inputs.command == '' && inputs.mode == 'pretty' }}
       uses: actions/upload-artifact@v7
       with:
         name: ${{ inputs.provider }}-session-pretty
@@ -125,14 +111,14 @@ runs:
         retention-days: 7
 
     - name: Collect provider session files
-      if: ${{ always() && inputs.save-session == 'true' }}
+      if: ${{ always() && inputs.run-session == 'true' && inputs.save-session == 'true' }}
       shell: bash
       env:
         PROVIDER: ${{ inputs.provider }}
       run: bash "${{ github.action_path }}/scripts/collect-session-files.sh"
 
     - name: Upload provider session files
-      if: ${{ always() && inputs.save-session == 'true' }}
+      if: ${{ always() && inputs.run-session == 'true' && inputs.save-session == 'true' }}
       uses: actions/upload-artifact@v7
       with:
         name: ${{ inputs.provider }}-session-${{ inputs.mode }}-files

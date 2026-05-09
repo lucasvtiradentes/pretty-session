@@ -22,5 +22,6 @@ export function handleResult(data: Record<string, unknown>, state: ParserState, 
 		const outputTokens = usage.output_tokens ?? 0
 		const stats = `${duration}s, $${cost}, ${turns} turns, ${inputTokens} in / ${outputTokens} out`
 		result.add(`\n${r.dim(`[done] ${stats}`)}\n`)
+		state.doneRendered = true
 	}
 }

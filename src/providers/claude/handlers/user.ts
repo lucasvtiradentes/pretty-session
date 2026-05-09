@@ -1,8 +1,36 @@
-import { INDENT, USER_MESSAGE_MAX_CHARS } from '../../../constants'
+import { INDENT } from '../../../constants'
 import { formatToolOutput } from '../../../lib/format'
 import type { ParseResult } from '../../../lib/result'
 import { ContentType, ParserMode } from '../constants'
 import type { ParserState } from '../state'
+
+function cleanUserMessage(content: string) {
+	return content
+		.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, '')
+		.replace(/<task-notification>[\s\S]*?<\/task-notification>/g, '')
+		.replace(/<local-command-caveat>[\s\S]*?<\/local-command-caveat>/g, '')
+		.replace(/<local-command-stdout>[\s\S]*?<\/local-command-stdout>/g, '')
+		.replace(/<command-name>[\s\S]*?<\/command-name>/g, '')
+		.replace(/<command-message>[\s\S]*?<\/command-message>/g, '')
+		.replace(/<command-args>[\s\S]*?<\/command-args>/g, '')
+		.replace(/<user-prompt-submit-hook>[\s\S]*?<\/user-prompt-submit-hook>/g, '')
+		.trim()
+}
+
+function parseToolUseError(content: string) {
+	const match = content.match(/^<tool_use_error>([\s\S]*)<\/tool_use_error>$/)
+	return match?.[1]?.trim()
+}
+
+export function renderUserText(content: string, state: ParserState, result: ParseResult) {
+	const cleaned = cleanUserMessage(content)
+	if (!cleaned) return
+	const r = state.renderer
+	if (state.turnCount > 1) result.add(`\n${r.dim('----')}\n`)
+	result.add(`\n${r.green('[user]')} ${cleaned}`)
+	result.add(`\n\n${r.dim('----')}\n`)
+	state.initialUserRendered = true
+}
 
 export function handleUserMessage(data: Record<string, unknown>, state: ParserState, result: ParseResult) {
 	const r = state.renderer
@@ -11,22 +39,7 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 
 	if (typeof content === 'string') {
 		if (state.mode === ParserMode.Replay && state.sessionShown) {
-			const cleaned = content
-				.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, '')
-				.replace(/<task-notification>[\s\S]*?<\/task-notification>/g, '')
-				.replace(/<local-command-caveat>[\s\S]*?<\/local-command-caveat>/g, '')
-				.replace(/<local-command-stdout>[\s\S]*?<\/local-command-stdout>/g, '')
-				.replace(/<command-name>[\s\S]*?<\/command-name>/g, '')
-				.replace(/<command-message>[\s\S]*?<\/command-message>/g, '')
-				.replace(/<command-args>[\s\S]*?<\/command-args>/g, '')
-				.replace(/<user-prompt-submit-hook>[\s\S]*?<\/user-prompt-submit-hook>/g, '')
-				.trim()
-			if (!cleaned) return
-			const text = cleaned.slice(0, USER_MESSAGE_MAX_CHARS)
-			if (state.turnCount > 1) result.add(`\n${r.dim('----')}\n`)
-			result.add(`\n${r.green('[user]')} ${text}`)
-			if (cleaned.length > USER_MESSAGE_MAX_CHARS) result.add(r.dim('...'))
-			result.add(`\n\n${r.dim('----')}\n`)
+			renderUserText(content, state, result)
 		}
 		return
 	}
@@ -52,8 +65,8 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 			) {
 				return
 			}
-			if (toolContent.includes('<tool_use_error>')) {
-				const errorMsg = toolContent.replace(/<[^>]*>/g, '')
+			const errorMsg = parseToolUseError(toolContent)
+			if (errorMsg) {
 				result.add(`${state.sp}${r.red(`${INDENT}✗ ${errorMsg}`)}\n`)
 				return
 			}

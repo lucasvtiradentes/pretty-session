@@ -11,6 +11,9 @@ importers:
       '@caporal/core':
         specifier: ^2.0.7
         version: 2.0.7
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.9.4
@@ -2175,8 +2178,8 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
-  zod@4.3.6:
-    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
 snapshots:
 
@@ -3366,7 +3369,7 @@ snapshots:
       strip-json-comments: 5.0.3
       unbash: 2.2.0
       yaml: 2.8.3
-      zod: 4.3.6
+      zod: 4.4.3
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -4117,4 +4120,4 @@ snapshots:
 
   yaml@2.8.3: {}
 
-  zod@4.3.6: {}
+  zod@4.4.3: {}

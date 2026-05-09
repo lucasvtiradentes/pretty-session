@@ -16,7 +16,6 @@ export interface Renderer {
 }
 
 const BOLD = '\x1b[1m'
-const INVERSE = '\x1b[7m'
 const GREEN = '\x1b[32m'
 const ORANGE = '\x1b[33m'
 const PURPLE = '\x1b[35m'
@@ -111,7 +110,7 @@ export class AnsiRenderer implements Renderer {
 		})
 		result = result.replace(/\*\*(.+?)\*\*/g, `${BOLD}$1${RESET}`)
 		result = result.replace(/__(.+?)__/g, `${BOLD}$1${RESET}`)
-		result = result.replace(/`([^`]+)`/g, `${INVERSE}$1${RESET}`)
+		result = result.replace(/`([^`]+)`/g, `${BOLD}$1${RESET}`)
 		result = result.replace(/CBLK(\d+)CBLK/g, (_, i) => `${DIM}${codeBlocks[Number(i)]}${RESET}`)
 		return result
 	}
@@ -125,11 +124,11 @@ export class AnsiRenderer implements Renderer {
 	}
 
 	styleCode() {
-		return INVERSE
+		return BOLD
 	}
 
 	styleBoldCode() {
-		return BOLD + INVERSE
+		return BOLD
 	}
 
 	pipe() {

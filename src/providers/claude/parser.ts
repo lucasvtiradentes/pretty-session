@@ -1,4 +1,5 @@
 import { parseJsonRecord } from '../../lib/json'
+import { findJsonlRecord } from '../../lib/jsonl'
 import { ParseResult } from '../../lib/result'
 import { ClaudeMessageType, ParserMode, SystemSubtype } from './constants'
 import {
@@ -8,7 +9,28 @@ import {
 	handleSystem,
 	handleUserMessage,
 } from './handlers/index'
+import { renderUserText } from './handlers/user'
 import type { ParserState } from './state'
+
+function flushInitialUserMessage(state: ParserState, result: ParseResult) {
+	if (state.initialUserRendered) return
+
+	if (state.pendingUserMessage) {
+		renderUserText(state.pendingUserMessage, state, result)
+		state.pendingUserMessage = ''
+		return
+	}
+
+	if (state.initialUserFallbackTried || !state.sessionFilePath) return
+	state.initialUserFallbackTried = true
+	const record = findJsonlRecord(state.sessionFilePath, (item) => {
+		const message = (item.message as Record<string, unknown>) ?? {}
+		return item.type === ClaudeMessageType.User && typeof message.content === 'string'
+	})
+	const message = (record?.message as Record<string, unknown>) ?? {}
+	const content = message.content
+	if (typeof content === 'string') renderUserText(content, state, result)
+}
 
 export function parseJsonLine(line: string, state: ParserState): ParseResult {
 	const result = new ParseResult()
@@ -32,7 +54,12 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 			state.mode = ParserMode.Replay
 		}
 		if (data.sessionId) state.turnCount++
-		handleUserMessage(data, state, result)
+		const message = (data.message as Record<string, unknown>) ?? {}
+		if (!state.sessionShown && typeof message.content === 'string') {
+			state.pendingUserMessage = message.content
+		} else {
+			handleUserMessage(data, state, result)
+		}
 	} else if (msgType === ClaudeMessageType.Assistant) {
 		result.markRecognized()
 		const message = (data.message as Record<string, unknown>) ?? {}
@@ -52,26 +79,34 @@ export function parseJsonLine(line: string, state: ParserState): ParseResult {
 			)
 		}
 
+		flushInitialUserMessage(state, result)
 		handleAssistantMessage(data, state, result)
 	} else if (msgType === ClaudeMessageType.Result) {
 		result.markRecognized()
 		handleResult(data, state, result)
 	} else if (msgType === ClaudeMessageType.LastPrompt) {
 		result.markRecognized()
-		if (state.mode === ParserMode.Replay && state.pendingSessionId) {
-			const usage = state.lastUsage
-			const inputTokens =
-				(usage.input_tokens ?? 0) + (usage.cache_read_input_tokens ?? 0) + (usage.cache_creation_input_tokens ?? 0)
-			const outputTokens = usage.output_tokens ?? 0
-			const r = state.renderer
-			const stats = `0.0s, $0.0000, ${state.turnCount} turns, ${inputTokens} in / ${outputTokens} out`
-			result.add(`\n${r.dim(`[done] ${stats}`)}\n`)
-		}
+		state.sawLastPrompt = true
 	} else if (msgType === ClaudeMessageType.Error) {
 		result.markRecognized()
 		const errorMsg = (data.error as string) ?? 'unknown error'
 		result.add(`\n${state.sp}${state.renderer.red(`[error] ${errorMsg}`)}`)
 	}
 
+	return result
+}
+
+export function finalizeClaude(state: ParserState): ParseResult {
+	const result = new ParseResult()
+	if (!state.sawLastPrompt || state.doneRendered || state.mode !== ParserMode.Replay || !state.pendingSessionId)
+		return result
+
+	const usage = state.lastUsage
+	const inputTokens =
+		(usage.input_tokens ?? 0) + (usage.cache_read_input_tokens ?? 0) + (usage.cache_creation_input_tokens ?? 0)
+	const outputTokens = usage.output_tokens ?? 0
+	const stats = `0.0s, $0.0000, ${state.turnCount} turns, ${inputTokens} in / ${outputTokens} out`
+	result.add(`\n${state.renderer.dim(`[done] ${stats}`)}\n`)
+	state.doneRendered = true
 	return result
 }

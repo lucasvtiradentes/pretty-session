@@ -3,6 +3,7 @@ import { rmSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { DEV_CLI_BIN_NAMES } from '../src/constants'
+import { env } from '../src/env'
 
 const binDir = getBinDir()
 const devBinNames = DEV_CLI_BIN_NAMES
@@ -13,7 +14,7 @@ for (const binName of devBinNames) {
 }
 
 function getBinDir() {
-	if (process.env.PRETTY_SESSION_DEV_BIN_DIR) return process.env.PRETTY_SESSION_DEV_BIN_DIR
+	if (env.PRETTY_SESSION_DEV_BIN_DIR) return env.PRETTY_SESSION_DEV_BIN_DIR
 
 	if (process.platform === 'win32') {
 		return getNpmPrefix() ?? join(homedir(), 'AppData', 'Roaming', 'npm')

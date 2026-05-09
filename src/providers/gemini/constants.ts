@@ -7,6 +7,7 @@ export enum GeminiMessageType {
 	Result = 'result',
 	ToolUse = 'tool_use',
 	ToolResult = 'tool_result',
+	User = 'user',
 }
 
 export enum GeminiUpdateType {
@@ -29,6 +30,7 @@ export enum GeminiToolKind {
 
 export enum GeminiRole {
 	Assistant = 'assistant',
+	User = 'user',
 }
 
 export const GEMINI_SESSION_UPDATE_METHOD = 'session/update'

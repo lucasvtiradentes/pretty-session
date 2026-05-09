@@ -14,11 +14,17 @@ export class ParserState {
 	renderer: Renderer
 	pendingSessionId = ''
 	pendingCwd = ''
+	sessionFilePath = ''
+	pendingUserMessage = ''
+	initialUserRendered = false
+	initialUserFallbackTried = false
 	lastUsage: Record<string, number> = {}
 	lastModel = ''
 	lastDurationMs = 0
 	turnCount = 0
 	lastCostUsd = 0
+	sawLastPrompt = false
+	doneRendered = false
 
 	constructor() {
 		this.mode = ParserMode.Stream

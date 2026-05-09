@@ -1,5 +1,6 @@
 import { execSync } from 'node:child_process'
 import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { homedir } from 'node:os'
 import { dirname, resolve } from 'node:path'
 import { scrubFixture } from '../scrub'
 import { SESSION_FOOTER, SESSION_HEADER, STREAM_SESSION_HEADER } from './expectations'
@@ -7,9 +8,9 @@ import { SESSION_FOOTER, SESSION_HEADER, STREAM_SESSION_HEADER } from './expecta
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '../..')
 const SANDBOX_BASE = resolve(CLI_ROOT, '.sandbox')
 const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
-const HOME = process.env.HOME ?? ''
+const HOME = homedir()
 
-const TEST_ENV = { ...process.env, PTS_TOOL_RESULT_MAX_CHARS: '300', PTS_READ_PREVIEW_LINES: '5' }
+const TEST_ENV = { ...process.env, PTS_TOOL_RESULT_LINES: '5' }
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: stripping ANSI escape codes
 export const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')
@@ -38,11 +39,10 @@ export function runE2E(promptPath: string, dir: string): string {
 	)
 
 	const sessionSrc = extractSessionPath(output)
-	if (sessionSrc) {
-		const dest = resolve(dir, 'session.jsonl')
-		copyFileSync(sessionSrc, dest)
-		scrubFixture(dest)
-	}
+	if (!sessionSrc) throw new Error('failed to find generated Codex session path')
+	const dest = resolve(dir, 'session.jsonl')
+	copyFileSync(sessionSrc, dest)
+	scrubFixture(dest)
 
 	scrubFixture(streamFile)
 	enrichStreamFixture(streamFile, resolve(dir, 'session.jsonl'))
@@ -53,6 +53,7 @@ export function runE2E(promptPath: string, dir: string): string {
 
 function enrichStreamFixture(streamFile: string, sessionFile: string) {
 	if (!existsSync(sessionFile)) return
+	// Codex live --json streams omit session_meta/turn_context, but replay needs them to resolve the saved session path.
 	const sessionLines = readFileSync(sessionFile, 'utf-8').split('\n')
 	const metaLines: string[] = []
 	for (const line of sessionLines) {
@@ -85,6 +86,7 @@ export function sanitize(output: string): string {
 			.replace(/model: [\w.-]*/g, 'model: <MODEL>')
 			.replace(/\d+ turns/g, '<N> turns')
 			.replace(/\d+ in \/ \d+ out/g, '<N> in / <N> out')
+			.replace(/\n\[user\][\s\S]*?\n\n----\n/g, '\n')
 			.replace(/(Mon|Tue|Wed|Thu|Fri|Sat|Sun) \w+\s+\d+ [\d:]+ [+-]?\w+ \d+/g, '<DATE>')
 			.replace(/\/(?:Users|home|root|tmp|test|private)\b[^\s]*/g, '<ABS_PATH>')
 			.replace(/(\[Edit\]) [^\n]+/g, '$1 <ABS_PATH>')
@@ -92,15 +94,16 @@ export function sanitize(output: string): string {
 			.replace(/\n+\[done\]/g, '\n\n[done]')
 			.replace(/\n{2,}(?=\[(?!done\]))/g, '\n\n\n')
 			.replace(/(model: <MODEL>\n)\n+(?=\[(?!done\]))/g, '$1\n\n\n')
+			.replace(/----\n{2,}/g, '----\n\n')
 	)
 }
 
 export function expected(body: string): string {
-	return SESSION_HEADER + body + SESSION_FOOTER
+	return SESSION_HEADER + body.replace(/^\n+/, '') + SESSION_FOOTER
 }
 
 export function expectedStream(body: string): string {
-	return STREAM_SESSION_HEADER + body + SESSION_FOOTER
+	return STREAM_SESSION_HEADER + body.replace(/^\n+/, '') + SESSION_FOOTER
 }
 
 export function fixtureExists(path: string): boolean {

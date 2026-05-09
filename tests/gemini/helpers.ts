@@ -1,17 +1,19 @@
 import { execSync } from 'node:child_process'
 import { copyFileSync, existsSync, readFileSync } from 'node:fs'
+import { homedir } from 'node:os'
 import { dirname, resolve } from 'node:path'
+import { Provider } from '../../src/constants'
+import { getProviderSessionRoot } from '../../src/lib/session-paths'
 import { SESSION_FOOTER, SESSION_HEADER } from './expectations'
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '../..')
 const SANDBOX_BASE = resolve(CLI_ROOT, '.sandbox')
 const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
-const HOME = process.env.HOME ?? ''
+const HOME = homedir()
 
 const TEST_ENV = {
 	...process.env,
-	PTS_TOOL_RESULT_MAX_CHARS: '300',
-	PTS_READ_PREVIEW_LINES: '5',
+	PTS_TOOL_RESULT_LINES: '5',
 	GEMINI_CLI_TRUST_WORKSPACE: 'true',
 }
 
@@ -50,17 +52,16 @@ export function runE2E(promptOrPath: string, dir?: string): string {
 	)
 
 	const sessionSrc = findGeminiSession(sandboxName)
-	if (sessionSrc) {
-		const dest = resolve(dir, 'session.jsonl')
-		copyFileSync(sessionSrc, dest)
-	}
+	if (!sessionSrc) throw new Error('failed to find generated Gemini session path')
+	const dest = resolve(dir, 'session.jsonl')
+	copyFileSync(sessionSrc, dest)
 	execSync(`rm -rf ${sandboxDir}`)
 
 	return output
 }
 
 function findGeminiSession(projectName: string): string | null {
-	const dir = resolve(HOME, '.gemini', 'tmp', projectName, 'chats')
+	const dir = resolve(getProviderSessionRoot(Provider.Gemini, HOME), projectName, 'chats')
 	if (!existsSync(dir)) return null
 	try {
 		const latest = execSync(`ls -t ${dir}/*.jsonl 2>/dev/null | head -1`, { encoding: 'utf-8' }).trim()
@@ -76,6 +77,7 @@ export function sanitize(output: string): string {
 		.replace(/model: [\w.-]*/g, 'model: <MODEL>')
 		.replace(/\d+ turns/g, '<N> turns')
 		.replace(/\d+ in \/ \d+ out/g, '<N> in / <N> out')
+		.replace(/\n\[user\][\s\S]*?\n\n----\n/g, '')
 }
 
 export function expected(body: string): string {

@@ -1,18 +1,14 @@
 <a name="TOC"></a>
 
 <div align="center">
-  <!-- <DYNFIELD:HEADER_LOGO> -->
   <div>Pretty Session</div>
-  <!-- </DYNFIELD:HEADER_LOGO> -->
   <br />
-  <a href="#-overview">Overview</a> • <a href="#-motivation">Motivation</a> • <a href="#-features">Features</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-commands">Commands</a> • <a href="#-configuration">Configuration</a> • <a href="#-license">License</a>
+  <a href="#-overview">Overview</a> • <a href="#-motivation">Motivation</a> • <a href="#-features">Features</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-usage">Usage</a> • <a href="#-completion">Completion</a> • <a href="#-development">Development</a> • <a href="#-license">License</a>
 </div>
 
-<!-- <DYNFIELD:TOP_DIVIDER> -->
 <div width="100%" align="center">
   <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/image/divider.png" />
 </div>
-<!-- </DYNFIELD:TOP_DIVIDER> -->
 
 ## 🎺 Overview
 
@@ -20,16 +16,15 @@ Pretty Session is a small CLI that formats AI coding agent streams and saved ses
 
 ## ❓ Motivation
 
-Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON events. That format is good for machines, but bad for quick human review. This is especially useful when AI coding agents run in CI/CD and you want readable progress instead of raw JSONL logs. Pretty Session keeps provider parsing separate and renders the same session in a cleaner, readable view.
+I wanted a way to actually understand what my coding agents are doing while they run, especially in CI, where the default stream-json logs are noisy and painful to read.
+
+Why? To quickly review progress, debug a run, or catch what happened at a glance.
 
 ## ⭐ Features
 
-- Pipe-based formatter for provider streams and saved sessions
-- Claude Code, Codex, and Gemini support
-- Formatted tool calls for Bash, Read, Edit, Grep, Glob, Task, and more
-- Markdown-ish terminal rendering for text, code, and tables
-- Nested subagent display for Task-style workflows
-- Session totals for duration, cost, and token usage when providers expose them
+- Three ways to format agent sessions: parse a saved session, watch an active one, or stream one live.
+- Multi-provider support for [Claude Code](https://claude.com/product/claude-code), [Codex](https://openai.com/codex/), and [Gemini](https://geminicli.com/), with a parser structure that is easy to extend.
+- Cleaner terminal output for tool calls, subagents, markdown-ish text, tables, and more.
 
 ## 🚀 Quick Start
 
@@ -39,10 +34,6 @@ Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON
    npm i -g pretty-session
    # now you can use "pts" or "pretty-session" in your terminal
    ```
-
-<div  align="center">
-  <a href="https://www.npmjs.com/package/pretty-session"><img src="https://img.shields.io/npm/v/pretty-session?label=npm&color=cb3837&logo=npm" alt="npm"></a>
-</div>
 
 2. Use whichever mode matches what you are inspecting:
 
@@ -70,7 +61,15 @@ Claude Code, Codex, and Gemini store useful session data as JSONL or stream JSON
    # pts watch gemini <path-or-session-id>
    ```
 
-## 🧰 Commands
+## 🧰 Usage
+
+<div align="center">
+
+<details>
+<summary>Show commands</summary>
+<br />
+
+<div align="left">
 
 <!-- <DYNFIELD:COMMANDS> -->
 ```sh
@@ -84,67 +83,116 @@ pts watch claude <session> [--from-end] [--interval <value>]
 pts watch codex <session> [--from-end] [--interval <value>]
 pts watch gemini <session> [--from-end] [--interval <value>]
 
-pts update
-
 # completion commands
 pts completion bash
 pts completion fish
 pts completion zsh
+
+# other commands
+pts update
 ```
 <!-- </DYNFIELD:COMMANDS> -->
 
+</div>
+
+</details>
+
+</div>
+
+<div align="center">
+
+<details>
+<summary>Environment variables</summary>
+
+<br />
+
+<div align="center">
+
+| Variable                   | Default | Description                                      |
+| -------------------------- | ------- | ------------------------------------------------ |
+| `PTS_TOOL_RESULT_LINES`    | `0`     | Maximum lines shown in tool result previews      |
+| `PTS_SHOW_SUBAGENT_PROMPT` | `true`  | Show subagent prompt lines under Agent tool calls |
+
+</div>
+
+</details>
+
+</div>
+
 ## 🧩 Completion
 
-Add completion to your shell config so `pts <tab>` can show available commands, subcommands, and flags.
+<div align="center">
+
+<details>
+<summary>Show completion setup</summary>
+<br />
+
+<div align="left">
+
+For a better terminal experience, enable shell completion so `pts <tab>` can show available commands, subcommands, and flags.
+
+If you use zsh, add this to your shell config (.zshrc):
 
 ```sh
 eval "$(pts completion zsh)"
 ```
 
-For the interactive completion menu shown while typing, install the [zsh-autocomplete](https://github.com/marlonrichert/zsh-autocomplete). Bash and Fish completion scripts are also available:
+For the interactive completion menu shown while typing, install the [zsh-autocomplete](https://github.com/marlonrichert/zsh-autocomplete).
+
+Bash and Fish completion scripts are also available:
 
 ```sh
 pts completion bash
 pts completion fish
 ```
 
+</div>
+
+</details>
+
+</div>
+
 ## 🛠️ Development
 
-Install the development binary when you want local code changes to be available from any terminal. This creates `ptsd`, which runs the current workspace version:
+<div align="center">
+
+<details>
+<summary>Show local development setup</summary>
+<br />
+
+<div align="left">
+
+When working on Pretty Session locally, install the development command:
 
 ```sh
 pnpm dev:install
 ptsd --help
 ```
 
-For development autocomplete, follow the Completion section and use the dev binary in your shell config:
+This creates `ptsd`, a dev-only command that runs the current workspace version without replacing the globally installed `pts`.
+
+To enable zsh completion for the dev command, add this to your shell config:
 
 ```sh
 eval "$(ptsd completion zsh)"
 ```
 
-Remove the development binary when you no longer need it:
+Remove the dev command when you no longer need it:
 
 ```sh
 pnpm dev:uninstall
 ```
 
-## ⚙️ Configuration
+</div>
 
-No config file is required. Pretty Session reads provider events from stdin and writes formatted output to stdout.
+</details>
 
-Environment variables:
-
-| Variable                    | Default | Description                                      |
-| --------------------------- | ------- | ------------------------------------------------ |
-| `PTS_TOOL_RESULT_MAX_CHARS` | `300`   | Maximum characters shown in tool result previews |
-| `PTS_READ_PREVIEW_LINES`    | `5`     | Maximum lines shown in read/file previews        |
+</div>
 
 ## 📜 License
 
 [MIT](https://github.com/lucasvtiradentes/pretty-session/blob/main/LICENSE)
 
-<!-- <DYNFIELD:FOOTER> -->
 <div width="100%" align="center">
   <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/image/divider.png" />
 </div>
@@ -159,4 +207,3 @@ Environment variables:
     <a target="_blank" href="https://github.com/lucasvtiradentes"><img src="https://img.shields.io/badge/-github-gray?logo=Github&logoColor=white" alt="Github"></a>
   </div>
 </div>
-<!-- </DYNFIELD:FOOTER> -->

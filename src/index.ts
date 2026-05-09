@@ -1,7 +1,7 @@
 export { COMPLETION_COMMAND_NAME, completionCommand } from './commands/completion/register'
 export { Provider, PROVIDER_VALUES } from './constants'
 export { formatToolOutput } from './lib/format'
-export { parseJsonLine } from './providers/claude'
+export { finalizeClaude, parseJsonLine } from './providers/claude'
 export { finalizeCodex, parseCodexLine } from './providers/codex'
 export { finalizeGemini, parseGeminiLine } from './providers/gemini'
 export { AnsiRenderer } from './lib/renderer'

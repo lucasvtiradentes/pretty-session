@@ -2,6 +2,7 @@ export const SESSION_HEADER = `[session]
    id:    <UUID>
    model: <MODEL>
 
+----
 `
 
 export const SESSION_FOOTER = `

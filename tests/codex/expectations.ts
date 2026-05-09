@@ -3,6 +3,8 @@ export const SESSION_HEADER = `[session]
    path:  <CODEX_PATH>
    model: <MODEL>
 
+----
+
 `
 
 export const SESSION_FOOTER = `[done] <N> turns, <N> in / <N> out
@@ -12,6 +14,8 @@ export const STREAM_SESSION_HEADER = `[session]
    id:    <UUID>
    path:  <CODEX_PATH>
    model: <MODEL>
+
+----
 
 `
 

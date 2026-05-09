@@ -14,91 +14,60 @@ on:
         default: true
     secrets:
       CLAUDE_CODE_OAUTH_TOKEN:
-        required: true
+        required: false
       CODEX_AUTH_JSON:
-        required: true
+        required: false
       GEMINI_CREDENTIALS:
-        required: true
+        required: false
 
 jobs:
   test-e2e-claude:
     if: ${{ inputs.run_claude }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup-and-install
-
-      - name: Install Claude Code
-        run: curl -fsSL https://claude.ai/install.sh | bash
-
-      - name: Run Claude e2e tests
-        timeout-minutes: 10
-        env:
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-        run: pnpm test:e2e:claude
-
-      - name: Upload Claude session logs
-        if: always()
-        uses: actions/upload-artifact@v7
+      - uses: ./.github/actions/run-provider-session
         with:
-          name: claudepretty-session-logs
-          path: ~/.claude/projects/
-          retention-days: 7
+          provider: claude
+          command: pnpm test:e2e:claude
+          install-cli: 'true'
+          mode: raw
+          bypass-permissions: 'true'
+          save-session: 'true'
+          claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
   test-e2e-codex:
     if: ${{ inputs.run_codex }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup-and-install
-
-      - name: Install Codex CLI
-        run: npm install -g @openai/codex
-
-      - name: Setup Codex auth
-        env:
-          CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
-        run: mkdir -p ~/.codex && echo "$CODEX_AUTH_JSON" > ~/.codex/auth.json
-
-      - name: Run Codex e2e tests
-        timeout-minutes: 10
-        run: pnpm test:e2e:codex
-
-      - name: Upload Codex session logs
-        if: always()
-        uses: actions/upload-artifact@v7
+      - uses: ./.github/actions/run-provider-session
         with:
-          name: codexpretty-session-logs
-          path: ~/.codex/sessions/
-          retention-days: 7
+          provider: codex
+          command: pnpm test:e2e:codex
+          install-cli: 'true'
+          mode: raw
+          bypass-permissions: 'true'
+          save-session: 'true'
+          codex-auth-json: ${{ secrets.CODEX_AUTH_JSON }}
 
   test-e2e-gemini:
     if: ${{ inputs.run_gemini }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup-and-install
-
-      - name: Install Gemini CLI
-        run: npm install -g @google/gemini-cli
-
-      - name: Setup Gemini auth
-        env:
-          GEMINI_CREDENTIALS: ${{ secrets.GEMINI_CREDENTIALS }}
-        run: |
-          mkdir -p ~/.gemini
-          printf '%s' "$GEMINI_CREDENTIALS" > ~/.gemini/oauth_creds.json
-          chmod 600 ~/.gemini/oauth_creds.json
-          echo '{"security":{"auth":{"selectedType":"oauth-personal"}}}' > ~/.gemini/settings.json
-
-      - name: Run Gemini e2e tests
-        timeout-minutes: 10
-        run: pnpm test:e2e:gemini
-
-      - name: Upload Gemini session logs
-        if: always()
-        uses: actions/upload-artifact@v7
+      - uses: ./.github/actions/run-provider-session
         with:
-          name: geminipretty-session-logs
-          path: ~/.gemini/tmp/
-          retention-days: 7
+          provider: gemini
+          command: pnpm test:e2e:gemini
+          install-cli: 'true'
+          mode: raw
+          bypass-permissions: 'true'
+          save-session: 'true'
+          gemini-credentials: ${{ secrets.GEMINI_CREDENTIALS }}

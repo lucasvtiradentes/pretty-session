@@ -1,0 +1,122 @@
+name: Run provider session
+description: Install, authenticate, run, format, and upload an AI provider session
+
+inputs:
+  # step 0: select provider and prompt
+  provider:
+    description: 'Provider to run: claude, codex, or gemini'
+    required: true
+  prompt:
+    description: Prompt to send to the provider
+    required: false
+    default: ''
+  command:
+    description: Command to run instead of sending a prompt to the provider
+    required: false
+    default: ''
+
+  # step 1: install provider CLI
+  install-cli:
+    description: Install the selected provider CLI
+    required: true
+
+  # step 2: setup provider auth
+  claude-code-oauth-token:
+    description: Claude Code OAuth token
+    required: false
+  codex-auth-json:
+    description: Codex auth.json content
+    required: false
+  gemini-credentials:
+    description: Gemini oauth_creds.json content
+    required: false
+
+  # step 3: run provider session
+  mode:
+    description: 'Output mode: raw or pretty'
+    required: true
+  model:
+    description: Provider model override
+    required: false
+    default: ''
+  bypass-permissions:
+    description: Run with provider auto-approval or bypass flags
+    required: true
+
+  # step 4: upload artifacts
+  save-session:
+    description: Upload the provider session directory
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Validate inputs
+      shell: bash
+      env:
+        MODE: ${{ inputs.mode }}
+        PROVIDER: ${{ inputs.provider }}
+      run: bash "${{ github.action_path }}/scripts/validate-inputs.sh"
+
+    - name: Install provider CLI
+      if: ${{ inputs.install-cli == 'true' }}
+      shell: bash
+      env:
+        PROVIDER: ${{ inputs.provider }}
+      run: bash "${{ github.action_path }}/scripts/install-provider.sh"
+
+    - name: Setup provider auth
+      shell: bash
+      env:
+        CODEX_AUTH_JSON: ${{ inputs.codex-auth-json }}
+        GEMINI_CREDENTIALS: ${{ inputs.gemini-credentials }}
+        PROVIDER: ${{ inputs.provider }}
+      run: bash "${{ github.action_path }}/scripts/setup-auth.sh"
+
+    - name: Run provider session
+      shell: bash
+      env:
+        BYPASS_PERMISSIONS: ${{ inputs.bypass-permissions }}
+        CLAUDE_CODE_OAUTH_TOKEN: ${{ inputs.provider == 'claude' && inputs.claude-code-oauth-token || '' }}
+        COMMAND: ${{ inputs.command }}
+        MODE: ${{ inputs.mode }}
+        MODEL: ${{ inputs.model }}
+        PROMPT: ${{ inputs.prompt }}
+        PROVIDER: ${{ inputs.provider }}
+      run: bash "${{ github.action_path }}/scripts/run-provider.sh"
+
+    - name: Upload raw output
+      if: ${{ always() && inputs.command == '' && inputs.mode == 'raw' }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ inputs.provider }}-session-raw
+        path: provider-session-raw.log
+        if-no-files-found: ignore
+        retention-days: 7
+
+    - name: Upload Pretty Session output
+      if: ${{ always() && inputs.command == '' && inputs.mode == 'pretty' }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ inputs.provider }}-session-pretty
+        path: |
+          provider-session-input.log
+          provider-session-pretty.log
+        if-no-files-found: ignore
+        retention-days: 7
+
+    - name: Collect provider session files
+      if: ${{ always() && inputs.save-session == 'true' }}
+      shell: bash
+      env:
+        PROVIDER: ${{ inputs.provider }}
+      run: bash "${{ github.action_path }}/scripts/collect-session-files.sh"
+
+    - name: Upload provider session files
+      if: ${{ always() && inputs.save-session == 'true' }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ inputs.provider }}-session-${{ inputs.mode }}-files
+        path: provider-session-files/
+        if-no-files-found: ignore
+        retention-days: 7

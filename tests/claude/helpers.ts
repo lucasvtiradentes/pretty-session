@@ -1,5 +1,6 @@
 import { execSync } from 'node:child_process'
 import { copyFileSync, existsSync, readFileSync } from 'node:fs'
+import { homedir } from 'node:os'
 import { dirname, resolve } from 'node:path'
 import { scrubFixture } from '../scrub'
 import { SESSION_FOOTER, SESSION_HEADER } from './expectations'
@@ -7,9 +8,9 @@ import { SESSION_FOOTER, SESSION_HEADER } from './expectations'
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '../..')
 const SANDBOX_BASE = resolve(CLI_ROOT, '.sandbox')
 const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
-const HOME = process.env.HOME ?? ''
+const HOME = homedir()
 
-const TEST_ENV = { ...process.env, PTS_TOOL_RESULT_MAX_CHARS: '300', PTS_READ_PREVIEW_LINES: '5' }
+const TEST_ENV = { ...process.env, PTS_TOOL_RESULT_LINES: '5' }
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: stripping ANSI escape codes
 export const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')
@@ -41,11 +42,10 @@ export function runE2E(promptPath: string, dir: string): string {
 	const cleaned = stripPnpmBanner(output)
 
 	const sessionSrc = extractSessionPath(cleaned)
-	if (sessionSrc) {
-		const dest = resolve(dir, 'session.jsonl')
-		copyFileSync(sessionSrc, dest)
-		scrubFixture(dest)
-	}
+	if (!sessionSrc) throw new Error('failed to find generated Claude session path')
+	const dest = resolve(dir, 'session.jsonl')
+	copyFileSync(sessionSrc, dest)
+	scrubFixture(dest)
 
 	scrubFixture(streamFile)
 	execSync(`rm -rf ${sandboxDir}`)
@@ -80,6 +80,7 @@ export function sanitize(output: string): string {
 			.replace(/\$[\d.]+/g, '$<COST>')
 			.replace(/\d+ turns/g, '<N> turns')
 			.replace(/\d+ in \/ \d+ out/g, '<N> in / <N> out')
+			.replace(/\n\[user\][\s\S]*?\n\n----\n/g, '\n')
 			.replace(/\[rerun: b\d+\]/g, '')
 			.replace(/(Mon|Tue|Wed|Thu|Fri|Sat|Sun) \w+\s+\d+ [\d:]+ [+-]?\w+ \d+/g, '<DATE>')
 			.replace(/\b[0-9a-f]{8}\b/g, '<HEX>')
@@ -93,15 +94,16 @@ export function sanitize(output: string): string {
 			.replace(/→ \(Bash completed with no output\)/g, '→')
 			.replace(/→ \n/g, '→\n')
 			.replace(/^ +→\n/gm, '')
-			.replace(/^(?!\[|\s{3}|\n$)[^\n]+\n?/gm, '')
+			.replace(/^(?!\[|\s{3}|----$|\n$)[^\n]+\n?/gm, '')
 			.replace(/(model: <MODEL>\n)\n+(?=\[(?!done\]))/g, '$1\n\n')
 			.replace(/\n+\[done\]/g, '\n\n[done]')
+			.replace(/----\n{2,}/g, '----\n\n')
 			.replace(/(\[Grep\][^\n]*\n\s*→ )No files found/g, '$1No matches found')
 	)
 }
 
 export function expected(body: string): string {
-	return SESSION_HEADER + body + SESSION_FOOTER
+	return SESSION_HEADER + body.replace(/^\n+/, '') + SESSION_FOOTER
 }
 
 export function fixtureExists(path: string): boolean {

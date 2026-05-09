@@ -6,7 +6,7 @@ export function showSession(state: GeminiState, result: ParseResult) {
 	if (state.sessionShown) return
 	state.sessionShown = true
 	const lines = `[session]\n${INDENT}id:    ${state.sessionId}\n${INDENT}model: ${state.model}`
-	result.add(`${state.renderer.dim(lines)}\n\n`)
+	result.add(`${state.renderer.dim(lines)}\n\n${state.renderer.dim('----')}\n`)
 }
 
 export function handleSavedSessionStart(data: Record<string, unknown>, state: GeminiState) {

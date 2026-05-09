@@ -9,8 +9,9 @@ const PROVIDER_SESSION_ROOTS = {
 	[Provider.Gemini]: ['.gemini', 'tmp'],
 } as const
 
-export function getProviderSessionRoot(provider: Provider, home = getHomeDir()) {
-	return join(home, ...PROVIDER_SESSION_ROOTS[provider])
+export function getProviderSessionRoot(provider: Provider, home?: string) {
+	const rootHome = home ?? getHomeDir()
+	return join(rootHome, ...PROVIDER_SESSION_ROOTS[provider])
 }
 
 function getProviderTildeSessionRoot(provider: Provider) {
@@ -25,7 +26,7 @@ function formatClaudeProjectName(cwd: string) {
 	return cwd.replace(/[\\/_.]/g, '-')
 }
 
-export function getClaudeSessionPath(cwd: string, sessionId: string, home = getHomeDir()) {
+export function getClaudeSessionPath(cwd: string, sessionId: string, home?: string) {
 	if (!cwd || !sessionId || cwd.includes('<')) return ''
 	return join(getProviderSessionRoot(Provider.Claude, home), formatClaudeProjectName(cwd), `${sessionId}.jsonl`)
 }
@@ -46,7 +47,7 @@ function formatCodexSessionDate(timestamp: string, timezone: string) {
 	return { datePart, day, month, timeFormatted, year }
 }
 
-export function getCodexSessionPath(timestamp: string, timezone: string, sessionId: string, home = getHomeDir()) {
+export function getCodexSessionPath(timestamp: string, timezone: string, sessionId: string, home?: string) {
 	if (!sessionId) return ''
 	const date = formatCodexSessionDate(timestamp, timezone)
 	if (!date) return ''
@@ -59,7 +60,7 @@ export function getCodexSessionPath(timestamp: string, timezone: string, session
 	)
 }
 
-export function findTodaysCodexSessionPath(sessionId: string, home = getHomeDir()) {
+export function findTodaysCodexSessionPath(sessionId: string, home?: string) {
 	if (!sessionId) return ''
 	const now = new Date()
 	const year = String(now.getFullYear())

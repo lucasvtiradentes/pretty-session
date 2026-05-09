@@ -1,4 +1,4 @@
-import { INDENT, USER_MESSAGE_MAX_CHARS } from '../../../constants'
+import { INDENT } from '../../../constants'
 import { formatToolOutput } from '../../../lib/format'
 import type { ParseResult } from '../../../lib/result'
 import { ContentType, ParserMode } from '../constants'
@@ -21,10 +21,8 @@ export function renderUserText(content: string, state: ParserState, result: Pars
 	const cleaned = cleanUserMessage(content)
 	if (!cleaned) return
 	const r = state.renderer
-	const text = cleaned.slice(0, USER_MESSAGE_MAX_CHARS)
 	if (state.turnCount > 1) result.add(`\n${r.dim('----')}\n`)
-	result.add(`\n${r.green('[user]')} ${text}`)
-	if (cleaned.length > USER_MESSAGE_MAX_CHARS) result.add(r.dim('...'))
+	result.add(`\n${r.green('[user]')} ${cleaned}`)
 	result.add(`\n\n${r.dim('----')}\n`)
 	state.initialUserRendered = true
 }

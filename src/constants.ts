@@ -14,6 +14,5 @@ export const INDENT = '   '
 
 export const TOOL_RESULT_MAX_CHARS = Number(process.env.PTS_TOOL_RESULT_MAX_CHARS ?? 300)
 export const READ_PREVIEW_LINES = Number(process.env.PTS_READ_PREVIEW_LINES ?? 5)
-export const USER_MESSAGE_MAX_CHARS = 200
 export const AGENT_DESCRIPTION_MAX_CHARS = 50
 export const TASK_SUBJECT_MAX_CHARS = 60

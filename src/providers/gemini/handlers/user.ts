@@ -1,4 +1,3 @@
-import { USER_MESSAGE_MAX_CHARS } from '../../../constants'
 import type { ParseResult } from '../../../lib/result'
 import type { GeminiState } from '../state'
 import { showSession } from './session'
@@ -11,9 +10,7 @@ function renderUserText(content: string, state: GeminiState, result: ParseResult
 	const cleaned = cleanUserMessage(content)
 	if (!cleaned) return
 	showSession(state, result)
-	const text = cleaned.slice(0, USER_MESSAGE_MAX_CHARS)
-	result.add(`\n${state.renderer.green('[user]')} ${text}`)
-	if (cleaned.length > USER_MESSAGE_MAX_CHARS) result.add(state.renderer.dim('...'))
+	result.add(`\n${state.renderer.green('[user]')} ${cleaned}`)
 	result.add(`\n\n${state.renderer.dim('----')}\n`)
 }
 

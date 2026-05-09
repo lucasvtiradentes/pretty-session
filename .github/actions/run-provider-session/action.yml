@@ -73,6 +73,21 @@ runs:
         PROVIDER: ${{ inputs.provider }}
       run: bash "${{ github.action_path }}/scripts/setup-auth.sh"
 
+    - name: Run Claude Code
+      if: ${{ inputs.command == '' && inputs.provider == 'claude' }}
+      shell: bash
+      run: claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json
+
+    - name: Install Pretty Session
+      if: ${{ inputs.command == '' && inputs.provider == 'claude' }}
+      shell: bash
+      run: npm install --global pretty-session
+
+    - name: Run Claude Code with Pretty Session
+      if: ${{ inputs.command == '' && inputs.provider == 'claude' }}
+      shell: bash
+      run: claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | pts parse claude
+
     - name: Run provider session
       shell: bash
       env:

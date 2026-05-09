@@ -1,5 +1,11 @@
 # pretty-session
 
+## 0.1.2
+
+### Patch Changes
+
+- 41b8aad: Update README docs and showcase images.
+
 ## 0.1.1
 
 ### Patch Changes

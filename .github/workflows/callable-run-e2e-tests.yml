@@ -14,11 +14,11 @@ on:
         default: true
     secrets:
       CLAUDE_CODE_OAUTH_TOKEN:
-        required: true
+        required: false
       CODEX_AUTH_JSON:
-        required: true
+        required: false
       GEMINI_CREDENTIALS:
-        required: true
+        required: false
 
 jobs:
   test-e2e-claude:

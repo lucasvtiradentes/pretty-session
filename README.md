@@ -160,7 +160,7 @@ pts completion fish
 
 </div>
 
-## 🛠️ Development
+## 🛠 Development
 
 <div align="center">
 
@@ -170,22 +170,22 @@ pts completion fish
 
 <div align="left">
 
-When working on Pretty Session locally, install the development command:
+Install the local development command:
 
 ```sh
 pnpm dev:install
 ptsd --help
 ```
 
-This creates `ptsd`, a dev-only command that runs the current workspace version without replacing the globally installed `pts`.
+This creates `ptsd`, which runs the current workspace version without replacing your global `pts` command.
 
-To enable zsh completion for the dev command, add this to your shell config:
+Add zsh completion for `ptsd`:
 
 ```sh
 eval "$(ptsd completion zsh)"
 ```
 
-Remove the dev command when you no longer need it:
+Remove it when you are done:
 
 ```sh
 pnpm dev:uninstall

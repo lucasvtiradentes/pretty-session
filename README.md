@@ -7,12 +7,17 @@
 </div>
 
 <div width="100%" align="center">
-  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/image/divider.png" />
+  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/divider.png" />
 </div>
 
 ## 🎺 Overview
 
 Pretty Session is a small CLI that formats AI coding agent streams and saved session files into readable terminal output.
+
+<div align="center">
+  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/without-pretty-session.png" alt="Without Pretty Session" width="49%" />
+  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/with-pretty-session.png" alt="With Pretty Session" width="49%" />
+</div>
 
 ## ❓ Motivation
 
@@ -31,7 +36,7 @@ Why? To quickly review progress, debug a run, or catch what happened at a glance
 1. Install the CLI globally:
 
    ```sh
-   npm i -g pretty-session
+   npm install -g pretty-session
    # now you can use "pts" or "pretty-session" in your terminal
    ```
 
@@ -194,7 +199,7 @@ pnpm dev:uninstall
 [MIT](https://github.com/lucasvtiradentes/pretty-session/blob/main/LICENSE)
 
 <div width="100%" align="center">
-  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/image/divider.png" />
+  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/divider.png" />
 </div>
 
 <br />

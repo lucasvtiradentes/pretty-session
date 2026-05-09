@@ -13,3 +13,4 @@ build/
 tmp-*
 .env
 .sandbox/
+**/.DS_Store

@@ -19,9 +19,11 @@ import {
 	handleAcpUsageUpdate,
 	handleSavedGeminiMessage,
 	handleSavedSessionStart,
+	handleSavedUserMessage,
 	handleStreamAssistantMessage,
 	handleStreamInit,
 	handleStreamResult,
+	handleStreamUserMessage,
 } from './handlers/index'
 import type { GeminiState } from './state'
 
@@ -57,6 +59,12 @@ export function parseGeminiLine(line: string, state: GeminiState): ParseResult {
 		return result
 	}
 
+	if (type === GeminiMessageType.User) {
+		result.markRecognized()
+		handleSavedUserMessage(data, state, result)
+		return result
+	}
+
 	if (type === GeminiMessageType.Init) {
 		result.markRecognized()
 		handleStreamInit(data, state)
@@ -66,6 +74,7 @@ export function parseGeminiLine(line: string, state: GeminiState): ParseResult {
 	if (type === GeminiMessageType.Message) {
 		result.markRecognized()
 		if (data.role === GeminiRole.Assistant) handleStreamAssistantMessage(data, state, result)
+		else if (data.role === GeminiRole.User) handleStreamUserMessage(data, state, result)
 		return result
 	}
 

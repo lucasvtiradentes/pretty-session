@@ -50,10 +50,9 @@ export function runE2E(promptOrPath: string, dir?: string): string {
 	)
 
 	const sessionSrc = findGeminiSession(sandboxName)
-	if (sessionSrc) {
-		const dest = resolve(dir, 'session.jsonl')
-		copyFileSync(sessionSrc, dest)
-	}
+	if (!sessionSrc) throw new Error('failed to find generated Gemini session path')
+	const dest = resolve(dir, 'session.jsonl')
+	copyFileSync(sessionSrc, dest)
 	execSync(`rm -rf ${sandboxDir}`)
 
 	return output
@@ -76,6 +75,7 @@ export function sanitize(output: string): string {
 		.replace(/model: [\w.-]*/g, 'model: <MODEL>')
 		.replace(/\d+ turns/g, '<N> turns')
 		.replace(/\d+ in \/ \d+ out/g, '<N> in / <N> out')
+		.replace(/\n\[user\][\s\S]*?\n\n----\n/g, '')
 }
 
 export function expected(body: string): string {

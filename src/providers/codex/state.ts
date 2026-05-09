@@ -5,6 +5,7 @@ export class CodexState {
 	sessionShown = false
 	sessionId = ''
 	sessionTimestamp = ''
+	sessionFilePath = ''
 	timezone = ''
 	model = ''
 	turnCount = 0
@@ -12,6 +13,9 @@ export class CodexState {
 	lastInputTokens = 0
 	lastOutputTokens = 0
 	streamingAssistantText = ''
+	pendingUserMessage = ''
+	initialUserRendered = false
+	initialUserFallbackTried = false
 
 	constructor() {
 		this.renderer = new AnsiRenderer()

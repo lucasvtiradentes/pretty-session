@@ -14,6 +14,10 @@ export class ParserState {
 	renderer: Renderer
 	pendingSessionId = ''
 	pendingCwd = ''
+	sessionFilePath = ''
+	pendingUserMessage = ''
+	initialUserRendered = false
+	initialUserFallbackTried = false
 	lastUsage: Record<string, number> = {}
 	lastModel = ''
 	lastDurationMs = 0

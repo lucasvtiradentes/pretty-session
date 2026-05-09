@@ -1,0 +1,6 @@
+{"timestamp":"2026-05-09T15:04:33.904Z","type":"session_meta","payload":{"id":"019e0d44-beac-7352-8781-6d0ff5aea79c","timestamp":"2026-05-09T15:04:29.612Z","cwd":"<CWD>","originator":"Codex Desktop","cli_version":"0.129.0","source":"exec","model_provider":"openai","git":{}}}
+{"timestamp":"2026-05-09T15:04:33.905Z","type":"turn_context","payload":{"turn_id":"019e0d44-beb1-7be0-8b04-5b77f9a7512b","cwd":"<CWD>","current_date":"2026-05-09","timezone":"America/Belem","approval_policy":"never","sandbox_policy":{"type":"danger-full-access"},"permission_profile":{"type":"disabled"},"model":"gpt-5.5","personality":"pragmatic","collaboration_mode":{"mode":"default","settings":{"model":"gpt-5.5","reasoning_effort":"medium"}},"realtime_active":false,"effort":"medium","summary":"none","truncation_policy":{"mode":"tokens","limit":10000}}}
+{"type":"thread.started","thread_id":"019e0d44-beac-7352-8781-6d0ff5aea79c"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"initial-prompt-ok"}}
+{"type":"turn.completed","usage":{"input_tokens":17435,"cached_input_tokens":12160,"output_tokens":8,"reasoning_output_tokens":0}}

@@ -58,6 +58,7 @@ function scrubSessionMeta(d: Record<string, unknown>): Record<string, unknown> {
 	if ((d.type as string) !== 'session_meta') return d
 	const payload = { ...((d.payload as Record<string, unknown>) ?? {}) }
 	if (typeof payload.cwd === 'string') payload.cwd = '<CWD>'
+	payload.base_instructions = undefined
 	return { ...d, payload }
 }
 

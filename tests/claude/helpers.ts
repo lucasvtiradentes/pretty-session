@@ -41,11 +41,10 @@ export function runE2E(promptPath: string, dir: string): string {
 	const cleaned = stripPnpmBanner(output)
 
 	const sessionSrc = extractSessionPath(cleaned)
-	if (sessionSrc) {
-		const dest = resolve(dir, 'session.jsonl')
-		copyFileSync(sessionSrc, dest)
-		scrubFixture(dest)
-	}
+	if (!sessionSrc) throw new Error('failed to find generated Claude session path')
+	const dest = resolve(dir, 'session.jsonl')
+	copyFileSync(sessionSrc, dest)
+	scrubFixture(dest)
 
 	scrubFixture(streamFile)
 	execSync(`rm -rf ${sandboxDir}`)
@@ -80,6 +79,7 @@ export function sanitize(output: string): string {
 			.replace(/\$[\d.]+/g, '$<COST>')
 			.replace(/\d+ turns/g, '<N> turns')
 			.replace(/\d+ in \/ \d+ out/g, '<N> in / <N> out')
+			.replace(/\n\[user\][\s\S]*?\n\n----\n/g, '\n')
 			.replace(/\[rerun: b\d+\]/g, '')
 			.replace(/(Mon|Tue|Wed|Thu|Fri|Sat|Sun) \w+\s+\d+ [\d:]+ [+-]?\w+ \d+/g, '<DATE>')
 			.replace(/\b[0-9a-f]{8}\b/g, '<HEX>')

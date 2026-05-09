@@ -38,11 +38,10 @@ export function runE2E(promptPath: string, dir: string): string {
 	)
 
 	const sessionSrc = extractSessionPath(output)
-	if (sessionSrc) {
-		const dest = resolve(dir, 'session.jsonl')
-		copyFileSync(sessionSrc, dest)
-		scrubFixture(dest)
-	}
+	if (!sessionSrc) throw new Error('failed to find generated Codex session path')
+	const dest = resolve(dir, 'session.jsonl')
+	copyFileSync(sessionSrc, dest)
+	scrubFixture(dest)
 
 	scrubFixture(streamFile)
 	enrichStreamFixture(streamFile, resolve(dir, 'session.jsonl'))
@@ -53,6 +52,7 @@ export function runE2E(promptPath: string, dir: string): string {
 
 function enrichStreamFixture(streamFile: string, sessionFile: string) {
 	if (!existsSync(sessionFile)) return
+	// Codex live --json streams omit session_meta/turn_context, but replay needs them to resolve the saved session path.
 	const sessionLines = readFileSync(sessionFile, 'utf-8').split('\n')
 	const metaLines: string[] = []
 	for (const line of sessionLines) {
@@ -85,6 +85,7 @@ export function sanitize(output: string): string {
 			.replace(/model: [\w.-]*/g, 'model: <MODEL>')
 			.replace(/\d+ turns/g, '<N> turns')
 			.replace(/\d+ in \/ \d+ out/g, '<N> in / <N> out')
+			.replace(/\n\[user\][\s\S]*?\n\n----\n/g, '\n')
 			.replace(/(Mon|Tue|Wed|Thu|Fri|Sat|Sun) \w+\s+\d+ [\d:]+ [+-]?\w+ \d+/g, '<DATE>')
 			.replace(/\/(?:Users|home|root|tmp|test|private)\b[^\s]*/g, '<ABS_PATH>')
 			.replace(/(\[Edit\]) [^\n]+/g, '$1 <ABS_PATH>')

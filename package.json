@@ -1,6 +1,6 @@
 {
 	"name": "pretty-session",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"description": "Pretty formatter for AI coding agent sessions",
 	"type": "module",
 	"packageManager": "pnpm@9.15.4",

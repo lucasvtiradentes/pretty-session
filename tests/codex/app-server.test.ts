@@ -235,6 +235,23 @@ describe('codex app-server parser', () => {
 		expect(clean).toContain('sent.')
 	})
 
+	it('ignores non-text function call output blocks', () => {
+		const state = new CodexState()
+
+		expect(() =>
+			parseCodexLine(
+				JSON.stringify({
+					type: 'response_item',
+					payload: {
+						type: 'function_call_output',
+						output: [{ type: 'input_image', image_url: 'data:image/png;base64,abc' }],
+					},
+				}),
+				state,
+			),
+		).not.toThrow()
+	})
+
 	it('renders todo_list items as a checklist when emitted by item.completed', () => {
 		const state = new CodexState()
 		let output = ''

@@ -2,6 +2,7 @@ import { execSync } from 'node:child_process'
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, resolve } from 'node:path'
+import { getClaudeSessionPath, getCodexSessionPath } from '../src/lib/session-paths'
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..')
 const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
@@ -36,10 +37,10 @@ export function replayClaudeStreamWithSession(streamFile: string, sessionFile: s
 			return JSON.stringify(data)
 		})
 		.join('\n')
-	const project = cwd.replace(/[\/_.]/g, '-')
-	const sessionDir = resolve(home, '.claude', 'projects', project)
+	const sessionPath = getClaudeSessionPath(cwd, sessionId, home)
+	const sessionDir = dirname(sessionPath)
 	mkdirSync(sessionDir, { recursive: true })
-	copyFileSync(sessionFile, resolve(sessionDir, `${sessionId}.jsonl`))
+	copyFileSync(sessionFile, sessionPath)
 	return runParse('claude', stream, home)
 }
 
@@ -58,12 +59,9 @@ export function replayCodexStreamWithSession(streamFile: string, sessionFile: st
 		}
 		if (data.type === 'turn_context') timezone = (payload.timezone as string) ?? ''
 	}
-	const local = new Date(timestamp).toLocaleString('sv-SE', { timeZone: timezone })
-	const [datePart, timePart] = local.split(' ')
-	const [year, month, day] = datePart.split('-')
-	const timeFormatted = timePart.replaceAll(':', '-')
-	const sessionDir = resolve(home, '.codex', 'sessions', year, month, day)
+	const sessionPath = getCodexSessionPath(timestamp, timezone, sessionId, home)
+	const sessionDir = dirname(sessionPath)
 	mkdirSync(sessionDir, { recursive: true })
-	copyFileSync(sessionFile, resolve(sessionDir, `rollout-${datePart}T${timeFormatted}-${sessionId}.jsonl`))
+	copyFileSync(sessionFile, sessionPath)
 	return runParse('codex', lines.join('\n'), home)
 }

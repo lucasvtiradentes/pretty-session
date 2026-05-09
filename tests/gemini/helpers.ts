@@ -2,6 +2,8 @@ import { execSync } from 'node:child_process'
 import { copyFileSync, existsSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, resolve } from 'node:path'
+import { Provider } from '../../src/constants'
+import { getProviderSessionRoot } from '../../src/lib/session-paths'
 import { SESSION_FOOTER, SESSION_HEADER } from './expectations'
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '../..')
@@ -59,7 +61,7 @@ export function runE2E(promptOrPath: string, dir?: string): string {
 }
 
 function findGeminiSession(projectName: string): string | null {
-	const dir = resolve(HOME, '.gemini', 'tmp', projectName, 'chats')
+	const dir = resolve(getProviderSessionRoot(Provider.Gemini, HOME), projectName, 'chats')
 	if (!existsSync(dir)) return null
 	try {
 		const latest = execSync(`ls -t ${dir}/*.jsonl 2>/dev/null | head -1`, { encoding: 'utf-8' }).trim()

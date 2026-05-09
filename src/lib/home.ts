@@ -11,6 +11,10 @@ export function expandHome(path: string) {
 	return resolve(path)
 }
 
+export function joinTildePath(...segments: string[]) {
+	return `~/${segments.join('/')}`
+}
+
 export function toTildePath(path: string) {
 	const home = getHomeDir()
 	if (path === home) return '~'

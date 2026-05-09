@@ -1,49 +1,18 @@
-import { readdirSync } from 'node:fs'
-import { join, resolve } from 'node:path'
 import { INDENT } from '../../../constants'
-import { getHomeDir, toTildePath } from '../../../lib/home'
+import { toTildePath } from '../../../lib/home'
 import { findJsonlRecord } from '../../../lib/jsonl'
 import type { ParseResult } from '../../../lib/result'
+import { findTodaysCodexSessionPath, getCodexSessionPath } from '../../../lib/session-paths'
 import { CodexEventType } from '../constants'
 import type { CodexState } from '../state'
 import { renderUserText } from './user'
 
 function buildSessionPath(state: CodexState): string {
-	if (!state.sessionTimestamp || !state.timezone) return ''
-	const d = new Date(state.sessionTimestamp)
-	const local = d.toLocaleString('sv-SE', { timeZone: state.timezone })
-	const [datePart, timePart] = local.split(' ')
-	const [year, month, day] = datePart.split('-')
-	const timeFormatted = timePart.replaceAll(':', '-')
-	const home = getHomeDir()
-	if (!home) return ''
-	return join(
-		home,
-		'.codex',
-		'sessions',
-		year,
-		month,
-		day,
-		`rollout-${datePart}T${timeFormatted}-${state.sessionId}.jsonl`,
-	)
+	return getCodexSessionPath(state.sessionTimestamp, state.timezone, state.sessionId)
 }
 
 function findSessionPath(sessionId: string): string {
-	const home = getHomeDir()
-	const now = new Date()
-	const y = now.getFullYear()
-	const m = String(now.getMonth() + 1).padStart(2, '0')
-	const d = String(now.getDate()).padStart(2, '0')
-	const dir = resolve(home, '.codex', 'sessions', `${y}`, m, d)
-	try {
-		const match = readdirSync(dir).find((f) => f.includes(sessionId) && f.endsWith('.jsonl'))
-		if (match) return resolve(dir, match)
-	} catch {}
-	return ''
-}
-
-function displaySessionPath(path: string) {
-	return toTildePath(path)
+	return findTodaysCodexSessionPath(sessionId)
 }
 
 function flushInitialUserMessage(state: CodexState, result: ParseResult) {
@@ -75,7 +44,7 @@ export function showSession(state: CodexState, result: ParseResult) {
 	const path = buildSessionPath(state) || (state.sessionId ? findSessionPath(state.sessionId) : '')
 	state.sessionFilePath = path
 	let lines = `[session]\n${INDENT}id:    ${state.sessionId}`
-	if (path) lines += `\n${INDENT}path:  ${displaySessionPath(path)}`
+	if (path) lines += `\n${INDENT}path:  ${toTildePath(path)}`
 	lines += `\n${INDENT}model: ${state.model}`
 	result.add(`${r.dim(lines)}\n\n${r.dim('----')}\n`)
 	flushInitialUserMessage(state, result)

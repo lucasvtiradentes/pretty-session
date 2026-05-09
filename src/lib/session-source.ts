@@ -1,7 +1,8 @@
 import { readFile, readdir, stat } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 import { Provider } from '../constants'
-import { expandHome, getHomeDir } from './home'
+import { expandHome } from './home'
+import { getProviderSessionRoot } from './session-paths'
 
 interface ResolveSessionSourceOptions {
 	searchRoot?: string
@@ -16,7 +17,6 @@ export async function resolveSessionSource(
 	if (await isFile(path)) return path
 
 	const searchRoot = options.searchRoot ?? getProviderSessionRoot(provider)
-	if (!searchRoot) throw new Error(`session lookup is not supported for provider '${provider}'`)
 	if (!(await isDirectory(searchRoot))) throw new Error(`session root not found: ${searchRoot}`)
 
 	const matches = await findSessionMatches(provider, searchRoot, source)
@@ -26,13 +26,6 @@ export async function resolveSessionSource(
 	}
 
 	return matches[0]
-}
-
-function getProviderSessionRoot(provider: Provider) {
-	const home = getHomeDir()
-	if (provider === Provider.Claude) return join(home, '.claude', 'projects')
-	if (provider === Provider.Codex) return join(home, '.codex', 'sessions')
-	if (provider === Provider.Gemini) return join(home, '.gemini', 'tmp')
 }
 
 async function findSessionMatches(provider: Provider, root: string, sessionId: string) {

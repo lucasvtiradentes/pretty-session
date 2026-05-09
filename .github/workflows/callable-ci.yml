@@ -85,6 +85,7 @@ jobs:
           CI: true
 
   test:
+    needs: [check, build]
     if: inputs.run_test
     runs-on: ubuntu-latest
     steps:
@@ -96,6 +97,7 @@ jobs:
         run: pnpm run test
 
   test-e2e:
+    needs: [check, build]
     if: inputs.run_e2e_tests
     uses: ./.github/workflows/callable-run-e2e-tests.yml
     with:

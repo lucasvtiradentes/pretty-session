@@ -1,18 +1,14 @@
 <a name="TOC"></a>
 
 <div align="center">
-  <!-- <DYNFIELD:HEADER_LOGO> -->
   <div>Pretty Session</div>
-  <!-- </DYNFIELD:HEADER_LOGO> -->
   <br />
   <a href="#-overview">Overview</a> • <a href="#-motivation">Motivation</a> • <a href="#-features">Features</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-commands">Commands</a> • <a href="#-configuration">Configuration</a> • <a href="#-license">License</a>
 </div>
 
-<!-- <DYNFIELD:TOP_DIVIDER> -->
 <div width="100%" align="center">
   <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/image/divider.png" />
 </div>
-<!-- </DYNFIELD:TOP_DIVIDER> -->
 
 ## 🎺 Overview
 
@@ -90,13 +86,17 @@ pts completion zsh
 
 ## 🧩 Completion
 
-Add completion to your shell config so `pts <tab>` can show available commands, subcommands, and flags.
+For a better terminal experience, enable shell completion so `pts <tab>` can show available commands, subcommands, and flags.
+
+If you use zsh, add this to your shell config (.zshrc):
 
 ```sh
 eval "$(pts completion zsh)"
 ```
 
-For the interactive completion menu shown while typing, install the [zsh-autocomplete](https://github.com/marlonrichert/zsh-autocomplete). Bash and Fish completion scripts are also available:
+For the interactive completion menu shown while typing, install the [zsh-autocomplete](https://github.com/marlonrichert/zsh-autocomplete).
+
+Bash and Fish completion scripts are also available:
 
 ```sh
 pts completion bash
@@ -105,20 +105,22 @@ pts completion fish
 
 ## 🛠️ Development
 
-Install the development binary when you want local code changes to be available from any terminal. This creates `ptsd`, which runs the current workspace version:
+When working on Pretty Session locally, install the development command:
 
 ```sh
 pnpm dev:install
 ptsd --help
 ```
 
-For development autocomplete, follow the Completion section and use the dev binary in your shell config:
+This creates `ptsd`, a dev-only command that runs the current workspace version without replacing the globally installed `pts`.
+
+To enable zsh completion for the dev command, add this to your shell config:
 
 ```sh
 eval "$(ptsd completion zsh)"
 ```
 
-Remove the development binary when you no longer need it:
+Remove the dev command when you no longer need it:
 
 ```sh
 pnpm dev:uninstall
@@ -143,7 +145,6 @@ Environment variables:
 
 [MIT](https://github.com/lucasvtiradentes/pretty-session/blob/main/LICENSE)
 
-<!-- <DYNFIELD:FOOTER> -->
 <div width="100%" align="center">
   <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/image/divider.png" />
 </div>
@@ -158,4 +159,3 @@ Environment variables:
     <a target="_blank" href="https://github.com/lucasvtiradentes"><img src="https://img.shields.io/badge/-github-gray?logo=Github&logoColor=white" alt="Github"></a>
   </div>
 </div>
-<!-- </DYNFIELD:FOOTER> -->

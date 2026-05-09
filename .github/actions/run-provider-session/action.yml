@@ -76,6 +76,8 @@ runs:
     - name: Run Claude Code
       if: ${{ inputs.command == '' && inputs.provider == 'claude' }}
       shell: bash
+      env:
+        CLAUDE_CODE_OAUTH_TOKEN: ${{ inputs.claude-code-oauth-token }}
       run: claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json
 
     - name: Install Pretty Session
@@ -86,6 +88,8 @@ runs:
     - name: Run Claude Code with Pretty Session
       if: ${{ inputs.command == '' && inputs.provider == 'claude' }}
       shell: bash
+      env:
+        CLAUDE_CODE_OAUTH_TOKEN: ${{ inputs.claude-code-oauth-token }}
       run: claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | pts parse claude
 
     - name: Run provider session

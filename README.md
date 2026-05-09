@@ -3,7 +3,7 @@
 <div align="center">
   <div>Pretty Session</div>
   <br />
-  <a href="#-overview">Overview</a> • <a href="#-motivation">Motivation</a> • <a href="#-features">Features</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-usage">Usage</a> • <a href="#-completion">Completion</a> • <a href="#-development">Development</a> • <a href="#-license">License</a>
+  <a href="#-overview">Overview</a> • <a href="#-motivation">Motivation</a> • <a href="#-features">Features</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-usage">Usage</a> • <a href="#-development">Development</a> • <a href="#-license">License</a>
 </div>
 
 <div width="100%" align="center">
@@ -15,6 +15,7 @@
 Pretty Session turns noisy AI coding agent logs into clean terminal output, making live streams and saved sessions easier to read, review, and debug.
 
 <div align="center">
+  <p>Without Pretty Session vs With Pretty Session</p>
   <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/without-pretty-session.png" alt="Without Pretty Session" width="49%" />
   <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/with-pretty-session.png" alt="With Pretty Session" width="49%" />
 </div>
@@ -124,8 +125,6 @@ pts update
 
 </div>
 
-## 🧩 Completion
-
 <div align="center">
 
 <details>
@@ -136,15 +135,19 @@ pts update
 
 For a better terminal experience, enable shell completion so `pts <tab>` can show available commands, subcommands, and flags.
 
-If you use zsh, add this to your shell config (.zshrc):
+<div align="center">
+  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/shell-completion.png" alt="Shell completion" />
+</div>
+
+For zsh, add this line to your `.zshrc`:
 
 ```sh
 eval "$(pts completion zsh)"
 ```
 
-For the interactive completion menu shown while typing, install the [zsh-autocomplete](https://github.com/marlonrichert/zsh-autocomplete).
+This enables completion for commands, subcommands, and flags. For a richer menu while you type, install [zsh-autocomplete](https://github.com/marlonrichert/zsh-autocomplete).
 
-Bash and Fish completion scripts are also available:
+Bash and Fish are available too:
 
 ```sh
 pts completion bash

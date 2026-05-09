@@ -22,8 +22,13 @@ if (countOccurrences(readme, startMarker) !== 1 || countOccurrences(readme, endM
 writeFileSync(readmePath, replaceBetween(readme, startMarker, endMarker, generated), 'utf8')
 
 function generateCommandDocs(commands: readonly CommandDefinition[]) {
-	const lines = commands.flatMap((command, index) => {
-		const commandLines = command.kind === 'command' ? parentCommandDocs(command) : commandDocs(command)
+	const parentCommands = commands.filter((command) => command.kind === 'command')
+	const standaloneCommands = commands.filter((command) => command.kind === 'subcommand')
+	const groups = [
+		...parentCommands.map((command) => parentCommandDocs(command)),
+		standaloneCommands.length > 0 ? otherCommandDocs(standaloneCommands) : [],
+	].filter((group) => group.length > 0)
+	const lines = groups.flatMap((commandLines, index) => {
 		return index === 0 ? commandLines : ['', ...commandLines]
 	})
 	return ['```sh', ...lines, '```'].join('\n')
@@ -41,6 +46,10 @@ function parentCommandDocs(command: ParentCommandDefinition) {
 function commandDocs(command: SubCommandDefinition, parent?: string) {
 	const commandPath = parent ? `${parent} ${command.name}` : command.name
 	return [commandUsage(commandPath, usageSuffix(command))]
+}
+
+function otherCommandDocs(commands: readonly SubCommandDefinition[]) {
+	return ['# other commands', ...commands.flatMap((command) => commandDocs(command))]
 }
 
 function commandUsage(commandPath: string, suffix: string) {

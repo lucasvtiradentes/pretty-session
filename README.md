@@ -3,7 +3,7 @@
 <div align="center">
   <div>Pretty Session</div>
   <br />
-  <a href="#-overview">Overview</a> • <a href="#-motivation">Motivation</a> • <a href="#-features">Features</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-commands">Commands</a> • <a href="#-configuration">Configuration</a> • <a href="#-license">License</a>
+  <a href="#-overview">Overview</a> • <a href="#-motivation">Motivation</a> • <a href="#-features">Features</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-usage">Usage</a> • <a href="#-completion">Completion</a> • <a href="#-development">Development</a> • <a href="#-license">License</a>
 </div>
 
 <div width="100%" align="center">
@@ -24,7 +24,7 @@ Why? To quickly review progress, debug a run, or catch what happened at a glance
 
 - Three ways to format agent sessions: parse a saved session, watch an active one, or stream one live.
 - Multi-provider support for [Claude Code](https://claude.com/product/claude-code), [Codex](https://openai.com/codex/), and [Gemini](https://geminicli.com/), with a parser structure that is easy to extend.
-- Cleaner terminal output for tool calls, subagents, markdown-ish text, tables, token usage, cost, and duration when available.
+- Cleaner terminal output for tool calls, subagents, markdown-ish text, tables, and more.
 
 ## 🚀 Quick Start
 
@@ -61,7 +61,15 @@ Why? To quickly review progress, debug a run, or catch what happened at a glance
    # pts watch gemini <path-or-session-id>
    ```
 
-## 🧰 Commands
+## 🧰 Usage
+
+<div align="center">
+
+<details>
+<summary>Show commands</summary>
+<br />
+
+<div align="left">
 
 <!-- <DYNFIELD:COMMANDS> -->
 ```sh
@@ -75,16 +83,51 @@ pts watch claude <session> [--from-end] [--interval <value>]
 pts watch codex <session> [--from-end] [--interval <value>]
 pts watch gemini <session> [--from-end] [--interval <value>]
 
-pts update
-
 # completion commands
 pts completion bash
 pts completion fish
 pts completion zsh
+
+# other commands
+pts update
 ```
 <!-- </DYNFIELD:COMMANDS> -->
 
+</div>
+
+</details>
+
+</div>
+
+<div align="center">
+
+<details>
+<summary>Environment variables</summary>
+
+<br />
+
+<div align="center">
+
+| Variable                   | Default | Description                                      |
+| -------------------------- | ------- | ------------------------------------------------ |
+| `PTS_TOOL_RESULT_LINES`    | `0`     | Maximum lines shown in tool result previews      |
+| `PTS_SHOW_SUBAGENT_PROMPT` | `true`  | Show subagent prompt lines under Agent tool calls |
+
+</div>
+
+</details>
+
+</div>
+
 ## 🧩 Completion
+
+<div align="center">
+
+<details>
+<summary>Show completion setup</summary>
+<br />
+
+<div align="left">
 
 For a better terminal experience, enable shell completion so `pts <tab>` can show available commands, subcommands, and flags.
 
@@ -103,7 +146,21 @@ pts completion bash
 pts completion fish
 ```
 
+</div>
+
+</details>
+
+</div>
+
 ## 🛠️ Development
+
+<div align="center">
+
+<details>
+<summary>Show local development setup</summary>
+<br />
+
+<div align="left">
 
 When working on Pretty Session locally, install the development command:
 
@@ -126,18 +183,9 @@ Remove the dev command when you no longer need it:
 pnpm dev:uninstall
 ```
 
-## ⚙️ Configuration
+</div>
 
-No config file is required. Pretty Session reads provider events from stdin and writes formatted output to stdout.
-
-Environment variables:
-
-<div align="center">
-
-| Variable                   | Default | Description                                      |
-| -------------------------- | ------- | ------------------------------------------------ |
-| `PTS_TOOL_RESULT_LINES`    | `0`     | Maximum lines shown in tool result previews      |
-| `PTS_SHOW_SUBAGENT_PROMPT` | `true`  | Show subagent prompt lines under Agent tool calls |
+</details>
 
 </div>
 

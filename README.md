@@ -12,7 +12,7 @@
 
 ## 🎺 Overview
 
-Pretty Session is a small CLI that formats AI coding agent streams and saved session files into readable terminal output.
+Pretty Session turns noisy AI coding agent logs into clean terminal output, making live streams and saved sessions easier to read, review, and debug.
 
 <div align="center">
   <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/without-pretty-session.png" alt="Without Pretty Session" width="49%" />

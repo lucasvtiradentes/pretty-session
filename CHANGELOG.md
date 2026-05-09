@@ -1,5 +1,11 @@
 # pretty-session
 
+## 0.1.3
+
+### Patch Changes
+
+- 53f70f6: Fix Codex parsing for non-text tool result blocks.
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,0 +1,56 @@
+name: Manual Showcase
+
+on:
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: Provider to run
+        type: choice
+        required: true
+        default: claude
+        options:
+          - claude
+          - codex
+          - gemini
+
+env:
+  SHOWCASE_PROMPT: Read the relevant project files and explain what this project does.
+
+jobs:
+  without-pretty-session:
+    name: Without Pretty Session
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-and-install
+      - uses: ./.github/actions/run-provider-session
+        with:
+          provider: ${{ inputs.provider }}
+          prompt: ${{ env.SHOWCASE_PROMPT }}
+          install-cli: 'true'
+          mode: raw
+          bypass-permissions: 'true'
+          save-session: 'true'
+          claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          codex-auth-json: ${{ secrets.CODEX_AUTH_JSON }}
+          gemini-credentials: ${{ secrets.GEMINI_CREDENTIALS }}
+
+  with-pretty-session:
+    name: With Pretty Session
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-and-install
+      - uses: ./.github/actions/run-provider-session
+        with:
+          provider: ${{ inputs.provider }}
+          prompt: ${{ env.SHOWCASE_PROMPT }}
+          install-cli: 'true'
+          mode: pretty
+          bypass-permissions: 'true'
+          save-session: 'true'
+          claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          codex-auth-json: ${{ secrets.CODEX_AUTH_JSON }}
+          gemini-credentials: ${{ secrets.GEMINI_CREDENTIALS }}

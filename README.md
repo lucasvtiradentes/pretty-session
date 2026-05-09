@@ -135,10 +135,10 @@ No config file is required. Pretty Session reads provider events from stdin and 
 
 Environment variables:
 
-| Variable                    | Default | Description                                      |
-| --------------------------- | ------- | ------------------------------------------------ |
-| `PTS_TOOL_RESULT_MAX_CHARS` | `300`   | Maximum characters shown in tool result previews |
-| `PTS_READ_PREVIEW_LINES`    | `5`     | Maximum lines shown in read/file previews        |
+| Variable                   | Default | Description                                      |
+| -------------------------- | ------- | ------------------------------------------------ |
+| `PTS_TOOL_RESULT_LINES`    | `0`     | Maximum lines shown in tool result previews      |
+| `PTS_SHOW_SUBAGENT_PROMPT` | `true`  | Show subagent prompt lines under Agent tool calls |
 
 ## 📜 License
 

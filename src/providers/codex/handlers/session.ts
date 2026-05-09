@@ -1,6 +1,7 @@
 import { readdirSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 import { INDENT } from '../../../constants'
+import { getHomeDir, toTildePath } from '../../../lib/home'
 import { findJsonlRecord } from '../../../lib/jsonl'
 import type { ParseResult } from '../../../lib/result'
 import { CodexEventType } from '../constants'
@@ -14,13 +15,21 @@ function buildSessionPath(state: CodexState): string {
 	const [datePart, timePart] = local.split(' ')
 	const [year, month, day] = datePart.split('-')
 	const timeFormatted = timePart.replaceAll(':', '-')
-	const home = process.env.HOME ?? ''
+	const home = getHomeDir()
 	if (!home) return ''
-	return `${home}/.codex/sessions/${year}/${month}/${day}/rollout-${datePart}T${timeFormatted}-${state.sessionId}.jsonl`
+	return join(
+		home,
+		'.codex',
+		'sessions',
+		year,
+		month,
+		day,
+		`rollout-${datePart}T${timeFormatted}-${state.sessionId}.jsonl`,
+	)
 }
 
 function findSessionPath(sessionId: string): string {
-	const home = process.env.HOME ?? ''
+	const home = getHomeDir()
 	const now = new Date()
 	const y = now.getFullYear()
 	const m = String(now.getMonth() + 1).padStart(2, '0')
@@ -34,9 +43,7 @@ function findSessionPath(sessionId: string): string {
 }
 
 function displaySessionPath(path: string) {
-	const home = process.env.HOME ?? ''
-	if (home && path.startsWith(`${home}/`)) return `~/${path.slice(home.length + 1)}`
-	return path
+	return toTildePath(path)
 }
 
 function flushInitialUserMessage(state: CodexState, result: ParseResult) {

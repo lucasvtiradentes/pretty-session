@@ -4,6 +4,7 @@ import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { DEV_CLI_BIN_NAMES } from '../src/constants'
+import { env } from '../src/env'
 
 const scriptDir = dirname(fileURLToPath(import.meta.url))
 const rootDir = resolve(scriptDir, '..')
@@ -26,7 +27,7 @@ for (const binName of devBinNames) {
 }
 
 function getBinDir() {
-	if (process.env.PRETTY_SESSION_DEV_BIN_DIR) return process.env.PRETTY_SESSION_DEV_BIN_DIR
+	if (env.PRETTY_SESSION_DEV_BIN_DIR) return env.PRETTY_SESSION_DEV_BIN_DIR
 
 	if (process.platform === 'win32') {
 		return getNpmPrefix() ?? join(homedir(), 'AppData', 'Roaming', 'npm')

@@ -1,17 +1,17 @@
 import { execSync } from 'node:child_process'
 import { copyFileSync, existsSync, readFileSync } from 'node:fs'
+import { homedir } from 'node:os'
 import { dirname, resolve } from 'node:path'
 import { SESSION_FOOTER, SESSION_HEADER } from './expectations'
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '../..')
 const SANDBOX_BASE = resolve(CLI_ROOT, '.sandbox')
 const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
-const HOME = process.env.HOME ?? ''
+const HOME = homedir()
 
 const TEST_ENV = {
 	...process.env,
-	PTS_TOOL_RESULT_MAX_CHARS: '300',
-	PTS_READ_PREVIEW_LINES: '5',
+	PTS_TOOL_RESULT_LINES: '5',
 	GEMINI_CLI_TRUST_WORKSPACE: 'true',
 }
 

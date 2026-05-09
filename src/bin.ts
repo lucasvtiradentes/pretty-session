@@ -7,6 +7,7 @@ import { cliCommands } from './cli/catalog'
 import { registerProgram } from './cli/register'
 import { COMPLETION_COMMAND_NAME } from './commands/completion/register'
 import { CLI_NAME, VERSION } from './constants'
+import { env } from './env'
 
 let programInstance: CaporalProgram | undefined
 let programInstanceBin: string | undefined
@@ -31,7 +32,7 @@ function isDirectRun() {
 }
 
 function getProgramBin() {
-	if (process.env.PRETTY_SESSION_PROG_NAME) return process.env.PRETTY_SESSION_PROG_NAME
+	if (env.PRETTY_SESSION_PROG_NAME) return env.PRETTY_SESSION_PROG_NAME
 	if (isDirectRun() && process.argv[1]) return basename(process.argv[1])
 	return CLI_NAME
 }

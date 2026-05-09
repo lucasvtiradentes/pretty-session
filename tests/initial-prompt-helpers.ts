@@ -15,7 +15,7 @@ function runParse(provider: 'claude' | 'codex', input: string, home: string) {
 			input,
 			encoding: 'utf-8',
 			cwd: CLI_ROOT,
-			env: { ...process.env, HOME: home },
+			env: { ...process.env, HOME: home, USERPROFILE: home },
 		}),
 	)
 }

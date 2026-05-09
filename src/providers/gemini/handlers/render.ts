@@ -1,4 +1,4 @@
-import { INDENT, READ_PREVIEW_LINES } from '../../../constants'
+import { INDENT, TOOL_RESULT_LINES } from '../../../constants'
 import { formatToolOutput } from '../../../lib/format'
 import type { ParseResult } from '../../../lib/result'
 import type { GeminiState } from '../state'
@@ -39,7 +39,7 @@ export function renderToolHeader(
 
 export function renderToolPreview(line: string, state: GeminiState, result: ParseResult) {
 	if (!line) return
-	if (READ_PREVIEW_LINES === 0) return
+	if (TOOL_RESULT_LINES === 0) return
 	result.add(`${INDENT}${state.renderer.dim(`→ ${line}`)}\n`)
 }
 

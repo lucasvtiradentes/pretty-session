@@ -1,5 +1,6 @@
 import { execSync } from 'node:child_process'
 import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { homedir } from 'node:os'
 import { dirname, resolve } from 'node:path'
 import { scrubFixture } from '../scrub'
 import { SESSION_FOOTER, SESSION_HEADER, STREAM_SESSION_HEADER } from './expectations'
@@ -7,9 +8,9 @@ import { SESSION_FOOTER, SESSION_HEADER, STREAM_SESSION_HEADER } from './expecta
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '../..')
 const SANDBOX_BASE = resolve(CLI_ROOT, '.sandbox')
 const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
-const HOME = process.env.HOME ?? ''
+const HOME = homedir()
 
-const TEST_ENV = { ...process.env, PTS_TOOL_RESULT_MAX_CHARS: '300', PTS_READ_PREVIEW_LINES: '5' }
+const TEST_ENV = { ...process.env, PTS_TOOL_RESULT_LINES: '5' }
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: stripping ANSI escape codes
 export const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')

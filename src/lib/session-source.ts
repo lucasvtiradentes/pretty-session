@@ -1,7 +1,7 @@
 import { readFile, readdir, stat } from 'node:fs/promises'
-import { homedir } from 'node:os'
-import { basename, join, resolve } from 'node:path'
+import { basename, join } from 'node:path'
 import { Provider } from '../constants'
+import { expandHome, getHomeDir } from './home'
 
 interface ResolveSessionSourceOptions {
 	searchRoot?: string
@@ -29,7 +29,7 @@ export async function resolveSessionSource(
 }
 
 function getProviderSessionRoot(provider: Provider) {
-	const home = homedir()
+	const home = getHomeDir()
 	if (provider === Provider.Claude) return join(home, '.claude', 'projects')
 	if (provider === Provider.Codex) return join(home, '.codex', 'sessions')
 	if (provider === Provider.Gemini) return join(home, '.gemini', 'tmp')
@@ -112,10 +112,4 @@ async function isDirectory(path: string) {
 	} catch {
 		return false
 	}
-}
-
-function expandHome(path: string) {
-	if (path === '~') return homedir()
-	if (path.startsWith('~/')) return join(homedir(), path.slice(2))
-	return resolve(path)
 }

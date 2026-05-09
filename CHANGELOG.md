@@ -1,5 +1,17 @@
 # pretty-session
 
+## 0.1.1
+
+### Patch Changes
+
+- 59ea7d1: Render inline code spans as bold text without inverse background styling.
+- af3f93f: Render initial user prompts for Claude, Codex, and Gemini session parsing.
+- 85a848a: Simplify environment configuration and use cross-platform home directory resolution.
+- 9f59730: Render full user prompts instead of truncating them in parsed session output.
+- 5b1dc27: Hide tool preview output lines by default while keeping tool headers visible.
+- 83bebf2: Add a reusable provider-session GitHub Action and a manual showcase workflow for comparing raw provider streams with Pretty Session output.
+- d891db1: Render the Claude replay done footer once when sessions contain repeated last-prompt records.
+
 ## 0.1.0
 
 ### Minor Changes

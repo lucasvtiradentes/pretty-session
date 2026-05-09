@@ -13,6 +13,6 @@ export const DEV_CLI_BIN_NAMES = ['pretty-sessiond', 'prettysessiond', 'ptsd']
 export const INDENT = '   '
 
 export const TOOL_RESULT_MAX_CHARS = Number(process.env.PTS_TOOL_RESULT_MAX_CHARS ?? 300)
-export const READ_PREVIEW_LINES = Number(process.env.PTS_READ_PREVIEW_LINES ?? 5)
+export const READ_PREVIEW_LINES = Number(process.env.PTS_READ_PREVIEW_LINES ?? 0)
 export const AGENT_DESCRIPTION_MAX_CHARS = 50
 export const TASK_SUBJECT_MAX_CHARS = 60

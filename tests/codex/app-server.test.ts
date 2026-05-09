@@ -159,18 +159,16 @@ describe('codex app-server parser', () => {
 		expect(clean).toContain('id:    thread-2')
 		expect(clean).toContain('About to run ls.')
 		expect(clean).toContain('[Bash] ls /tmp')
-		expect(clean).toContain('→ fileA')
-		expect(clean).toContain('→ fileB')
+		expect(clean).not.toContain('→ fileA')
+		expect(clean).not.toContain('→ fileB')
 		expect(clean).toContain('Done.')
 
 		const aboutIdx = clean.indexOf('About to run ls.')
 		const bashIdx = clean.indexOf('[Bash] ls /tmp')
-		const fileAIdx = clean.indexOf('→ fileA')
 		const doneIdx = clean.indexOf('Done.')
 		expect(aboutIdx).toBeGreaterThan(0)
 		expect(bashIdx).toBeGreaterThan(aboutIdx)
-		expect(fileAIdx).toBeGreaterThan(bashIdx)
-		expect(doneIdx).toBeGreaterThan(fileAIdx)
+		expect(doneIdx).toBeGreaterThan(bashIdx)
 	})
 
 	it('does not duplicate text when only deltas are emitted (legacy flow)', () => {
@@ -314,6 +312,6 @@ describe('codex app-server parser', () => {
 
 		const clean = stripAnsi(output)
 		expect(clean).toContain('[Agent] just say ok')
-		expect(clean).toContain('→ ok')
+		expect(clean).not.toContain('→ ok')
 	})
 })

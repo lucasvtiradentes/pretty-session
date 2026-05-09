@@ -29,8 +29,7 @@ describe('Claude tool result errors', () => {
 			].join('\n'),
 		)
 
-		expect(output).toContain("→ 1\tif (toolContent.includes('<tool_use_error>')) {")
-		expect(output).toContain('→ 2\t\tconst value: Record<string, unknown> = {}')
+		expect(output).toBe('')
 		expect(output).not.toContain('✗')
 	})
 

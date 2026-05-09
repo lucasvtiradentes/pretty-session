@@ -234,7 +234,7 @@ describe('gemini parser', () => {
 		expect(clean).toContain('[Edit] new.txt')
 	})
 
-	it('does not duplicate ACP tool previews for repeated updates', () => {
+	it('does not render ACP tool previews when previews are disabled', () => {
 		const state = new GeminiState()
 		let output = ''
 
@@ -285,6 +285,6 @@ describe('gemini parser', () => {
 
 		const clean = stripAnsi(output)
 		expect(clean).toContain('[Shell] ls /tmp')
-		expect(clean.split('→ fileA').length - 1).toBe(1)
+		expect(clean).not.toContain('→ fileA')
 	})
 })

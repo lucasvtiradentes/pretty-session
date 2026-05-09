@@ -5,9 +5,9 @@ import type { ParseResult } from './result'
 export function formatToolOutput(content: string, r: Renderer, result: ParseResult, prefix = '') {
 	if (TOOL_RESULT_MAX_CHARS === 0) return
 	if (!content) return
+	if (READ_PREVIEW_LINES === 0) return
 
 	if (content.includes('\n')) {
-		if (READ_PREVIEW_LINES === 0) return
 		const lines = content.split('\n').slice(0, READ_PREVIEW_LINES)
 		for (const line of lines) {
 			result.add(`${prefix}${r.dim(`${INDENT}→ ${line}`)}\n`)

@@ -17,6 +17,11 @@ function cleanUserMessage(content: string) {
 		.trim()
 }
 
+function parseToolUseError(content: string) {
+	const match = content.match(/^<tool_use_error>([\s\S]*)<\/tool_use_error>$/)
+	return match?.[1]?.trim()
+}
+
 export function renderUserText(content: string, state: ParserState, result: ParseResult) {
 	const cleaned = cleanUserMessage(content)
 	if (!cleaned) return
@@ -60,8 +65,8 @@ export function handleUserMessage(data: Record<string, unknown>, state: ParserSt
 			) {
 				return
 			}
-			if (toolContent.includes('<tool_use_error>')) {
-				const errorMsg = toolContent.replace(/<[^>]*>/g, '')
+			const errorMsg = parseToolUseError(toolContent)
+			if (errorMsg) {
 				result.add(`${state.sp}${r.red(`${INDENT}✗ ${errorMsg}`)}\n`)
 				return
 			}

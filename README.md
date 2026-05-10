@@ -16,8 +16,8 @@ Pretty Session turns noisy AI coding agent logs into clean terminal output, maki
 
 <div align="center">
   <p>Without Pretty Session vs With Pretty Session</p>
-  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/without-pretty-session.png" alt="Without Pretty Session" width="49%" />
-  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/with-pretty-session.png" alt="With Pretty Session" width="49%" />
+  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/without-pretty-session.png?v2" alt="Without Pretty Session" width="49%" />
+  <img src="https://cdn.jsdelivr.net/gh/lucasvtiradentes/pretty-session@main/.github/images/with-pretty-session.png?v2" alt="With Pretty Session" width="49%" />
 </div>
 
 ## ❓ Motivation

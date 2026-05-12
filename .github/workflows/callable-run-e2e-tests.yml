@@ -28,15 +28,14 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup-and-install
-      - uses: ./.github/actions/run-provider-session
+      - uses: lucasvtiradentes/setup-ai-provider@v0
         with:
           provider: claude
-          command: pnpm test:e2e:claude
-          install-cli: 'true'
-          mode: raw
-          bypass-permissions: 'true'
-          save-session: 'true'
           claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          artifact-name: claude-session-raw-files
+          upload-session-files: 'true'
+      - name: Run Claude e2e tests
+        run: pnpm test:e2e:claude
 
   test-e2e-codex:
     if: ${{ inputs.run_codex }}
@@ -45,15 +44,14 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup-and-install
-      - uses: ./.github/actions/run-provider-session
+      - uses: lucasvtiradentes/setup-ai-provider@v0
         with:
           provider: codex
-          command: pnpm test:e2e:codex
-          install-cli: 'true'
-          mode: raw
-          bypass-permissions: 'true'
-          save-session: 'true'
           codex-auth-json: ${{ secrets.CODEX_AUTH_JSON }}
+          artifact-name: codex-session-raw-files
+          upload-session-files: 'true'
+      - name: Run Codex e2e tests
+        run: pnpm test:e2e:codex
 
   test-e2e-gemini:
     if: ${{ inputs.run_gemini }}
@@ -62,12 +60,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup-and-install
-      - uses: ./.github/actions/run-provider-session
+      - uses: lucasvtiradentes/setup-ai-provider@v0
         with:
           provider: gemini
-          command: pnpm test:e2e:gemini
-          install-cli: 'true'
-          mode: raw
-          bypass-permissions: 'true'
-          save-session: 'true'
-          gemini-credentials: ${{ secrets.GEMINI_CREDENTIALS }}
+          gemini-auth-json: ${{ secrets.GEMINI_CREDENTIALS }}
+          artifact-name: gemini-session-raw-files
+          upload-session-files: 'true'
+      - name: Run Gemini e2e tests
+        run: pnpm test:e2e:gemini

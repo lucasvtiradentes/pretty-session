@@ -1,5 +1,12 @@
 # pretty-session
 
+## 0.1.4
+
+### Patch Changes
+
+- 067ed24: Add Pi provider support for parsing and watching Pi session JSONL streams.
+- d11f9ef: Allow parse and watch commands to use provider session paths or session ids.
+
 ## 0.1.3
 
 ### Patch Changes

@@ -30,7 +30,7 @@ function flushPendingUserMessage(state: PiState, result: ParseResult) {
 	renderUserText(raw, state, result)
 }
 
-export function renderUserText(raw: string, state: PiState, result: ParseResult) {
+function renderUserText(raw: string, state: PiState, result: ParseResult) {
 	if (!raw) return
 	if (state.turnCount > 0) result.add(`\n${state.renderer.dim('----')}\n`)
 	result.add(`\n${state.renderer.green('[user]')} ${raw}`)

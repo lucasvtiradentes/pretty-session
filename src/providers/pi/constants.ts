@@ -6,7 +6,6 @@ export enum PiEntryType {
 	Compaction = 'compaction',
 	BranchSummary = 'branch_summary',
 	CustomMessage = 'custom_message',
-	SessionInfo = 'session_info',
 }
 
 export enum PiMessageRole {
@@ -21,6 +20,5 @@ export enum PiMessageRole {
 
 export enum PiBlockType {
 	Text = 'text',
-	Thinking = 'thinking',
 	ToolCall = 'toolCall',
 }

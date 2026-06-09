@@ -130,7 +130,7 @@ export function promptPath(dir: string): string {
 	return resolve(dir, 'prompt.md')
 }
 
-export function stripAnsi(value: string) {
+function stripAnsi(value: string) {
 	const ansiPattern = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, 'g')
 	return value.replace(ansiPattern, '')
 }

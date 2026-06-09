@@ -2,6 +2,7 @@ import { Provider } from '../constants'
 import { ParserState, finalizeClaude, parseJsonLine } from '../providers/claude'
 import { CodexState, finalizeCodex, parseCodexLine } from '../providers/codex'
 import { GeminiState, finalizeGemini, parseGeminiLine } from '../providers/gemini'
+import { PiState, finalizePi, parsePiLine } from '../providers/pi'
 import type { LineParser } from './stream'
 
 export function createProviderParser(provider: Provider): LineParser {
@@ -21,9 +22,17 @@ export function createProviderParser(provider: Provider): LineParser {
 		}
 	}
 
-	const state = new GeminiState()
+	if (provider === Provider.Gemini) {
+		const state = new GeminiState()
+		return {
+			parseLine: (line) => parseGeminiLine(line, state),
+			finalize: () => finalizeGemini(state),
+		}
+	}
+
+	const state = new PiState()
 	return {
-		parseLine: (line) => parseGeminiLine(line, state),
-		finalize: () => finalizeGemini(state),
+		parseLine: (line) => parsePiLine(line, state),
+		finalize: () => finalizePi(state),
 	}
 }

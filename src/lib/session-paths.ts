@@ -7,6 +7,7 @@ const PROVIDER_SESSION_ROOTS = {
 	[Provider.Claude]: ['.claude', 'projects'],
 	[Provider.Codex]: ['.codex', 'sessions'],
 	[Provider.Gemini]: ['.gemini', 'tmp'],
+	[Provider.Pi]: ['.pi', 'agent', 'sessions'],
 } as const
 
 export function getProviderSessionRoot(provider: Provider, home?: string) {

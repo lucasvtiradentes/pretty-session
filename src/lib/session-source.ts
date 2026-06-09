@@ -72,6 +72,7 @@ function getSessionId(provider: Provider, record: Record<string, unknown>) {
 		const payload = record.payload
 		if (isRecord(payload)) return stringValue(payload.id)
 	}
+	if (provider === Provider.Pi) return stringValue(record.id) ?? stringValue(record.sessionId)
 }
 
 function parseRecord(line: string) {

@@ -14,6 +14,7 @@ describe('session paths', () => {
 		expect(getProviderSessionRoot(Provider.Claude, home)).toBe(join(home, '.claude', 'projects'))
 		expect(getProviderSessionRoot(Provider.Codex, home)).toBe(join(home, '.codex', 'sessions'))
 		expect(getProviderSessionRoot(Provider.Gemini, home)).toBe(join(home, '.gemini', 'tmp'))
+		expect(getProviderSessionRoot(Provider.Pi, home)).toBe(join(home, '.pi', 'agent', 'sessions'))
 	})
 
 	it('builds Claude absolute and display paths with the same project name', () => {

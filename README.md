@@ -29,7 +29,7 @@ Why? To quickly review progress, debug a run, or catch what happened at a glance
 ## ⭐ Features
 
 - Three ways to format agent sessions: parse a saved session, watch an active one, or stream one live.
-- Multi-provider support for [Claude Code](https://claude.com/product/claude-code), [Codex](https://openai.com/codex/), and [Gemini](https://geminicli.com/), with a parser structure that is easy to extend.
+- Multi-provider support for [Claude Code](https://claude.com/product/claude-code), [Codex](https://openai.com/codex/), [Gemini](https://geminicli.com/), and [Pi](https://pi.dev/), with a parser structure that is easy to extend.
 - Cleaner terminal output for tool calls, subagents, markdown-ish text, tables, and more.
 
 ## 🚀 Quick Start
@@ -49,6 +49,7 @@ Why? To quickly review progress, debug a run, or catch what happened at a glance
    claude -p "explain this code" --print --verbose --dangerously-skip-permissions --output-format stream-json | pts parse claude
    # codex exec "explain this code" --json | pts parse codex
    # gemini -p "explain this code" --output-format stream-json | pts parse gemini
+   # pi -p "explain this code" --mode json | pts parse pi
    ```
 
    Mode B: Saved session snapshot
@@ -57,6 +58,7 @@ Why? To quickly review progress, debug a run, or catch what happened at a glance
    cat ~/.claude/projects/.../session.jsonl | pts parse claude
    # cat ~/.codex/sessions/.../session.jsonl | pts parse codex
    # cat ~/.gemini/tmp/.../session.jsonl | pts parse gemini
+   # cat ~/.pi/agent/sessions/.../session.jsonl | pts parse pi
    ```
 
    Mode C: Follow an active session
@@ -65,6 +67,7 @@ Why? To quickly review progress, debug a run, or catch what happened at a glance
    pts watch claude <path-or-session-id>
    # pts watch codex <path-or-session-id>
    # pts watch gemini <path-or-session-id>
+   # pts watch pi <path-or-session-id>
    ```
 
 ## 🧰 Usage
@@ -83,11 +86,13 @@ Why? To quickly review progress, debug a run, or catch what happened at a glance
 pts parse claude
 pts parse codex
 pts parse gemini
+pts parse pi
 
 # watch commands
 pts watch claude <session> [--from-end] [--interval <value>]
 pts watch codex <session> [--from-end] [--interval <value>]
 pts watch gemini <session> [--from-end] [--interval <value>]
+pts watch pi <session> [--from-end] [--interval <value>]
 
 # completion commands
 pts completion bash

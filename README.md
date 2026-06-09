@@ -83,16 +83,16 @@ Why? To quickly review progress, debug a run, or catch what happened at a glance
 <!-- <DYNFIELD:COMMANDS> -->
 ```sh
 # parse commands
-pts parse claude
-pts parse codex
-pts parse gemini
-pts parse pi
+pts parse claude [path-or-session-id]
+pts parse codex [path-or-session-id]
+pts parse gemini [path-or-session-id]
+pts parse pi [path-or-session-id]
 
 # watch commands
-pts watch claude <session> [--from-end] [--interval <value>]
-pts watch codex <session> [--from-end] [--interval <value>]
-pts watch gemini <session> [--from-end] [--interval <value>]
-pts watch pi <session> [--from-end] [--interval <value>]
+pts watch claude <path-or-session-id> [--from-end] [--interval <value>]
+pts watch codex <path-or-session-id> [--from-end] [--interval <value>]
+pts watch gemini <path-or-session-id> [--from-end] [--interval <value>]
+pts watch pi <path-or-session-id> [--from-end] [--interval <value>]
 
 # completion commands
 pts completion bash

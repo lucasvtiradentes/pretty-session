@@ -13,7 +13,9 @@ export const watchCommand = defineCommand({
 		defineSubCommand({
 			name: provider,
 			description: `Follow a saved ${provider} session JSONL file`,
-			arguments: [argument.string('session', 'Session JSONL file path or session id to follow', { required: true })],
+			arguments: [
+				argument.string('path-or-session-id', 'Session JSONL file path or session id to follow', { required: true }),
+			],
 			flags: [
 				flag.boolean('--from-end', 'Start at the end of the file instead of replaying existing events'),
 				flag.string('--interval', 'Polling interval in milliseconds', { default: '250' }),
@@ -29,7 +31,7 @@ export const watchCommand = defineCommand({
 				process.once('SIGINT', () => controller.abort())
 				process.once('SIGTERM', () => controller.abort())
 
-				const path = await resolveSessionSource(provider, String(args.session))
+				const path = await resolveSessionSource(provider, String(args.pathOrSessionId))
 				await watchLines({
 					path,
 					createParser: () => createProviderParser(provider),

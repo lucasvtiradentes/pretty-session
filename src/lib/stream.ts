@@ -1,4 +1,4 @@
-import { open, stat } from 'node:fs/promises'
+import { open, readFile, stat } from 'node:fs/promises'
 import { createInterface } from 'node:readline'
 import type { ParseResult } from './result'
 
@@ -9,31 +9,53 @@ export interface LineParser {
 
 export function streamLines(parser: LineParser) {
 	const rl = createInterface({ input: process.stdin })
-	let linesRead = 0
-	let recognizedEvents = 0
+	let stats = createParseStats()
 
 	rl.on('line', (line) => {
-		const trimmed = line.trim()
-		if (trimmed) {
-			linesRead++
-			const result = parser.parseLine(trimmed)
-			if (result.recognized) recognizedEvents++
-			const output = result.getOutput()
-			if (output) process.stdout.write(output)
-		}
+		stats = parseLine(line, parser, stats, (output) => process.stdout.write(output))
 	})
 
-	rl.on('close', () => {
-		if (parser.finalize) {
-			const finalize = parser.finalize
-			const output = finalize().getOutput()
-			if (output) process.stdout.write(output)
-		}
-		if (linesRead > 0 && recognizedEvents === 0) {
-			process.stderr.write('error: no recognized events; check that the provider command matches the input\n')
-			process.exitCode = 2
-		}
-	})
+	rl.on('close', () => finalizeParse(parser, stats, (output) => process.stdout.write(output)))
+}
+
+export async function parseFileLines(path: string, parser: LineParser) {
+	let stats = createParseStats()
+	const content = await readFile(path, 'utf8')
+	for (const line of content.split('\n'))
+		stats = parseLine(line, parser, stats, (output) => process.stdout.write(output))
+	finalizeParse(parser, stats, (output) => process.stdout.write(output))
+}
+
+interface ParseStats {
+	linesRead: number
+	recognizedEvents: number
+}
+
+function createParseStats(): ParseStats {
+	return { linesRead: 0, recognizedEvents: 0 }
+}
+
+function parseLine(line: string, parser: LineParser, stats: ParseStats, write: (output: string) => void): ParseStats {
+	const trimmed = line.trim()
+	if (!trimmed) return stats
+
+	const result = parser.parseLine(trimmed)
+	if (result.recognized) stats.recognizedEvents++
+	const output = result.getOutput()
+	if (output) write(output)
+
+	return { ...stats, linesRead: stats.linesRead + 1 }
+}
+
+function finalizeParse(parser: LineParser, stats: ParseStats, write: (output: string) => void) {
+	if (parser.finalize) {
+		const output = parser.finalize().getOutput()
+		if (output) write(output)
+	}
+	if (stats.linesRead > 0 && stats.recognizedEvents === 0) {
+		process.stderr.write('error: no recognized events; check that the provider command matches the input\n')
+		process.exitCode = 2
+	}
 }
 
 interface WatchLinesOptions {

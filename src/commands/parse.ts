@@ -1,5 +1,6 @@
-import { argument, defineCommand, defineSubCommand } from '../cli/define'
+import { argument, defineCommand, defineSubCommand, flag } from '../cli/define'
 import { Provider } from '../constants'
+import { lastTurnsLines } from '../lib/last-turns'
 import { createProviderParser } from '../lib/provider-parser'
 import { resolveSessionSource } from '../lib/session-source'
 import { parseFileLines, streamLines } from '../lib/stream'
@@ -16,13 +17,24 @@ export const parseCommand = defineCommand({
 			arguments: [
 				argument.string('path-or-session-id', 'Session JSONL file path or session id to parse', { required: false }),
 			],
-			action: async ({ args }) => {
+			flags: [flag.string('--last-turns', 'Parse only the latest N real user turns from a saved session')],
+			action: async ({ args, options }) => {
 				const parser = createProviderParser(provider)
-				if (args.pathOrSessionId)
-					await parseFileLines(await resolveSessionSource(provider, args.pathOrSessionId), parser)
-				else streamLines(parser)
+				const lastTurns = parseLastTurns(options.lastTurns)
+				if (args.pathOrSessionId) {
+					await parseFileLines(await resolveSessionSource(provider, args.pathOrSessionId), parser, {
+						filterLines: lastTurns ? (lines) => lastTurnsLines(provider, lines, lastTurns) : undefined,
+					})
+				} else streamLines(parser)
 				return 0
 			},
 		}),
 	),
 })
+
+function parseLastTurns(value: string | undefined): number | undefined {
+	if (value === undefined) return undefined
+	const count = Number(value)
+	if (!Number.isInteger(count) || count < 1) throw new Error('--last-turns must be a positive integer')
+	return count
+}

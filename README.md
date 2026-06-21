@@ -83,10 +83,10 @@ Why? To quickly review progress, debug a run, or catch what happened at a glance
 <!-- <DYNFIELD:COMMANDS> -->
 ```sh
 # parse commands
-pts parse claude [path-or-session-id]
-pts parse codex [path-or-session-id]
-pts parse gemini [path-or-session-id]
-pts parse pi [path-or-session-id]
+pts parse claude [path-or-session-id] [--last-turns <value>]
+pts parse codex [path-or-session-id] [--last-turns <value>]
+pts parse gemini [path-or-session-id] [--last-turns <value>]
+pts parse pi [path-or-session-id] [--last-turns <value>]
 
 # watch commands
 pts watch claude <path-or-session-id> [--from-end] [--interval <value>]

@@ -18,12 +18,16 @@ export function streamLines(parser: LineParser) {
 	rl.on('close', () => finalizeParse(parser, stats, (output) => process.stdout.write(output)))
 }
 
-export async function parseFileLines(path: string, parser: LineParser) {
+export async function parseFileLines(path: string, parser: LineParser, options: ParseFileLinesOptions = {}) {
 	let stats = createParseStats()
 	const content = await readFile(path, 'utf8')
-	for (const line of content.split('\n'))
-		stats = parseLine(line, parser, stats, (output) => process.stdout.write(output))
+	const lines = options.filterLines?.(content.split('\n')) ?? content.split('\n')
+	for (const line of lines) stats = parseLine(line, parser, stats, (output) => process.stdout.write(output))
 	finalizeParse(parser, stats, (output) => process.stdout.write(output))
+}
+
+interface ParseFileLinesOptions {
+	filterLines?(lines: string[]): string[]
 }
 
 interface ParseStats {

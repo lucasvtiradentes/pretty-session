@@ -3,7 +3,7 @@ import { dirname, resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..')
-const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
+const CLI_PATH = resolve(CLI_ROOT, 'src/cli.ts')
 
 function runCli(args: string[], binName = 'pretty-session') {
 	return execSync(`npx tsx ${CLI_PATH} ${args.join(' ')}`, {
@@ -22,50 +22,52 @@ describe('completion', () => {
 		expect(output).toContain('claude')
 		expect(output).toContain('codex')
 		expect(output).toContain('gemini')
-		expect(output).toContain('completion')
+		expect(output).toContain('update')
 	})
 
 	it('binds zsh completion to every package bin', () => {
 		const output = runCli(['completion', 'zsh'])
 
-		expect(output).toContain('#compdef pretty-session pts')
-		expect(output).toContain('compdef _pretty_session_completion pretty-session pts')
+		expect(output).toContain('#compdef pretty-session')
+		expect(output).toContain('#compdef pts')
+		expect(output).toContain('compdef _pretty_session pretty-session')
+		expect(output).toContain('compdef _pts pts')
 		expect(output).not.toContain('ptsd')
-		expect(output).not.toContain('_ps()')
 	})
 
 	it('binds zsh dev completion only to dev bins', () => {
 		const output = runCli(['completion', 'zsh'], 'ptsd')
 
-		expect(output).toContain('#compdef ptsd pretty-sessiond prettysessiond')
-		expect(output).toContain('compdef _ptsd_completion ptsd pretty-sessiond prettysessiond')
-		expect(output).not.toContain('compdef _ptsd_completion pts ')
-		expect(output).not.toContain('compdef _ptsd_completion pretty-session ')
+		expect(output).toContain('#compdef ptsd')
+		expect(output).toContain('#compdef pretty-sessiond')
+		expect(output).toContain('#compdef prettysessiond')
+		expect(output).toContain('compdef _ptsd ptsd')
+		expect(output).not.toContain('compdef _pts pts')
 	})
 
-	it('completes flags in zsh', () => {
+	it('completes command flags in zsh', () => {
 		const output = runCli(['completion', 'zsh'])
 
-		expect(output).toContain('--help:Show help')
-		expect(output).toContain('--version:Show version')
+		expect(output).toContain('--last-turns:Parse only the latest N real user turns from a saved session')
+		expect(output).toContain('--from-end:Start at the end of the file instead of replaying existing events')
 	})
 
-	it('completes shells in bash', () => {
+	it('completes commands in bash', () => {
 		const output = runCli(['completion', 'bash'])
 
-		expect(output).toContain('bash fish zsh')
+		expect(output).toContain('parse update watch')
 		expect(output).toContain('complete -F _pretty_session_completion pretty-session')
-		expect(output).toContain('complete -F _pretty_session_completion pts')
+		expect(output).toContain('complete -F _pts_completion pts')
 	})
 
 	it('binds bash dev completion only to dev bins', () => {
 		const output = runCli(['completion', 'bash'], 'ptsd')
 
 		expect(output).toContain('complete -F _ptsd_completion ptsd')
-		expect(output).toContain('complete -F _ptsd_completion pretty-sessiond')
-		expect(output).toContain('complete -F _ptsd_completion prettysessiond')
-		expect(output).not.toContain('complete -F _ptsd_completion pts\n')
-		expect(output).not.toContain('complete -F _ptsd_completion pretty-session\n')
+		expect(output).toContain('complete -F _pretty_sessiond_completion pretty-sessiond')
+		expect(output).toContain('complete -F _prettysessiond_completion prettysessiond')
+		expect(output).not.toContain('complete -F _pts_completion pts\n')
+		expect(output).not.toContain('complete -F _pretty_session_completion pretty-session\n')
 	})
 
 	it('binds fish completion to every package bin', () => {

@@ -5,7 +5,7 @@ import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 const root = new URL('..', import.meta.url).pathname
-const cli = resolve(root, 'src/bin.ts')
+const cli = resolve(root, 'src/cli.ts')
 
 function parseLastTurns(provider: string, fixture: string, count = 1): string {
 	return execSync(`pnpm exec tsx ${cli} parse ${provider} ${fixture} --last-turns ${count}`, {

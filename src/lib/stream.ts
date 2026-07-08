@@ -8,14 +8,19 @@ export interface LineParser {
 }
 
 export function streamLines(parser: LineParser) {
-	const rl = createInterface({ input: process.stdin })
-	let stats = createParseStats()
+	return new Promise<void>((resolve) => {
+		const rl = createInterface({ input: process.stdin })
+		let stats = createParseStats()
 
-	rl.on('line', (line) => {
-		stats = parseLine(line, parser, stats, (output) => process.stdout.write(output))
+		rl.on('line', (line) => {
+			stats = parseLine(line, parser, stats, (output) => process.stdout.write(output))
+		})
+
+		rl.on('close', () => {
+			finalizeParse(parser, stats, (output) => process.stdout.write(output))
+			resolve()
+		})
 	})
-
-	rl.on('close', () => finalizeParse(parser, stats, (output) => process.stdout.write(output)))
 }
 
 export async function parseFileLines(path: string, parser: LineParser, options: ParseFileLinesOptions = {}) {

@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@caporal/core':
-        specifier: ^2.0.7
-        version: 2.0.7
+      unicommand:
+        specifier: file:../unicommand
+        version: file:../unicommand
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -2042,6 +2042,9 @@ packages:
   undici-types@7.19.2:
     resolution: {integrity: sha512-qYVnV5OEm2AW8cJMCpdV20CDyaN3g0AjDlOGf1OW4iaDEx8MwdtChUp4zu4H0VP3nDRF/8RKWH+IPp9uW0YGZg==}
 
+  unicommand@file:../unicommand:
+    resolution: {directory: ../unicommand, type: directory}
+
   universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
     engines: {node: '>= 4.0.0'}
@@ -4020,6 +4023,13 @@ snapshots:
   unbash@2.2.0: {}
 
   undici-types@7.19.2: {}
+
+  unicommand@file:../unicommand:
+    dependencies:
+      '@caporal/core': 2.0.7
+      zod: 4.4.3
+    transitivePeerDependencies:
+      - supports-color
 
   universalify@0.1.2: {}
 

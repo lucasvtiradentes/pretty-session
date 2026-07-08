@@ -5,7 +5,7 @@ import { dirname, join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..')
-const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
+const CLI_PATH = resolve(CLI_ROOT, 'src/cli.ts')
 const dirs: string[] = []
 
 afterEach(() => {

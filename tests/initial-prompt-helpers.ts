@@ -5,7 +5,7 @@ import { dirname, resolve } from 'node:path'
 import { getClaudeSessionPath, getCodexSessionPath } from '../src/lib/session-paths'
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..')
-const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
+const CLI_PATH = resolve(CLI_ROOT, 'src/cli.ts')
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: stripping ANSI escape codes
 const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '')

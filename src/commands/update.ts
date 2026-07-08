@@ -1,11 +1,18 @@
 import { exec } from 'node:child_process'
 import { platform } from 'node:os'
 import { promisify } from 'node:util'
-import { defineSubCommand } from '../cli/define'
+import { createCommandAdapters, defineCommand, z } from 'unicommand'
 import { CLI_NAME, VERSION } from '../constants'
 
 const execAsync = promisify(exec)
 const packageName = 'pretty-session'
+
+const metadata = defineCommand({
+	name: 'update',
+	description: `Update ${CLI_NAME} to latest version`,
+	inputSchema: z.object({}),
+	outputSchema: z.number(),
+})
 
 enum PackageManager {
 	Npm = 'npm',
@@ -19,47 +26,48 @@ const updateCommandsByPackageManager = {
 	[PackageManager.Yarn]: `yarn global upgrade ${packageName}`,
 } as const satisfies Record<PackageManager, string>
 
-export const updateCommand = defineSubCommand({
-	name: 'update',
-	description: `Update ${CLI_NAME} to latest version`,
-	action: async ({ program }) => {
-		console.log('Checking current version...')
-		const currentVersion = VERSION
+export const handler = async () => {
+	console.log('Checking current version...')
+	const currentVersion = VERSION
 
-		console.log('Checking latest version...')
-		const latestVersion = await getLatestVersion()
-		if (!latestVersion) {
-			console.log('error: could not fetch latest version from npm')
-			return 1
-		}
+	console.log('Checking latest version...')
+	const latestVersion = await getLatestVersion()
+	if (!latestVersion) {
+		console.log('error: could not fetch latest version from npm')
+		return 1
+	}
 
-		console.log(`Current version: ${currentVersion}`)
-		console.log(`Latest version: ${latestVersion}`)
+	console.log(`Current version: ${currentVersion}`)
+	console.log(`Latest version: ${latestVersion}`)
 
-		if (currentVersion === latestVersion) {
-			console.log(`${program.getBin()} is already up to date`)
-			return 0
-		}
-
-		console.log('Detecting package manager...')
-		const packageManager = await detectPackageManager(program.getBin())
-
-		if (!packageManager) {
-			console.log(`error: could not detect how ${program.getBin()} was installed`)
-			console.log('Please update manually using your package manager')
-			return 1
-		}
-
-		console.log(`Detected package manager: ${packageManager}`)
-		console.log(`Updating ${packageName} from ${currentVersion} to ${latestVersion}...`)
-
-		const { stdout, stderr } = await execAsync(getUpdateCommand(packageManager))
-
-		console.log(`${packageName} updated successfully from ${currentVersion} to ${latestVersion}`)
-		if (stdout) console.log(stdout.trim())
-		if (stderr) console.log(stderr.trim())
+	if (currentVersion === latestVersion) {
+		console.log(`${CLI_NAME} is already up to date`)
 		return 0
-	},
+	}
+
+	console.log('Detecting package manager...')
+	const packageManager = await detectPackageManager(CLI_NAME)
+
+	if (!packageManager) {
+		console.log(`error: could not detect how ${CLI_NAME} was installed`)
+		console.log('Please update manually using your package manager')
+		return 1
+	}
+
+	console.log(`Detected package manager: ${packageManager}`)
+	console.log(`Updating ${packageName} from ${currentVersion} to ${latestVersion}...`)
+
+	const { stdout, stderr } = await execAsync(getUpdateCommand(packageManager))
+
+	console.log(`${packageName} updated successfully from ${currentVersion} to ${latestVersion}`)
+	if (stdout) console.log(stdout.trim())
+	if (stderr) console.log(stderr.trim())
+	return 0
+}
+
+export const updateCommand = createCommandAdapters({
+	metadata,
+	handler,
 })
 
 async function detectPackageManager(binName: string): Promise<PackageManager | null> {

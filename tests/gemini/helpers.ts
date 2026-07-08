@@ -8,7 +8,7 @@ import { SESSION_FOOTER, SESSION_HEADER } from './expectations'
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '../..')
 const SANDBOX_BASE = resolve(CLI_ROOT, '.sandbox')
-const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
+const CLI_PATH = resolve(CLI_ROOT, 'src/cli.ts')
 const HOME = homedir()
 
 const TEST_ENV = {

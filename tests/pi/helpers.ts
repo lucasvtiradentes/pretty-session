@@ -8,7 +8,7 @@ import { scrubFixture } from '../scrub'
 import { SESSION_FOOTER, SESSION_HEADER } from './expectations'
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '../..')
-const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
+const CLI_PATH = resolve(CLI_ROOT, 'src/cli.ts')
 const HOME = homedir()
 const TEST_ENV = { ...process.env, PI_SKIP_VERSION_CHECK: '1', PTS_TOOL_RESULT_LINES: '5' }
 

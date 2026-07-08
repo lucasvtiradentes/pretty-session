@@ -94,11 +94,6 @@ pts watch codex <path-or-session-id> [--from-end] [--interval <value>]
 pts watch gemini <path-or-session-id> [--from-end] [--interval <value>]
 pts watch pi <path-or-session-id> [--from-end] [--interval <value>]
 
-# completion commands
-pts completion bash
-pts completion fish
-pts completion zsh
-
 # other commands
 pts update
 ```
@@ -119,9 +114,9 @@ pts update
 
 <div align="center">
 
-| Variable                   | Default | Description                                      |
-| -------------------------- | ------- | ------------------------------------------------ |
-| `PTS_TOOL_RESULT_LINES`    | `0`     | Maximum lines shown in tool result previews      |
+| Variable                   | Default | Description                                       |
+|----------------------------|---------|---------------------------------------------------|
+| `PTS_TOOL_RESULT_LINES`    | `0`     | Maximum lines shown in tool result previews       |
 | `PTS_SHOW_SUBAGENT_PROMPT` | `true`  | Show subagent prompt lines under Agent tool calls |
 
 </div>

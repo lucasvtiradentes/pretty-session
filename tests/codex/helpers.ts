@@ -7,7 +7,7 @@ import { SESSION_FOOTER, SESSION_HEADER, STREAM_SESSION_HEADER } from './expecta
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '../..')
 const SANDBOX_BASE = resolve(CLI_ROOT, '.sandbox')
-const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
+const CLI_PATH = resolve(CLI_ROOT, 'src/cli.ts')
 const HOME = homedir()
 
 const TEST_ENV = { ...process.env, PTS_TOOL_RESULT_LINES: '5' }

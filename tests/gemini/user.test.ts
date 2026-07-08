@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { stripAnsi } from './helpers'
 
 const CLI_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '../..')
-const CLI_PATH = resolve(CLI_ROOT, 'src/bin.ts')
+const CLI_PATH = resolve(CLI_ROOT, 'src/cli.ts')
 
 function runParse(input: string) {
 	return stripAnsi(

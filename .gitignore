@@ -14,5 +14,3 @@ tmp-*
 .env
 .sandbox/
 **/.DS_Store
-_branch
-.bctx

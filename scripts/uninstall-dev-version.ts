@@ -1,5 +1,3 @@
-import { uninstallPackageDevCommand } from 'unicommand'
+import { uninstallPackageDevCommands } from 'unicommand'
 
-uninstallPackageDevCommand(import.meta.url, { commandName: 'pretty-sessiond' })
-uninstallPackageDevCommand(import.meta.url, { commandName: 'prettysessiond' })
-uninstallPackageDevCommand(import.meta.url, { commandName: 'ptsd' })
+uninstallPackageDevCommands(import.meta.url, { commandNames: ['pretty-sessiond', 'prettysessiond', 'ptsd'] })

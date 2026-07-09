@@ -93,9 +93,6 @@ pts watch claude <path-or-session-id> [--from-end] [--interval <value>]
 pts watch codex <path-or-session-id> [--from-end] [--interval <value>]
 pts watch gemini <path-or-session-id> [--from-end] [--interval <value>]
 pts watch pi <path-or-session-id> [--from-end] [--interval <value>]
-
-# other commands
-pts update
 ```
 <!-- </DYNFIELD:COMMANDS> -->
 

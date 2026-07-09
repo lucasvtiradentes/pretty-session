@@ -35,14 +35,15 @@ describe('completion', () => {
 		expect(output).not.toContain('ptsd')
 	})
 
-	it('binds zsh dev completion only to dev bins', () => {
+	it('binds zsh completion to active dev bin and package bins', () => {
 		const output = runCli(['completion', 'zsh'], 'ptsd')
 
 		expect(output).toContain('#compdef ptsd')
-		expect(output).toContain('#compdef pretty-sessiond')
-		expect(output).toContain('#compdef prettysessiond')
+		expect(output).toContain('#compdef pretty-session')
+		expect(output).toContain('#compdef pts')
 		expect(output).toContain('compdef _ptsd ptsd')
-		expect(output).not.toContain('compdef _pts pts')
+		expect(output).toContain('compdef _pretty_session pretty-session')
+		expect(output).toContain('compdef _pts pts')
 	})
 
 	it('completes command flags in zsh', () => {
@@ -60,14 +61,12 @@ describe('completion', () => {
 		expect(output).toContain('complete -F _pts_completion pts')
 	})
 
-	it('binds bash dev completion only to dev bins', () => {
+	it('binds bash completion to active dev bin and package bins', () => {
 		const output = runCli(['completion', 'bash'], 'ptsd')
 
 		expect(output).toContain('complete -F _ptsd_completion ptsd')
-		expect(output).toContain('complete -F _pretty_sessiond_completion pretty-sessiond')
-		expect(output).toContain('complete -F _prettysessiond_completion prettysessiond')
-		expect(output).not.toContain('complete -F _pts_completion pts\n')
-		expect(output).not.toContain('complete -F _pretty_session_completion pretty-session\n')
+		expect(output).toContain('complete -F _pretty_session_completion pretty-session')
+		expect(output).toContain('complete -F _pts_completion pts')
 	})
 
 	it('binds fish completion to every package bin', () => {
@@ -77,13 +76,11 @@ describe('completion', () => {
 		expect(output).toContain('complete -c pts -f')
 	})
 
-	it('binds fish dev completion only to dev bins', () => {
+	it('binds fish completion to active dev bin and package bins', () => {
 		const output = runCli(['completion', 'fish'], 'ptsd')
 
 		expect(output).toContain('complete -c ptsd -f')
-		expect(output).toContain('complete -c pretty-sessiond -f')
-		expect(output).toContain('complete -c prettysessiond -f')
-		expect(output).not.toContain('complete -c pts -f')
-		expect(output).not.toContain('complete -c pretty-session -f\n')
+		expect(output).toContain('complete -c pretty-session -f')
+		expect(output).toContain('complete -c pts -f')
 	})
 })

@@ -14,6 +14,7 @@ export const defineWatchCommand = (provider: Provider) =>
 	defineCommand({
 		name: `watch ${provider}`,
 		description: `Follow a saved ${provider} session JSONL file`,
+		examples: (binName) => [`${binName} watch ${provider} <path-or-session-id>`],
 		inputSchema,
 		outputSchema: z.number(),
 		arguments: [

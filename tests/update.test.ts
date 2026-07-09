@@ -1,5 +1,5 @@
+import { getPackageManagerFromPath } from 'unicommand'
 import { describe, expect, it } from 'vitest'
-import { getPackageManagerFromPath } from '../src/commands/update'
 
 describe('update command', () => {
 	it.each([

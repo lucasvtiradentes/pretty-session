@@ -14,6 +14,10 @@ export const defineParseCommand = (provider: Provider) =>
 	defineCommand({
 		name: `parse ${provider}`,
 		description: `Parse a ${provider} session stream from stdin or a saved session`,
+		examples: (binName) => [
+			`${binName} parse ${provider} < session.jsonl`,
+			`${binName} parse ${provider} <path-or-session-id>`,
+		],
 		inputSchema,
 		outputSchema: z.number(),
 		arguments: [

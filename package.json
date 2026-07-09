@@ -44,7 +44,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"unicommand": "file:../unicommand",
+		"unicommand": "^0.0.2",
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {
